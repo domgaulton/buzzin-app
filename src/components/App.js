@@ -23,10 +23,18 @@ function App() {
     //   name: 'Test',
     //   score: 0,
     // });
-    const studioName = base.ref('test-studio/name');
+    const studioName = base.ref('test-studio/');
+    console.log(studioName)
     studioName.on('value', function(snapshot) {
-      console.log(snapshot);
+      console.log(snapshot.name);
     });
+    studioName.once('value')
+    .then(function(snapshot) {
+      //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+      const name = snapshot.val().name;
+      console.log(name)
+      // ...
+    })
   }
 
 
