@@ -6,7 +6,9 @@ import '../styles/App.css';
 function App() {
   const [tavernName, setTavernName] = useState('');
   const [countdown, setCountdown] = useState(undefined);
+  const [membersReady, setMembersReady] = useState(false);
 
+  // NOTE NOTE NOTE - this funciton needs to be run to check database state! (no componenet did mount as this isn't a component)
   const tavernData = e => {
     e.preventDefault();
 
@@ -25,21 +27,35 @@ function App() {
       }, function(doc) {
         const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
         console.log(source, " data: ", doc.data());
+
         const tavernName = doc.data().name;
+        console.log(tavernName);
+        setTavernName(tavernName);
+
         const members = doc.data().members;
         const membersReady = members.every(item => {
           return item.ready === true;
         })
-        const countdown = doc.data().options.countdown;
-        console.log(tavernName);
         console.log(members);
         console.log(membersReady);
-        setTavernName(tavernName);
+        setMembersReady(membersReady);
+
+        const countdown = doc.data().options.countdown;
         setCountdown(countdown)
     });
   }
 
-
+  // const members = () => {
+  //   firestore.collection("taverns").doc('another-tavern')
+  //     .onSnapshot({
+  //       // Listen for document metadata changes
+  //       includeMetadataChanges: true
+  //     }, function(doc) {
+  //       const ready = doc.data().members.every(item => item.ready === true);
+  //       console.log(ready);
+  //       setMembersReady(ready);
+  //   });
+  // }
 
   return (
     <div className="App">
@@ -50,6 +66,7 @@ function App() {
         </p>
         <h1>{tavernName}</h1>
         <p>{countdown}</p>
+        <p>{membersReady ? 'ready' : 'not ready'}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
