@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { firestore } from "../base";
 
-function Tavern() {
+function Tavern(props) {
 
   const [tavernName, setTavernName] = useState('');
   const [countdown, setCountdown] = useState(undefined);
@@ -15,7 +15,7 @@ function Tavern() {
   });
 
   // https://firebase.google.com/docs/firestore/query-data/listen
-  firestore.collection("taverns").doc('another-tavern')
+  firestore.collection("taverns").doc(props.match.params.tavernId)
     .onSnapshot({
       // Listen for document metadata changes
       includeMetadataChanges: true
@@ -42,6 +42,7 @@ function Tavern() {
   return (
     <div>
       <h1>{tavernName}</h1>
+      <p>Props {props.match.params.tavernId}</p>
       <p>Members are {!membersReady ? 'not' : ''} ready!</p>
     </div>
   );

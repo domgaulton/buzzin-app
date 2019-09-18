@@ -7,7 +7,7 @@ function AppRouter() {
   return (
     <Router>
         <Route path="/" exact component={App} />
-        <Route path="/tavern" component={Tavern} />
+        <Route path="/tavern/:tavernId" component={Tavern} />
       </Router>
   );
 }
