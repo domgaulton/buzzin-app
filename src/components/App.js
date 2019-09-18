@@ -45,18 +45,6 @@ function App() {
     });
   }
 
-  // const members = () => {
-  //   firestore.collection("taverns").doc('another-tavern')
-  //     .onSnapshot({
-  //       // Listen for document metadata changes
-  //       includeMetadataChanges: true
-  //     }, function(doc) {
-  //       const ready = doc.data().members.every(item => item.ready === true);
-  //       console.log(ready);
-  //       setMembersReady(ready);
-  //   });
-  // }
-
   return (
     <div className="App">
       <header className="App-header">
