@@ -13,7 +13,7 @@ function App() {
     // - WORKING - https://firebase.google.com/docs/firestore/quickstart
     firestore.collection("taverns").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data()}`);
+        console.log(`${doc.id} => ${doc.data()}`);
       });
     });
 
@@ -23,11 +23,17 @@ function App() {
         // Listen for document metadata changes
         includeMetadataChanges: true
       }, function(doc) {
-        var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+        const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
         console.log(source, " data: ", doc.data());
         const tavernName = doc.data().name;
+        const members = doc.data().members;
+        const membersReady = members.every(item => {
+          return item.ready === true;
+        })
         const countdown = doc.data().options.countdown;
         console.log(tavernName);
+        console.log(members);
+        console.log(membersReady);
         setTavernName(tavernName);
         setCountdown(countdown)
     });
