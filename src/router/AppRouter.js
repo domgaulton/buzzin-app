@@ -1,0 +1,15 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import App from "../components/App";
+import Tavern from "../components/Tavern";
+
+function AppRouter() {
+  return (
+    <Router>
+        <Route path="/" exact component={App} />
+        <Route path="/tavern" component={Tavern} />
+      </Router>
+  );
+}
+
+export default AppRouter;
