@@ -6,6 +6,7 @@ function Tavern(props) {
   const [tavernName, setTavernName] = useState('');
   const [countdown, setCountdown] = useState(undefined);
   const [membersReady, setMembersReady] = useState(false);
+  const [memberSet, setMembers] = useState([]);
 
   // - WORKING - https://firebase.google.com/docs/firestore/quickstart
   firestore.collection("taverns").get().then((querySnapshot) => {
@@ -31,8 +32,7 @@ function Tavern(props) {
       const membersReady = members.every(item => {
         return item.ready === true;
       })
-      console.log(members);
-      console.log(membersReady);
+
       setMembersReady(membersReady);
 
       const countdown = doc.data().options.countdown;
@@ -42,7 +42,7 @@ function Tavern(props) {
   return (
     <div>
       <h1>{tavernName}</h1>
-      <p>Props {props.match.params.tavernId}</p>
+      <p>Time limit: {countdown}</p>
       <p>Members are {!membersReady ? 'not' : ''} ready!</p>
     </div>
   );
