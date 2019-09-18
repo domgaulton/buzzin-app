@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../media/logo.svg';
 import { firestore } from "../base";
 import '../styles/App.css';
 
 function App() {
+  const [tavernName, setTavernName] = useState('');
+  const [countdown, setCountdown] = useState(undefined);
 
   const tavernData = e => {
     e.preventDefault();
@@ -24,7 +26,10 @@ function App() {
         var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
         console.log(source, " data: ", doc.data());
         const tavernName = doc.data().name;
+        const countdown = doc.data().options.countdown;
         console.log(tavernName);
+        setTavernName(tavernName);
+        setCountdown(countdown)
     });
   }
 
@@ -37,6 +42,8 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <h1>{tavernName}</h1>
+        <p>{countdown}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
