@@ -80,7 +80,12 @@ function Home(props) {
     <div className="App">
       <h1>Login</h1>
        <form onSubmit={e => handleRoomChecker(e)}>
-        <input type='text' placeholder='Enter Tavern Name' onChange={e => handleInputChange(e)}/>
+        <input
+          type='text'
+          placeholder='Enter Tavern Name'
+          value={roomName}
+          onChange={e => handleInputChange(e)}
+        />
       </form>
 
       <h1>Create Tavern</h1>
@@ -88,11 +93,13 @@ function Home(props) {
         <input
           type='text'
           placeholder='Enter Tavern Name'
+          value={createRoomName}
           onChange={e => handle_createRoomNameInputChange(e)}
         />
         <input
           type='text'
           placeholder='Enter Pin'
+          value={createPin}
           onChange={e => handle_createPinInputChange(e)}
         />
         <input type="submit" />
