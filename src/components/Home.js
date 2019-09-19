@@ -24,8 +24,8 @@ function Home(props) {
       data.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id);
-            console.log('redirect');
-            //props.history.push(`/tavern/${doc.id}`)
+            // console.log('redirect');
+            props.history.push(`/tavern/${doc.id}`)
             // return (
             //   <Router>
             //     <Route path="/tavern/" component={Tavern} />
@@ -78,7 +78,7 @@ function Home(props) {
 
   return (
     <div className="App">
-      <h1>Login</h1>
+      <h1>Find Your Room</h1>
        <form onSubmit={e => handleRoomChecker(e)}>
         <input
           type='text'
