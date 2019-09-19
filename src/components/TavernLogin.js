@@ -11,12 +11,14 @@ function TavernLogin(props) {
       // Listen for document metadata changes
       includeMetadataChanges: true
     }, function(doc) {
-      const pin = doc.data().options.pin;
+      const pin = doc.data().pin;
+      console.log(pin)
       set_pinNo(pin);
   });
 
   const checkPin = (e) => {
     if (Number(e.currentTarget.value) === pinNo){
+      console.log('true')
       props.pinEntered(true);
     }
 
