@@ -12,6 +12,8 @@ const tavernsApi = tavernId => {
   });
 }
 
+// SEE https://firestore.googleapis.com/v1/projects/dg-projects-27574/databases/(default)/documents/taverns
+
 const tavernsTest = tavernId => {
   const item = firestore.collection("taverns").doc(tavernId).get().then(function(doc) {
       // Document was found in the cache. If no cached document exists,
