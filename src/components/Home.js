@@ -21,24 +21,11 @@ function Home(props) {
     .then(function(data) {
       console.log(data)
       if (!data.empty) {
-      data.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
+        data.forEach(function(doc) {
           console.log(doc.id);
-            // console.log('redirect');
-            props.history.push(`/tavern/${doc.id}`)
-            // return (
-            //   <Router>
-            //     <Route path="/tavern/" component={Tavern} />
-            //   </Router>
-            // )
-
-      });
+          props.history.push(`/tavern/${doc.id}`)
+        });
       }
-
-        // querySnapshot.forEach(function(doc) {
-        //     // doc.data() is never undefined for query doc snapshots
-        //     console.log(doc.id, " => ", doc.data());
-        // });
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
