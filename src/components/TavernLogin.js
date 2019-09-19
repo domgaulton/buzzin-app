@@ -3,50 +3,29 @@ import { firestore } from "../base";
 
 function TavernLogin(props) {
 
-  const [pinNo, set_pinNo] = useState(undefined);
-  const [pinCorrect, set_pinCorrect] = useState(false);
+  const [pinNo, set_pinNo] = useState();
 
-  // const pin = () => {
-  //   firestore.collection("taverns").doc(props.match.params.tavernId).get().then((querySnapshot) => {
-  //     return querySnapshot.data().options.pin;
-  //   });
-  // }
-
-  // const pin = firestore.collection("taverns").doc(props.tavernId).get().then((querySnapshot) => {
-  //     return querySnapshot.data().options.pin;
-  //   });
-
-
-  const pin = firestore.collection("taverns").doc(props.tavernId).get().then(function(doc) {
-      if (doc.exists) {
-          console.log("Document data:", doc.data().options.pin);
-          return doc.data().options.pin
-      } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-      }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
-    })
-
-  console.log(pin)
-  // firestore.collection("taverns").doc(props.tavernId).get().then((querySnapshot) => {
-  //   console.log(querySnapshot.data().options.pin)
-  //   set_pinNo(querySnapshot.data().options.pin);
-  // });
+  // https://firebase.google.com/docs/firestore/query-data/listen
+  firestore.collection("taverns").doc(props.tavernId)
+    .onSnapshot({
+      // Listen for document metadata changes
+      includeMetadataChanges: true
+    }, function(doc) {
+      const pin = doc.data().options.pin;
+      set_pinNo(pin);
+  });
 
   const checkPin = (e) => {
-    //console.log(e.currentTarget.value)
-    if (e.currentTarget.value == 1234){
-      console.log('hello!')
+    if (e.currentTarget.value == pinNo){
+      props.pinEntered(true);
     }
-    // props.pinCorrect(true);
+
   }
 
   return (
     <React.Fragment>
       <h1>Enter Pin</h1>
-      <input type='number' placeholder='enter pin' onChange={e => checkPin(e)}/>
+      <input type='number' placeholder='enter pin' onChange={e => checkPin(e)} />
     </React.Fragment>
   );
 
