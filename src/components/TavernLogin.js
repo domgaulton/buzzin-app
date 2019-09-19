@@ -16,7 +16,7 @@ function TavernLogin(props) {
   });
 
   const checkPin = (e) => {
-    if (e.currentTarget.value == pinNo){
+    if (Number(e.currentTarget.value) === pinNo){
       props.pinEntered(true);
     }
 
