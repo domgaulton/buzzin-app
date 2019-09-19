@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { firestore } from "../base";
+import { tavernsApi, tavernsTest } from '../apis/taverns'
 import '../styles/App.css';
 
 function Home(props) {
@@ -89,6 +90,8 @@ function Home(props) {
       </form>
 
       <h1>Create Tavern</h1>
+      <p>Test Pin: {tavernsApi('another-tavern')}</p>
+      <p>Taverns Test Pin: {tavernsTest('another-tavern')}</p>
        <form onSubmit={e => handleCreateRoom(e)}>
         <input
           type='text'
