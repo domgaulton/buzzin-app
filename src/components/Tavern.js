@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import TavernLogin from './TavernLogin';
+import TavernRoom from './TavernRoom';
 import { firestore } from "../base";
 
 function Tavern(props) {
@@ -10,20 +12,7 @@ function Tavern(props) {
   const [countdown, setCountdown] = useState(undefined);
   const [membersReady, setMembersReady] = useState(false);
   const [memberSet, setMembers] = useState([]);
-
-  firestore.collection("taverns").doc(props.match.params.tavernId).get().then((querySnapshot) => {
-    console.log(querySnapshot.data().options.pin)
-  });
-
-  // const pin = () => {
-  //   firestore.collection("taverns").doc(props.match.params.tavernId).get().then((querySnapshot) => {
-  //     return querySnapshot.data().options.pin;
-  //   });
-  // }
-
-  const pin = () => {
-    firestore.collection("taverns").doc(props.match.params.tavernId).get().then((querySnapshot) => querySnapshot.data().options.pin);
-  }
+  const [pinCorrect, set_pinCorrect] = useState(false);
 
   // https://firebase.google.com/docs/firestore/query-data/listen
   firestore.collection("taverns").doc(props.match.params.tavernId)
@@ -52,13 +41,10 @@ function Tavern(props) {
       setCountdown(countdown)
   });
 
-  return (
-    <div>
-      <h1>{tavernName}</h1>
-      <p>Time limit: {countdown}</p>
-      <p>Members are {!membersReady ? 'not' : ''} ready!</p>
-      <p>Pin: {pin()}</p>
-    </div>
+  return pinCorrect ? (
+    <TavernRoom tavernId={props.match.params.tavernId} />
+  ) : (
+    <TavernLogin tavernId={props.match.params.tavernId} />
   );
 
 }
