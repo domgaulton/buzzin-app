@@ -16,14 +16,14 @@ function Home(props) {
     const taverns = firestore.collection("taverns");
     taverns.where("name", "==", roomName)
     .get()
-    .then(function(querySnapshot) {
-      console.log(querySnapshot)
-      if (!querySnapshot.empty) {
-      querySnapshot.forEach(function(doc) {
+    .then(function(data) {
+      console.log(data)
+      if (!data.empty) {
+      data.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id);
-            console.log('redriect');
-            props.history.push(`/tavern/${doc.id}`)
+            console.log('redirect');
+            //props.history.push(`/tavern/${doc.id}`)
             // return (
             //   <Router>
             //     <Route path="/tavern/" component={Tavern} />
@@ -31,16 +31,6 @@ function Home(props) {
             // )
 
       });
-      }
-
-      if (!querySnapshot.empty) {
-        console.log('redriect');
-        // props.history.push(`/target`)
-        // return (
-        //   <Router>
-        //     <Route path="/tavern/" component={Tavern} />
-        //   </Router>
-        // )
       }
 
         // querySnapshot.forEach(function(doc) {
