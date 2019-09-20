@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { firestore } from "../base";
 import '../styles/App.css';
 
-function Home(props) {
+function Login(props) {
 
   const [loginEmail, set_loginEmail] = useState('');
   const [loginPin, set_loginPin] = useState('');
+  const [userData, set_userData] = useState({});
 
   const handleLoginEmailInputChange = e => {
     set_loginEmail(e.currentTarget.value)
@@ -25,8 +26,15 @@ function Home(props) {
       console.log(data)
       if (!data.empty) {
         data.forEach(function(doc) {
-          console.log(doc.id);
-          props.history.push(`/user/${doc.id}`)
+          if (Number(doc.data().pin) === loginPin) {
+            console.log(doc.data());
+            // set_userData(doc.data());
+            console.log(userData);
+            props.logUserIn(loginEmail);
+            //props.history.push(`/user/${doc.id}`);
+          } else {
+            console.log('fail');
+          }
         });
       }
     })
@@ -63,4 +71,4 @@ function Home(props) {
   );
 }
 
-export default Home;
+export default Login;

@@ -65,16 +65,6 @@ function Home(props) {
 
   return (
     <div className="App">
-      <h1>Find Your Room</h1>
-       <form onSubmit={e => handleRoomChecker(e)}>
-        <input
-          type='text'
-          placeholder='Enter Tavern Name'
-          value={roomName}
-          onChange={e => handleInputChange(e)}
-        />
-      </form>
-
       <h1>Create Tavern</h1>
        <form onSubmit={e => handleCreateRoom(e)}>
         <input
@@ -91,6 +81,11 @@ function Home(props) {
         />
         <input type="submit" />
       </form>
+
+      <h1>{props.userData} Rooms</h1>
+        <ul>
+          <li>Room 1</li>
+        </ul>
     </div>
   );
 }

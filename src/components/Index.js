@@ -5,15 +5,18 @@ import Login from './Login';
 function Index(props) {
 
   const [isLoggedIn, set_isLoggedIn] = useState(false);
+  const [userData, set_userData] = useState('');
 
-  // const handlePinCorrect = () => {
-  //   set_pinCorrect(true);
-  // }
+  const handleLogUserIn = userData => {
+    console.log(userData);
+    set_userData(userData);
+    set_isLoggedIn(true);
+  }
 
   return isLoggedIn ? (
-    <Home />
+    <Home userData={userData}/>
   ) : (
-    <Login />
+    <Login logUserIn={(userData) => handleLogUserIn(userData)} />
   );
 
 }
