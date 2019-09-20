@@ -81,32 +81,31 @@ class Home extends Component {
   }
   render(){
     return (
-    <div className="App">
-      <h1>Create Tavern</h1>
-       <form onSubmit={e => this.handleCreateRoom(e)}>
-        <input
-          type='text'
-          placeholder='Enter Tavern Name'
-          value={this.state.createRoomName}
-          onChange={e => this.handle_createRoomNameInputChange(e)}
-        />
-        <input
-          type='text'
-          placeholder='Enter Pin'
-          value={this.state.createPin}
-          onChange={e => this.handle_createPinInputChange(e)}
-        />
-        <input type="submit" />
-      </form>
+      <div className="App">
+        <h1>Create Tavern</h1>
+         <form onSubmit={e => this.handleCreateRoom(e)}>
+          <input
+            type='text'
+            placeholder='Enter Tavern Name'
+            value={this.state.createRoomName}
+            onChange={e => this.handle_createRoomNameInputChange(e)}
+          />
+          <input
+            type='text'
+            placeholder='Enter Pin'
+            value={this.state.createPin}
+            onChange={e => this.handle_createPinInputChange(e)}
+          />
+          <input type="submit" />
+        </form>
 
-      <h1>{this.props.userData} Rooms</h1>
-        <ul>
-          <li>Room 1</li>
-        </ul>
-    </div>
-  );
+        <h1>{this.props.userData} Rooms</h1>
+          <ul>
+            <li>Room 1</li>
+          </ul>
+      </div>
+    );
   }
-
 }
 
 const HomeUpdate = props => (

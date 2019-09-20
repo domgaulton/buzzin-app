@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import { ContextConsumer } from "../context/ContextFirebaseProvider";
 import { firestore } from "../base";
 import '../styles/App.css';
@@ -35,10 +35,10 @@ class Login extends Component {
     const users = firestore.collection("users");
     users.where("email", "==", this.state.loginEmail)
     .get()
-    .then(function(data) {
+    .then(data => {
       console.log(data)
       if (!data.empty) {
-        data.forEach(function(doc) {
+        data.forEach(doc => {
           if (Number(doc.data().pin) === this.state.loginPin) {
             console.log(doc.data());
             // set_userData(doc.data());
@@ -84,12 +84,11 @@ class Login extends Component {
     </div>
   );
   }
-
 }
 
 const LoginUpdate = props => (
   <ContextConsumer>
-    {({ setUserData }) => (
+    {( setUserData ) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
