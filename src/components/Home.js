@@ -1,61 +1,51 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import { ContextConsumer } from "../context/ContextFirebaseProvider";
 import { firestore } from "../base";
 import '../styles/App.css';
 
-function Home(props) {
 
-  const [roomName, set_roomName] = useState('');
-  const [createRoomName, set_createRoomName] = useState('');
-  const [createPin, set_createPin] = useState('');
-
-  const handleInputChange = e => {
-    set_roomName(e.currentTarget.value)
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      roomName: '',
+      createRoomName: false,
+      createPin: '',
+    };
   }
 
-  const handleRoomChecker = e => {
+  handleInputChange = e => {
+    this.setState({
+      roomName: e.currentTarget.value
+    })
+  }
+
+  handleRoomChecker = e => {
     e.preventDefault();
-    // console.log(roomName);
     const taverns = firestore.collection("taverns");
-    taverns.where("name", "==", roomName)
+    taverns.where("name", "==", this.props.roomName)
     .get()
     .then(function(data) {
       console.log(data)
       if (!data.empty) {
-      data.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
+        data.forEach(function(doc) {
           console.log(doc.id);
-            // console.log('redirect');
-            props.history.push(`/tavern/${doc.id}`)
-            // return (
-            //   <Router>
-            //     <Route path="/tavern/" component={Tavern} />
-            //   </Router>
-            // )
-
-      });
+          this.props.history.push(`/tavern/${doc.id}`)
+        });
       }
-
-        // querySnapshot.forEach(function(doc) {
-        //     // doc.data() is never undefined for query doc snapshots
-        //     console.log(doc.id, " => ", doc.data());
-        // });
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
   }
 
-  const handleCreateRoom = e => {
+  handleCreateRoom = e => {
     console.log('test')
     e.preventDefault();
-    // const data = {
-    //   name: createRoomName,
-    //   pin: createPin,
-    // }
 
     firestore.collection("taverns").add({
-      name: createRoomName,
-      pin: createPin,
+      name: this.state.createRoomName,
+      pin: this.state.createPin,
     })
     .then(function(docRef) {
         console.log("Document written with ID: ", docRef.id);
@@ -65,47 +55,59 @@ function Home(props) {
     });
   }
 
-  const handle_createRoomNameInputChange = e => {
-
-    set_createRoomName(e.currentTarget.value)
-    console.log(createRoomName)
+  handle_createRoomNameInputChange = e => {
+    this.setState({
+      createRoomName: e.currentTarget.value
+    })
   }
 
-  const handle_createPinInputChange = e => {
-    set_createPin(e.currentTarget.value)
-    console.log(createPin)
+  handle_createPinInputChange = e => {
+    this.setState({
+      createPin: e.currentTarget.value
+    })
   }
+  render(){
+    return (
+      <div className="App">
+        <h1>Create Tavern</h1>
+         <form onSubmit={e => this.handleCreateRoom(e)}>
+          <input
+            type='text'
+            placeholder='Enter Tavern Name'
+            value={this.state.createRoomName}
+            onChange={e => this.handle_createRoomNameInputChange(e)}
+          />
+          <input
+            type='text'
+            placeholder='Enter Pin'
+            value={this.state.createPin}
+            onChange={e => this.handle_createPinInputChange(e)}
+          />
+          <input type="submit" />
+        </form>
 
-  return (
-    <div className="App">
-      <h1>Find Your Room</h1>
-       <form onSubmit={e => handleRoomChecker(e)}>
-        <input
-          type='text'
-          placeholder='Enter Tavern Name'
-          value={roomName}
-          onChange={e => handleInputChange(e)}
-        />
-      </form>
+        <h1>{this.props.userData.name}'s Rooms</h1>
 
-      <h1>Create Tavern</h1>
-       <form onSubmit={e => handleCreateRoom(e)}>
-        <input
-          type='text'
-          placeholder='Enter Tavern Name'
-          value={createRoomName}
-          onChange={e => handle_createRoomNameInputChange(e)}
-        />
-        <input
-          type='text'
-          placeholder='Enter Pin'
-          value={createPin}
-          onChange={e => handle_createPinInputChange(e)}
-        />
-        <input type="submit" />
-      </form>
-    </div>
-  );
+        <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
+          <ul>
+            <li>Room 1</li>
+          </ul>
+      </div>
+    );
+  }
 }
 
-export default Home;
+const HomeUpdate = props => (
+  <ContextConsumer>
+    {({ userData, membersReady }) => (
+      <Home
+        // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
+        {...props}
+        userData={userData}
+        membersReady={membersReady}
+      />
+    )}
+  </ContextConsumer>
+);
+
+export default HomeUpdate;
