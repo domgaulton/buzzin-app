@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import { ContextConsumer } from "../context/ContextFirebaseProvider";
 import Home from './Home';
 import Login from './Login';
 
-function Index(props) {
+class Index extends Component {
 
-  const [isLoggedIn, set_isLoggedIn] = useState(false);
-
-  const handleLogUserIn = userData => {
-    console.log(userData);
-    set_isLoggedIn(true);
+  render(){
+    return this.props.userLoggedIn ? (
+      <Home/>
+    ) : (
+      <Login />
+    );
   }
-
-  return isLoggedIn ? (
-    <Home/>
-  ) : (
-    <Login logUserIn={(userData) => handleLogUserIn(userData)} />
-  );
-
 }
 
-export default Index;
+const IndexUpdate = props => (
+  <ContextConsumer>
+    {({ userLoggedIn }) => (
+      <Index
+        {...props}
+        userLoggedIn={userLoggedIn}
+      />
+    )}
+  </ContextConsumer>
+);
+
+export default IndexUpdate;

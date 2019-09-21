@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ContextConsumer } from "../context/ContextFirebaseProvider";
 import { firestore } from "../base";
-import '../styles/App.css';
 
 class Login extends Component {
   constructor(props) {
@@ -10,12 +9,6 @@ class Login extends Component {
       loginEmail: '',
       loginPin: '',
     };
-
-    this.handleLogin = this.handleLogin.bind(this);
-  }
-
-  compenentDidMount(){
-    console.log(this.props);
   }
 
   handleLoginEmailInputChange = e => {
@@ -32,24 +25,14 @@ class Login extends Component {
 
   handleLogin = e => {
     e.preventDefault();
-    console.log(this.state.loginEmail, this.state.loginPin);
     const users = firestore.collection("users");
     users.where("email", "==", this.state.loginEmail)
     .get()
     .then(data => {
-      console.log(data)
       if (!data.empty) {
         data.forEach(doc => {
           if (doc.data().pin ===  Number(this.state.loginPin)) {
-            console.log(doc.id);
-            // set_userData(doc.data());
-            // console.log(this.state.userData);
-            // this.setState({
-            //   userData: doc.data()
-            // })
             this.props.setUserData(doc.id);
-            this.props.logUserIn(this.state.loginEmail);
-            //props.history.push(`/user/${doc.id}`);
           } else {
             console.log('fail');
           }
@@ -57,7 +40,7 @@ class Login extends Component {
       }
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
+      console.log("Error getting documents: ", error);
     });
   }
 
@@ -90,9 +73,9 @@ class Login extends Component {
   }
 }
 
-const LoginUpdate = props => (
+const LoginUpdate = (props) => (
   <ContextConsumer>
-    {( setUserData ) => (
+    {({ setUserData }) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}

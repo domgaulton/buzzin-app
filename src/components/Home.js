@@ -14,10 +14,6 @@ class Home extends Component {
     };
   }
 
-  // const [roomName, set_roomName] = useState('');
-  // const [createRoomName, set_createRoomName] = useState('');
-  // const [createPin, set_createPin] = useState('');
-
   handleInputChange = e => {
     this.setState({
       roomName: e.currentTarget.value
@@ -26,7 +22,6 @@ class Home extends Component {
 
   handleRoomChecker = e => {
     e.preventDefault();
-    // console.log(roomName);
     const taverns = firestore.collection("taverns");
     taverns.where("name", "==", this.props.roomName)
     .get()
@@ -47,10 +42,6 @@ class Home extends Component {
   handleCreateRoom = e => {
     console.log('test')
     e.preventDefault();
-    // const data = {
-    //   name: createRoomName,
-    //   pin: createPin,
-    // }
 
     firestore.collection("taverns").add({
       name: this.state.createRoomName,
@@ -68,13 +59,9 @@ class Home extends Component {
     this.setState({
       createRoomName: e.currentTarget.value
     })
-    // set_createRoomName(e.currentTarget.value)
-    // console.log(createRoomName)
   }
 
   handle_createPinInputChange = e => {
-    // set_createPin(e.currentTarget.value)
-    // console.log(createPin)
     this.setState({
       createPin: e.currentTarget.value
     })
@@ -99,7 +86,9 @@ class Home extends Component {
           <input type="submit" />
         </form>
 
-        <h1>{this.props.userData.name} Rooms</h1>
+        <h1>{this.props.userData.name}'s Rooms</h1>
+
+        <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
           <ul>
             <li>Room 1</li>
           </ul>
@@ -110,7 +99,7 @@ class Home extends Component {
 
 const HomeUpdate = props => (
   <ContextConsumer>
-    {( userData, membersReady ) => (
+    {({ userData, membersReady }) => (
       <Home
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}

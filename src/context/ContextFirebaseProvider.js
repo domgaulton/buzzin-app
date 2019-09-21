@@ -9,7 +9,7 @@ class FirebaseProvider extends Component {
     super(props);
     this.state = {
       userData: {},
-      membersReady: false,
+      userLoggedIn: false,
       setUserData: (data) => this.handleSetUserData(data),
     };
   }
@@ -42,7 +42,6 @@ class FirebaseProvider extends Component {
 
   handleSetUserData = userId => {
     console.log(userId)
-
     firestore.collection("users").doc(userId)
     .onSnapshot({
       includeMetadataChanges: true
@@ -51,11 +50,10 @@ class FirebaseProvider extends Component {
       this.setState({
         userData
       })
+      this.setState({
+        userLoggedIn: true,
+      })
     });
-
-    // this.setState({
-    //   userData
-    // })
   }
 
 
