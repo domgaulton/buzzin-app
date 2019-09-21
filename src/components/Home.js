@@ -99,7 +99,7 @@ class Home extends Component {
           <input type="submit" />
         </form>
 
-        <h1>{this.props.userData} Rooms</h1>
+        <h1>{this.props.userData.name} Rooms</h1>
           <ul>
             <li>Room 1</li>
           </ul>
@@ -110,7 +110,7 @@ class Home extends Component {
 
 const HomeUpdate = props => (
   <ContextConsumer>
-    {({ userData, membersReady }) => (
+    {( userData, membersReady ) => (
       <Home
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}

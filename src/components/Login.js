@@ -9,13 +9,14 @@ class Login extends Component {
     this.state = {
       loginEmail: '',
       loginPin: '',
-      userData: {},
     };
+
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  // const [loginEmail, set_loginEmail] = useState('');
-  // const [loginPin, set_loginPin] = useState('');
-  // const [userData, set_userData] = useState({});
+  compenentDidMount(){
+    console.log(this.props);
+  }
 
   handleLoginEmailInputChange = e => {
     this.setState({
@@ -39,11 +40,14 @@ class Login extends Component {
       console.log(data)
       if (!data.empty) {
         data.forEach(doc => {
-          if (Number(doc.data().pin) === this.state.loginPin) {
-            console.log(doc.data());
+          if (doc.data().pin ===  Number(this.state.loginPin)) {
+            console.log(doc.id);
             // set_userData(doc.data());
-            console.log(this.state.userData);
-            this.props.setUserData(doc.data())
+            // console.log(this.state.userData);
+            // this.setState({
+            //   userData: doc.data()
+            // })
+            this.props.setUserData(doc.id);
             this.props.logUserIn(this.state.loginEmail);
             //props.history.push(`/user/${doc.id}`);
           } else {
