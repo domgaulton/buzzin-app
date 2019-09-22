@@ -36,10 +36,11 @@ class TavernRoom extends Component {
           .onSnapshot({
             includeMetadataChanges: true
           },doc => {
+            const memberObj = doc.data()
             console.log(doc.data())
-            this.setState({
-              members: [...prevState.members, doc.data()]
-            })
+            this.setState(prevState => ({
+              members: [...prevState.members, memberObj]
+            }))
           })
       })
     }
@@ -56,17 +57,15 @@ class TavernRoom extends Component {
 
   handleUserReady = e => {
     console.log('spread existing user data!');
-    // firestore.collection("users").doc(this.props.userId).set({
-    //   // TO DO! {...doc.data()}
-    //   isReady: true,
-    //   }
-    // })
-    // .then(function(docRef) {
-    //     console.log("Document written with ID: ", docRef.id);
-    // })
-    // .catch(function(error) {
-    //     console.error("Error adding document: ", error);
-    // });
+    firestore.collection("users").doc(this.props.userId).update({
+      isReady: true
+    })
+    .then(function(docRef) {
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
   }
 
   createMembersList = array => {
