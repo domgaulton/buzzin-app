@@ -45,14 +45,18 @@ class FirebaseProvider extends Component {
   }
 
   handleSetUserData = userId => {
-    console.log(userId)
+    // console.log(userId)
     firestore.collection("users").doc(userId)
     .onSnapshot({
       includeMetadataChanges: true
     },(doc) => {
+      const userId = doc.id
       const userData = doc.data();
       this.setState({
-        userData
+        userData,
+      })
+      this.setState({
+        userId,
       })
       this.setState({
         userLoggedIn: true,

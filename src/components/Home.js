@@ -20,21 +20,21 @@ class Home extends Component {
     if (this.props.userData && this.props.userData.taverns){
       const taverns = this.props.userData.taverns;
       taverns.forEach(item => {
-      firestore.collection("taverns").doc(item)
-        .onSnapshot({
-          includeMetadataChanges: true
-        },(doc) => {
-          const id = doc.id;
-          const name = doc.data().name;
-          const tavernObj = {
-            id,
-            name,
-          }
-          this.setState(prevState => ({
-            taverns: [...prevState.taverns, tavernObj]
-          }))
-        });
-      })
+        firestore.collection("taverns").doc(item)
+          .onSnapshot({
+            includeMetadataChanges: true
+          },(doc) => {
+            const id = doc.id;
+            const name = doc.data().name;
+            const tavernObj = {
+              id,
+              name,
+            }
+            this.setState(prevState => ({
+              taverns: [...prevState.taverns, tavernObj]
+            }))
+          });
+        })
     }
 
 
@@ -98,7 +98,7 @@ class Home extends Component {
         {array.map(item => {
           return(
             <Link key={item.id}  to={`/tavern/${item.id}`}>
-              <li >{item.name}</li>
+              <li>{item.name}</li>
             </Link>
           );
         })}
