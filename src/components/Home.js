@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ContextConsumer } from "../context/ContextFirebaseProvider";
-import { BrowserRouter as Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { firestore } from "../base";
 import '../styles/App.css';
 
@@ -17,31 +17,24 @@ class Home extends Component {
   }
 
   componentDidMount(){
-    console.log(this.props.userData)
-
     if (this.props.userData && this.props.userData.taverns){
-
-      // let tavernsTemp = [];
       const taverns = this.props.userData.taverns;
-      console.log(taverns);
       taverns.forEach(item => {
-        console.log(item)
       firestore.collection("taverns").doc(item)
         .onSnapshot({
           includeMetadataChanges: true
         },(doc) => {
-          const tavernName = doc.data().name;
-          // tavernsTemp.push(tavernName)
-          console.log(doc.data())
+          const id = doc.id;
+          const name = doc.data().name;
+          const tavernObj = {
+            id,
+            name,
+          }
           this.setState(prevState => ({
-            taverns: [...prevState.taverns, tavernName]
+            taverns: [...prevState.taverns, tavernObj]
           }))
         });
       })
-      // console.log(tavernsTemp);
-      // this.setState({
-      //   taverns: tavernsTemp,
-      // })
     }
 
 
@@ -73,7 +66,6 @@ class Home extends Component {
   }
 
   handleCreateRoom = e => {
-    console.log('test')
     e.preventDefault();
 
     firestore.collection("taverns").add({
@@ -101,19 +93,19 @@ class Home extends Component {
   }
 
   createRoomList = array => {
-    console.log(array)
     return (
       <ul className="test">
-        {array.map(function(name, index){
+        {array.map(item => {
           return(
-            <Link key={index}  to="/about">
-              <li >{name}</li>
+            <Link key={item.id}  to={`/tavern/${item.id}`}>
+              <li >{item.name}</li>
             </Link>
           );
         })}
       </ul>
     );
   }
+
   render(){
     return (
       <div className="App">
@@ -137,7 +129,7 @@ class Home extends Component {
         <h1>{this.props.userData.name}'s Rooms</h1>
 
         <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
-        {this.createRoomList(this.state.taverns)}
+          {this.createRoomList(this.state.taverns)}
       </div>
     );
   }
