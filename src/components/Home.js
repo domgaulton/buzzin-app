@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ContextConsumer } from "../context/ContextFirebaseProvider";
+import { Link } from "react-router-dom";
 import { firestore } from "../base";
 import '../styles/App.css';
 
@@ -11,7 +12,32 @@ class Home extends Component {
       roomName: '',
       createRoomName: false,
       createPin: '',
+      taverns: []
     };
+  }
+
+  componentDidMount(){
+    if (this.props.userData && this.props.userData.taverns){
+      const taverns = this.props.userData.taverns;
+      taverns.forEach(item => {
+      firestore.collection("taverns").doc(item)
+        .onSnapshot({
+          includeMetadataChanges: true
+        },(doc) => {
+          const id = doc.id;
+          const name = doc.data().name;
+          const tavernObj = {
+            id,
+            name,
+          }
+          this.setState(prevState => ({
+            taverns: [...prevState.taverns, tavernObj]
+          }))
+        });
+      })
+    }
+
+
   }
 
   handleInputChange = e => {
@@ -40,7 +66,6 @@ class Home extends Component {
   }
 
   handleCreateRoom = e => {
-    console.log('test')
     e.preventDefault();
 
     firestore.collection("taverns").add({
@@ -66,6 +91,21 @@ class Home extends Component {
       createPin: e.currentTarget.value
     })
   }
+
+  createRoomList = array => {
+    return (
+      <ul className="test">
+        {array.map(item => {
+          return(
+            <Link key={item.id}  to={`/tavern/${item.id}`}>
+              <li >{item.name}</li>
+            </Link>
+          );
+        })}
+      </ul>
+    );
+  }
+
   render(){
     return (
       <div className="App">
@@ -89,9 +129,7 @@ class Home extends Component {
         <h1>{this.props.userData.name}'s Rooms</h1>
 
         <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
-          <ul>
-            <li>Room 1</li>
-          </ul>
+          {this.createRoomList(this.state.taverns)}
       </div>
     );
   }

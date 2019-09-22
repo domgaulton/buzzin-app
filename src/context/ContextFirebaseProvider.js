@@ -15,6 +15,10 @@ class FirebaseProvider extends Component {
   }
 
   componentDidMount(){
+
+    if ( localStorage.getItem("buzzinApp") ) {
+      this.handleSetUserData(localStorage.getItem("buzzinApp"))
+    }
     // firestore.collection("users").doc('0JcPK6LmtSMsvxYeWpqB')
     // .onSnapshot({
     //   includeMetadataChanges: true
@@ -53,6 +57,7 @@ class FirebaseProvider extends Component {
       this.setState({
         userLoggedIn: true,
       })
+      localStorage.setItem("buzzinApp", userId);
     });
   }
 
