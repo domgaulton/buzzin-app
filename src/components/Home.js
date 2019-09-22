@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ContextConsumer } from "../context/ContextFirebaseProvider";
+import { BrowserRouter as Link } from "react-router-dom";
 import { firestore } from "../base";
 import '../styles/App.css';
 
@@ -11,7 +12,39 @@ class Home extends Component {
       roomName: '',
       createRoomName: false,
       createPin: '',
+      taverns: []
     };
+  }
+
+  componentDidMount(){
+    console.log(this.props.userData)
+
+    if (this.props.userData && this.props.userData.taverns){
+
+      // let tavernsTemp = [];
+      const taverns = this.props.userData.taverns;
+      console.log(taverns);
+      taverns.forEach(item => {
+        console.log(item)
+      firestore.collection("taverns").doc(item)
+        .onSnapshot({
+          includeMetadataChanges: true
+        },(doc) => {
+          const tavernName = doc.data().name;
+          // tavernsTemp.push(tavernName)
+          console.log(doc.data())
+          this.setState(prevState => ({
+            taverns: [...prevState.taverns, tavernName]
+          }))
+        });
+      })
+      // console.log(tavernsTemp);
+      // this.setState({
+      //   taverns: tavernsTemp,
+      // })
+    }
+
+
   }
 
   handleInputChange = e => {
@@ -66,6 +99,21 @@ class Home extends Component {
       createPin: e.currentTarget.value
     })
   }
+
+  createRoomList = array => {
+    console.log(array)
+    return (
+      <ul className="test">
+        {array.map(function(name, index){
+          return(
+            <Link key={index}  to="/about">
+              <li >{name}</li>
+            </Link>
+          );
+        })}
+      </ul>
+    );
+  }
   render(){
     return (
       <div className="App">
@@ -89,9 +137,7 @@ class Home extends Component {
         <h1>{this.props.userData.name}'s Rooms</h1>
 
         <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
-          <ul>
-            <li>Room 1</li>
-          </ul>
+        {this.createRoomList(this.state.taverns)}
       </div>
     );
   }

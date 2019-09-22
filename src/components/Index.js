@@ -7,7 +7,7 @@ class Index extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <Home/>
+      <Home />
     ) : (
       <Login />
     );
