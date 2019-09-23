@@ -10,9 +10,9 @@ class FirebaseTavernProvider extends Component {
     this.state = {
       tavernId: '',
       tavernData: {},
-      tavernMemberData: {},
+      tavernMemberData: [],
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
-      setTavernMemberData: () => this.handleSetTavernMemberData(),
+      setMemberData: (tavernId) => this.handleSetMemberData(tavernId),
       setTavernData: (data) => this.handleSetTavernData(data),
     };
   }
@@ -77,26 +77,35 @@ class FirebaseTavernProvider extends Component {
   //   consofirestore.collection("taverns").doc(this.state.tavernId).where('member.id','==',userId);
   // }
 
-  // handleSetTavernMemberData = () => {
-  //   console.log('setTavernMembers')
-  //   // firestore.collection("taverns").doc(tavernId).collection('members')
-  //   // .get()
-  //   // .then(data => {
-  //   //   if (!data.empty) {
-  //   //     data.forEach(doc => {
-  //   //       console.log(doc.data())
-  //   //     });
-  //   //   }
-  //   // })
-  //   // .catch(function(error) {
-  //   //   console.log("Error getting documents: ", error);
-  //   // });
-  //   firestore.collection("taverns").doc(this.state.tavernId).collection("members").onSnapshot({
-  //     includeMetadataChanges: true
-  //   },(doc) => {
-  //     console.log(doc)
-  //   });
-  // }
+  handleSetMemberData = tavernId => {
+    console.log('setTavernMembers')
+    // firestore.collection("taverns").doc(tavernId).collection('members')
+    // .get()
+    // .then(data => {
+    //   if (!data.empty) {
+    //     data.forEach(doc => {
+    //       console.log(doc.data())
+    //     });
+    //   }
+    // })
+    // .catch(function(error) {
+    //   console.log("Error getting documents: ", error);
+    // });
+    firestore.collection("taverns").doc(tavernId).collection("members")
+    .get()
+    .then(data => {
+      if (!data.empty) {
+        data.forEach(doc => {
+          this.setState(prevState => ({
+            tavernMemberData: [...prevState.tavernMemberData, doc.data() ]
+          }))
+        });
+      }
+    })
+    .catch(function(error) {
+      console.log("Error getting documents: ", error);
+    });
+  }
 
   // handleSetTavernMemberData = (tavernId, userId, bool) => {
   //   console.log('setTavernMembers', tavernId, userId, bool)

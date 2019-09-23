@@ -20,6 +20,8 @@ class TavernRoom extends Component {
   // https://firebase.google.com/docs/firestore/query-data/listen
 
     this.props.setTavernData(this.props.tavernId);
+
+    this.props.setMemberData(this.props.tavernId);
     // this.props.setTavernMemberData();
     // firestore.collection("taverns").doc(this.props.tavernId)
     //   .onSnapshot({
@@ -108,14 +110,15 @@ class TavernRoom extends Component {
 
 
   createMembersList = () => {
+    console.log(this.props.tavernMemberData)
     console.log(this.props.tavernData);
     if (this.props.tavernData && this.props.tavernData.members){
       console.log('members')
       return (
         <ul className="test">
-          {this.props.tavernData.members.map(item => {
+          {this.props.tavernMemberData.map(item => {
             return (
-              <li key={item.id}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
+              <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
             )
           })}
         </ul>
@@ -146,15 +149,16 @@ const TavernRoomUpdate = props => (
   <ContextUserConsumer>
     {({ userId, userData }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, setUserReady }) => (
+        {({ tavernData, setTavernData, setMemberData, setUserReady, tavernMemberData }) => (
           <TavernRoom
             {...props}
             userId={userId}
             userData={userData}
             setUserReady={setUserReady}
             tavernData={tavernData}
-            // setTavernMemberData={setTavernMemberData}
+            setMemberData={setMemberData}
             setTavernData={setTavernData}
+            tavernMemberData={tavernMemberData}
           />
         )}
       </ContextTavernConsumer>
