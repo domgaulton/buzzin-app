@@ -18,13 +18,13 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleSetUserReady = (userId, bool) => {
-    var washingtonRef = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId);
-    // Set the "capital" field of the city 'DC'
-    return washingtonRef.update({
+    const userData = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId);
+    const testData = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId).get().then(doc => {return doc.data().isReady});
+    console.log(testData);
+    return userData.update({
         isReady: bool
     })
     .then(() => {
-        console.log("Document successfully updated!!!!!!!! set member data");
         this.handleSetMemberData(this.state.tavernId);
     })
     .catch(function(error) {
@@ -33,7 +33,6 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleSetTavernData = tavernId => {
-    console.log('set tavern Data')
     firestore.collection("taverns").doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true
@@ -50,7 +49,6 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleSetMemberData = tavernId => {
-    console.log('set member Data')
     firestore.collection("taverns").doc(tavernId).collection("members")
     .get()
       .then(querySnapshot => {

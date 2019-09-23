@@ -11,7 +11,6 @@ class FirebaseUserProvider extends Component {
       userId: '',
       userData: {},
       userLoggedIn: false,
-      //setUserReady: (bool) => this.handleSetUserReady(bool),
       setUserData: (data) => this.handleSetUserData(data),
     };
   }
@@ -22,41 +21,7 @@ class FirebaseUserProvider extends Component {
     }
   }
 
-  // handleSetUserReady = (tavernId, bool) => {
-  //   firestore.collection("taverns").doc(tavernId).collection('members').where('members', '==', this.state.userId).update({
-  //     isReady: bool
-  //   })
-  //   .then(function(docRef) {
-  //       console.log("Document written with ID: ", docRef.id);
-  //   })
-  //   .catch(function(error) {
-  //       console.error("Error adding document: ", error);
-  //   });
-
-  //   // firestore.collection("taverns").where("members", "array-contains", this.state.userId).update({
-  //   //   isReady: bool
-  //   // })
-  //   // .then(function(docRef) {
-  //   //     console.log("Document written with ID: ", docRef.id);
-  //   // })
-  //   // .catch(function(error) {
-  //   //     console.error("Error adding document: ", error);
-  //   // });
-
-
-  //   // firestore.collection("users").doc(this.state.userId).update({
-  //   //   isReady: bool
-  //   // })
-  //   // .then(function(docRef) {
-  //   //     console.log("Document written with ID: ", docRef.id);
-  //   // })
-  //   // .catch(function(error) {
-  //   //     console.error("Error adding document: ", error);
-  //   // });
-  // }
-
   handleSetUserData = userId => {
-    // console.log(userId)
     firestore.collection("users").doc(userId)
     .onSnapshot({
       includeMetadataChanges: true
