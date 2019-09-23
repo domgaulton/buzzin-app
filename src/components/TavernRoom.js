@@ -28,24 +28,62 @@ class TavernRoom extends Component {
     });
   }
 
+  // createMembersList = array => {
+  //   return (
+  //     <ul className="test">
+  //       {array.map(item => {
+  //         firestore.collection("users").doc(item)
+  //         .onSnapshot({
+  //           includeMetadataChanges: true
+  //         },doc => {
+  //           console.log(doc.data());
+  //           return(
+  //             <li key={doc.data().name}>{doc.data().name}, is {doc.data().isReady ? 'ready' : 'not ready'}</li>
+  //           );
+  //         })
+  //       })}
+  //     </ul>
+  //   );
+  // }
+
   componentDidUpdate(prevProps, prevState) {
     if (this.state.membersList !== prevState.membersList ){
-      this.state.membersList.forEach(item => {
-        console.log(item);
+      // console.log('members list changed');
+      // let tempMembersList = []
+      this.state.membersList.map(item => {
+        // console.log(item);
         firestore.collection("users").doc(item)
           .onSnapshot({
             includeMetadataChanges: true
           },doc => {
-            const memberObj = doc.data()
-            console.log(doc.data())
+            // const memberObj = doc.data();
+            // tempMembersList.push(memberObj)
+            // console.log(doc.data())
             this.setState(prevState => ({
-              members: [...prevState.members, memberObj]
+              members: [...prevState.members, doc.data() ]
             }))
           })
       })
+      // this.state.membersList.forEach(item => {
+      //   const users = firestore.collection("users");
+      //   users.where("id", "==", item)
+      //   .get()
+      //   .then(data => {
+      //     console.log(data)
+      //     // if (!data.empty) {
+      //     //   data.forEach(doc => {
+      //     //     console.log(doc)
+      //     //   });
+      //     // }
+      //   })
+      //   .catch(function(error) {
+      //     console.log("Error getting documents: ", error);
+      //   });
+      // })
     }
 
     if (this.state.members !== prevState.members) {
+      console.log('members changed');
       const membersReady = this.state.members.every(item => {
         return item.isReady === true;
       })
@@ -56,7 +94,6 @@ class TavernRoom extends Component {
   }
 
   handleUserReady = e => {
-    console.log('spread existing user data!');
     firestore.collection("users").doc(this.props.userId).update({
       isReady: true
     })
@@ -67,6 +104,19 @@ class TavernRoom extends Component {
         console.error("Error adding document: ", error);
     });
   }
+
+  handleUserNotReady = e => {
+    firestore.collection("users").doc(this.props.userId).update({
+      isReady: false
+    })
+    .then(function(docRef) {
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+  }
+
 
   createMembersList = array => {
     return (
@@ -84,8 +134,12 @@ class TavernRoom extends Component {
     return (
       <div>
         <h1>{this.props.tavernName}</h1>
+        <p>Welcome {this.props.userData.name}</p>
         <button onClick={this.handleUserReady}>
           I'm Ready!
+        </button>
+        <button onClick={this.handleUserNotReady}>
+          I'm not Ready!
         </button>
         <p>Time limit: {this.props.countdown}</p>
         <p>Members are {this.state.membersReady ? '' : 'not'} ready!</p>
@@ -97,10 +151,11 @@ class TavernRoom extends Component {
 
 const TavernRoomUpdate = props => (
   <ContextConsumer>
-    {({ userId }) => (
+    {({ userId, userData }) => (
       <TavernRoom
         {...props}
         userId={userId}
+        userData={userData}
       />
     )}
   </ContextConsumer>
