@@ -10,7 +10,7 @@ class FirebaseTavernProvider extends Component {
     this.state = {
       tavernId: '',
       tavernData: {},
-      tavernMemberData: [],
+      memberData: [],
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setMemberData: (tavernId) => this.handleSetMemberData(tavernId),
       setTavernData: (data) => this.handleSetTavernData(data),
@@ -19,8 +19,8 @@ class FirebaseTavernProvider extends Component {
 
   handleSetUserReady = (userId, bool) => {
     const userData = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId);
-    const testData = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId).get().then(doc => {return doc.data().isReady});
-    console.log(testData);
+    // const testData = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId).get().then(doc => {return doc.data().isReady});
+    // console.log(testData);
     return userData.update({
         isReady: bool
     })
@@ -53,7 +53,7 @@ class FirebaseTavernProvider extends Component {
     .get()
       .then(querySnapshot => {
         const data = querySnapshot.docs.map(doc => doc.data());
-        this.setState({ tavernMemberData: data });
+        this.setState({ memberData: data });
       });
   }
 

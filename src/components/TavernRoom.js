@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
-// import { firestore } from "../base";
-// import TavernUser from './TavernUser';
 
 class TavernRoom extends Component {
   constructor(props) {
@@ -17,17 +15,11 @@ class TavernRoom extends Component {
     this.props.setTavernData(this.props.tavernId);
     this.props.setMemberData(this.props.tavernId);
 
-    // firestore.collection("taverns").doc(this.props.tavernId).collection("members")
-    // .get()
-    // .then(querySnapshot => {
-    //   const data = querySnapshot.docs.map(doc => doc.data());
-    //   this.setState({ members: data });
-    // });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.tavernMemberData !== prevProps.tavernMemberData) {
-      const membersReady = this.props.tavernMemberData.every(item => {
+    if (this.props.memberData !== prevProps.memberData) {
+      const membersReady = this.props.memberData.every(item => {
         return item.isReady === true;
       })
       this.setState({
@@ -48,7 +40,7 @@ class TavernRoom extends Component {
   createMembersList = () => {
     return (
       <ul className="test">
-        {this.props.tavernMemberData.map(item => {
+        {this.props.memberData.map(item => {
           return (
             <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
           )
@@ -80,16 +72,16 @@ const TavernRoomUpdate = props => (
   <ContextUserConsumer>
     {({ userId, userData }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, setMemberData, setUserReady, tavernMemberData }) => (
+        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady }) => (
           <TavernRoom
             {...props}
             userId={userId}
             userData={userData}
-            setUserReady={setUserReady}
             tavernData={tavernData}
-            setMemberData={setMemberData}
             setTavernData={setTavernData}
-            tavernMemberData={tavernMemberData}
+            memberData={memberData}
+            setMemberData={setMemberData}
+            setUserReady={setUserReady}
           />
         )}
       </ContextTavernConsumer>
