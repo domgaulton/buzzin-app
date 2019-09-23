@@ -7,6 +7,7 @@ class TavernRoom extends Component {
     super(props);
     this.state = {
       tavernName: '',
+      adminUser: false,
       membersReady: false,
     };
   }
@@ -15,6 +16,7 @@ class TavernRoom extends Component {
     this.props.setTavernData(this.props.tavernId);
     this.props.setMemberData(this.props.tavernId);
 
+    this.checkAdmin(this.props.userId, this.props.tavernData.admin);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,11 +51,20 @@ class TavernRoom extends Component {
     );
   }
 
+  checkAdmin = () => {
+    if (this.props.userId === this.props.tavernData.admin) {
+      return true;
+    }
+  }
+
   render(){
     return (
       <div>
         <h1>{this.props.tavernData.name}</h1>
-        <p>Welcome {this.props.userData.name}</p>
+        <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
+        {this.checkAdmin() && (
+          <button disabled={!this.state.membersReady}>Start timer!</button>
+        )}
         <button onClick={() => this.handleUserReady()}>
           I'm Ready!
         </button>
