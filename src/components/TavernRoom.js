@@ -9,89 +9,25 @@ class TavernRoom extends Component {
     super(props);
     this.state = {
       tavernName: '',
-      membersList: [],
-      members: [],
       membersReady: false,
     };
   }
 
-  // TO DO - HOW DO WE GET THE EFFING MEMBERS!?
   componentDidMount(){
-  // https://firebase.google.com/docs/firestore/query-data/listen
-
     this.props.setTavernData(this.props.tavernId);
-
     this.props.setMemberData(this.props.tavernId);
-    // this.props.setTavernMemberData();
-    // firestore.collection("taverns").doc(this.props.tavernId)
-    //   .onSnapshot({
-    //     // Listen for document metadata changes
-    //     includeMetadataChanges: true
-    //   },(doc) => {
-    //     const membersList = doc.data().members;
-    //     this.setState({
-    //       membersList
-    //     })
+
+    // firestore.collection("taverns").doc(this.props.tavernId).collection("members")
+    // .get()
+    // .then(querySnapshot => {
+    //   const data = querySnapshot.docs.map(doc => doc.data());
+    //   this.setState({ members: data });
     // });
   }
 
-  // createMembersList = array => {
-  //   return (
-  //     <ul className="test">
-  //       {array.map(item => {
-  //         firestore.collection("users").doc(item)
-  //         .onSnapshot({
-  //           includeMetadataChanges: true
-  //         },doc => {
-  //           console.log(doc.data());
-  //           return(
-  //             <li key={doc.data().name}>{doc.data().name}, is {doc.data().isReady ? 'ready' : 'not ready'}</li>
-  //           );
-  //         })
-  //       })}
-  //     </ul>
-  //   );
-  // }
-
   componentDidUpdate(prevProps, prevState) {
-    // if (this.props.tavernData.members !== prevState.tavernData.members ){
-    //   // console.log('members list changed');
-    //   // let tempMembersList = []
-    //   this.props.tavernData.members.map(item => {
-    //     // console.log(item);
-    //     firestore.collection("users").doc(item)
-    //       .onSnapshot({
-    //         includeMetadataChanges: true
-    //       },doc => {
-    //         // const memberObj = doc.data();
-    //         // tempMembersList.push(memberObj)
-    //         // console.log(doc.data())
-    //         this.setState(prevState => ({
-    //           members: [...prevState.members, doc.data() ]
-    //         }))
-    //       })
-    //   })
-    //   // this.state.membersList.forEach(item => {
-    //   //   const users = firestore.collection("users");
-    //   //   users.where("id", "==", item)
-    //   //   .get()
-    //   //   .then(data => {
-    //   //     console.log(data)
-    //   //     // if (!data.empty) {
-    //   //     //   data.forEach(doc => {
-    //   //     //     console.log(doc)
-    //   //     //   });
-    //   //     // }
-    //   //   })
-    //   //   .catch(function(error) {
-    //   //     console.log("Error getting documents: ", error);
-    //   //   });
-    //   // })
-    // }
-
-    if (this.state.members !== prevState.members) {
-      console.log('members changed');
-      const membersReady = this.state.members.every(item => {
+    if (this.props.tavernMemberData !== prevProps.tavernMemberData) {
+      const membersReady = this.props.tavernMemberData.every(item => {
         return item.isReady === true;
       })
       this.setState({
@@ -101,29 +37,24 @@ class TavernRoom extends Component {
   }
 
   handleUserReady = e => {
-    this.props.setUserReady(this.props.tavernId, this.props.userId, true)
+    this.props.setUserReady(this.props.userId, true)
   }
 
   handleUserNotReady = e => {
-    this.props.setUserReady(this.props.tavernId, this.props.userId, false)
+    this.props.setUserReady(this.props.userId, false)
   }
 
 
   createMembersList = () => {
-    console.log(this.props.tavernMemberData)
-    console.log(this.props.tavernData);
-    if (this.props.tavernData && this.props.tavernData.members){
-      console.log('members')
-      return (
-        <ul className="test">
-          {this.props.tavernMemberData.map(item => {
-            return (
-              <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
-            )
-          })}
-        </ul>
-      );
-    }
+    return (
+      <ul className="test">
+        {this.props.tavernMemberData.map(item => {
+          return (
+            <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
+          )
+        })}
+      </ul>
+    );
   }
 
   render(){

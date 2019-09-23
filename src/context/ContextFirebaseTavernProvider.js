@@ -18,39 +18,22 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleSetUserReady = (userId, bool) => {
-    firestore.collection("taverns").doc(this.state.tavernId).doc('member.id','==',userId).update({
-      isReady: bool
+    var washingtonRef = firestore.collection("taverns").doc(this.state.tavernId).collection('members').doc(userId);
+    // Set the "capital" field of the city 'DC'
+    return washingtonRef.update({
+        isReady: bool
     })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
+    .then(() => {
+        console.log("Document successfully updated!!!!!!!! set member data");
+        this.handleSetMemberData(this.state.tavernId);
     })
     .catch(function(error) {
-        console.error("Error adding document: ", error);
+        console.error("Error updating document: ", error);
     });
-
-    // firestore.collection("taverns").where("members", "array-contains", this.state.userId).update({
-    //   isReady: bool
-    // })
-    // .then(function(docRef) {
-    //     console.log("Document written with ID: ", docRef.id);
-    // })
-    // .catch(function(error) {
-    //     console.error("Error adding document: ", error);
-    // });
-
-
-    // firestore.collection("users").doc(this.state.userId).update({
-    //   isReady: bool
-    // })
-    // .then(function(docRef) {
-    //     console.log("Document written with ID: ", docRef.id);
-    // })
-    // .catch(function(error) {
-    //     console.error("Error adding document: ", error);
-    // });
   }
 
   handleSetTavernData = tavernId => {
+    console.log('set tavern Data')
     firestore.collection("taverns").doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true
@@ -66,68 +49,15 @@ class FirebaseTavernProvider extends Component {
 
   }
 
-  // setUserReady = (userId, bool) => {
-  //   // console.log('setUserReady', userId, bool)
-  //   // firestore.collection("taverns").doc(this.state.tavernId).collection("members").doc(userId).onSnapshot({
-  //   //   includeMetadataChanges: true
-  //   // },(doc) => {
-  //   //   console.log(doc)
-  //   // });
-
-  //   consofirestore.collection("taverns").doc(this.state.tavernId).where('member.id','==',userId);
-  // }
-
   handleSetMemberData = tavernId => {
-    console.log('setTavernMembers')
-    // firestore.collection("taverns").doc(tavernId).collection('members')
-    // .get()
-    // .then(data => {
-    //   if (!data.empty) {
-    //     data.forEach(doc => {
-    //       console.log(doc.data())
-    //     });
-    //   }
-    // })
-    // .catch(function(error) {
-    //   console.log("Error getting documents: ", error);
-    // });
+    console.log('set member Data')
     firestore.collection("taverns").doc(tavernId).collection("members")
     .get()
-    .then(data => {
-      if (!data.empty) {
-        data.forEach(doc => {
-          this.setState(prevState => ({
-            tavernMemberData: [...prevState.tavernMemberData, doc.data() ]
-          }))
-        });
-      }
-    })
-    .catch(function(error) {
-      console.log("Error getting documents: ", error);
-    });
+      .then(querySnapshot => {
+        const data = querySnapshot.docs.map(doc => doc.data());
+        this.setState({ tavernMemberData: data });
+      });
   }
-
-  // handleSetTavernMemberData = (tavernId, userId, bool) => {
-  //   console.log('setTavernMembers', tavernId, userId, bool)
-  //   // firestore.collection("taverns").doc(tavernId).collection('members')
-  //   // .get()
-  //   // .then(data => {
-  //   //   if (!data.empty) {
-  //   //     data.forEach(doc => {
-  //   //       console.log(doc.data())
-  //   //     });
-  //   //   }
-  //   // })
-  //   // .catch(function(error) {
-  //   //   console.log("Error getting documents: ", error);
-  //   // });
-  //   firestore.collection("taverns").doc(tavernId).collection("members").doc(userId).onSnapshot({
-  //     includeMetadataChanges: true
-  //   },(doc) => {
-  //     console.log(doc)
-  //   });
-  // }
-
 
   render(){
     return (
