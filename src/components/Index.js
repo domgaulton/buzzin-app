@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ContextConsumer } from "../context/ContextFirebaseProvider";
+import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import Home from './Home';
 import Login from './Login';
 
@@ -15,14 +15,14 @@ class Index extends Component {
 }
 
 const IndexUpdate = props => (
-  <ContextConsumer>
+  <ContextUserConsumer>
     {({ userLoggedIn }) => (
       <Index
         {...props}
         userLoggedIn={userLoggedIn}
       />
     )}
-  </ContextConsumer>
+  </ContextUserConsumer>
 );
 
 export default IndexUpdate;

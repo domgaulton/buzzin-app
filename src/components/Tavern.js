@@ -4,7 +4,7 @@ import TavernRoom from './TavernRoom';
 
 function Tavern(props) {
 
-  const [pinCorrect, set_pinCorrect] = useState(false);
+  const [pinCorrect, set_pinCorrect] = useState(true);
 
   const handlePinCorrect = () => {
     set_pinCorrect(true);

@@ -1,46 +1,92 @@
-import React, { useState } from 'react';
-import { firestore } from "../base";
+import React, { Component } from 'react';
+import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
+import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
 
-function TavernRoom(props) {
+class TavernRoom extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tavernName: '',
+      membersReady: false,
+    };
+  }
 
-  const [tavernName, setTavernName] = useState('');
-  const [countdown, setCountdown] = useState(undefined);
-  const [membersReady, setMembersReady] = useState(false);
+  componentDidMount(){
+    this.props.setTavernData(this.props.tavernId);
+    this.props.setMemberData(this.props.tavernId);
 
-  // TO DO - HOW DO WE GET THE EFFING MEMBERS!?
-  // const [memberSet, setMembers] = useState([]);
+  }
 
-  // https://firebase.google.com/docs/firestore/query-data/listen
-  firestore.collection("taverns").doc(props.tavernId)
-    .onSnapshot({
-      // Listen for document metadata changes
-      includeMetadataChanges: true
-    }, function(doc) {
-      // const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-      // console.log(source, " data: ", doc.data());
-
-      const tavernName = doc.data().name;
-      setTavernName(tavernName);
-
-      const members = doc.data().members;
-      // console.log(members)
-
-      const membersReady = members.every(item => {
-        return item.ready === true;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.memberData !== prevProps.memberData) {
+      const membersReady = this.props.memberData.every(item => {
+        return item.isReady === true;
       })
-      setMembersReady(membersReady);
+      this.setState({
+        membersReady
+      })
+    }
+  }
 
-      const countdown = doc.data().options.countdown;
-      setCountdown(countdown)
-  });
+  handleUserReady = e => {
+    this.props.setUserReady(this.props.userId, true)
+  }
 
-  return (
-    <div>
-      <h1>{tavernName}</h1>
-      <p>Time limit: {countdown}</p>
-      <p>Members are {!membersReady ? 'not' : ''} ready!</p>
-    </div>
-  );
+  handleUserNotReady = e => {
+    this.props.setUserReady(this.props.userId, false)
+  }
+
+
+  createMembersList = () => {
+    return (
+      <ul className="test">
+        {this.props.memberData.map(item => {
+          return (
+            <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
+          )
+        })}
+      </ul>
+    );
+  }
+
+  render(){
+    return (
+      <div>
+        <h1>{this.props.tavernData.name}</h1>
+        <p>Welcome {this.props.userData.name}</p>
+        <button onClick={() => this.handleUserReady()}>
+          I'm Ready!
+        </button>
+        <button onClick={() => this.handleUserNotReady()}>
+          I'm not Ready!
+        </button>
+        <p>Time limit: {this.props.countdown}</p>
+        <p>Members are {this.state.membersReady ? '' : 'not'} ready!</p>
+        {this.createMembersList()}
+      </div>
+    );
+  };
 }
 
-export default TavernRoom;
+const TavernRoomUpdate = props => (
+  <ContextUserConsumer>
+    {({ userId, userData }) => (
+      <ContextTavernConsumer>
+        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady }) => (
+          <TavernRoom
+            {...props}
+            userId={userId}
+            userData={userData}
+            tavernData={tavernData}
+            setTavernData={setTavernData}
+            memberData={memberData}
+            setMemberData={setMemberData}
+            setUserReady={setUserReady}
+          />
+        )}
+      </ContextTavernConsumer>
+    )}
+  </ContextUserConsumer>
+);
+
+export default TavernRoomUpdate;

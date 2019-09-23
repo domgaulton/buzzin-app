@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ContextConsumer } from "../context/ContextFirebaseProvider";
+import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import { Link } from "react-router-dom";
 import { firestore } from "../base";
 import '../styles/App.css';
@@ -20,21 +20,21 @@ class Home extends Component {
     if (this.props.userData && this.props.userData.taverns){
       const taverns = this.props.userData.taverns;
       taverns.forEach(item => {
-      firestore.collection("taverns").doc(item)
-        .onSnapshot({
-          includeMetadataChanges: true
-        },(doc) => {
-          const id = doc.id;
-          const name = doc.data().name;
-          const tavernObj = {
-            id,
-            name,
-          }
-          this.setState(prevState => ({
-            taverns: [...prevState.taverns, tavernObj]
-          }))
-        });
-      })
+        firestore.collection("taverns").doc(item)
+          .onSnapshot({
+            includeMetadataChanges: true
+          },(doc) => {
+            const id = doc.id;
+            const name = doc.data().name;
+            const tavernObj = {
+              id,
+              name,
+            }
+            this.setState(prevState => ({
+              taverns: [...prevState.taverns, tavernObj]
+            }))
+          });
+        })
     }
 
 
@@ -98,7 +98,7 @@ class Home extends Component {
         {array.map(item => {
           return(
             <Link key={item.id}  to={`/tavern/${item.id}`}>
-              <li >{item.name}</li>
+              <li>{item.name}</li>
             </Link>
           );
         })}
@@ -136,7 +136,7 @@ class Home extends Component {
 }
 
 const HomeUpdate = props => (
-  <ContextConsumer>
+  <ContextUserConsumer>
     {({ userData, membersReady }) => (
       <Home
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
@@ -145,7 +145,7 @@ const HomeUpdate = props => (
         membersReady={membersReady}
       />
     )}
-  </ContextConsumer>
+  </ContextUserConsumer>
 );
 
 export default HomeUpdate;
