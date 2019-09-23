@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { ContextConsumer } from "../context/ContextFirebaseProvider";
-import { firestore } from "../base";
+import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
+import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
+// import { firestore } from "../base";
+// import TavernUser from './TavernUser';
 
 class TavernRoom extends Component {
   constructor(props) {
@@ -16,16 +18,19 @@ class TavernRoom extends Component {
   // TO DO - HOW DO WE GET THE EFFING MEMBERS!?
   componentDidMount(){
   // https://firebase.google.com/docs/firestore/query-data/listen
-    firestore.collection("taverns").doc(this.props.tavernId)
-      .onSnapshot({
-        // Listen for document metadata changes
-        includeMetadataChanges: true
-      },(doc) => {
-        const membersList = doc.data().members;
-        this.setState({
-          membersList
-        })
-    });
+
+    this.props.setTavernData(this.props.tavernId);
+    // this.props.setTavernMemberData();
+    // firestore.collection("taverns").doc(this.props.tavernId)
+    //   .onSnapshot({
+    //     // Listen for document metadata changes
+    //     includeMetadataChanges: true
+    //   },(doc) => {
+    //     const membersList = doc.data().members;
+    //     this.setState({
+    //       membersList
+    //     })
+    // });
   }
 
   // createMembersList = array => {
@@ -47,40 +52,40 @@ class TavernRoom extends Component {
   // }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.membersList !== prevState.membersList ){
-      // console.log('members list changed');
-      // let tempMembersList = []
-      this.state.membersList.map(item => {
-        // console.log(item);
-        firestore.collection("users").doc(item)
-          .onSnapshot({
-            includeMetadataChanges: true
-          },doc => {
-            // const memberObj = doc.data();
-            // tempMembersList.push(memberObj)
-            // console.log(doc.data())
-            this.setState(prevState => ({
-              members: [...prevState.members, doc.data() ]
-            }))
-          })
-      })
-      // this.state.membersList.forEach(item => {
-      //   const users = firestore.collection("users");
-      //   users.where("id", "==", item)
-      //   .get()
-      //   .then(data => {
-      //     console.log(data)
-      //     // if (!data.empty) {
-      //     //   data.forEach(doc => {
-      //     //     console.log(doc)
-      //     //   });
-      //     // }
-      //   })
-      //   .catch(function(error) {
-      //     console.log("Error getting documents: ", error);
-      //   });
-      // })
-    }
+    // if (this.props.tavernData.members !== prevState.tavernData.members ){
+    //   // console.log('members list changed');
+    //   // let tempMembersList = []
+    //   this.props.tavernData.members.map(item => {
+    //     // console.log(item);
+    //     firestore.collection("users").doc(item)
+    //       .onSnapshot({
+    //         includeMetadataChanges: true
+    //       },doc => {
+    //         // const memberObj = doc.data();
+    //         // tempMembersList.push(memberObj)
+    //         // console.log(doc.data())
+    //         this.setState(prevState => ({
+    //           members: [...prevState.members, doc.data() ]
+    //         }))
+    //       })
+    //   })
+    //   // this.state.membersList.forEach(item => {
+    //   //   const users = firestore.collection("users");
+    //   //   users.where("id", "==", item)
+    //   //   .get()
+    //   //   .then(data => {
+    //   //     console.log(data)
+    //   //     // if (!data.empty) {
+    //   //     //   data.forEach(doc => {
+    //   //     //     console.log(doc)
+    //   //     //   });
+    //   //     // }
+    //   //   })
+    //   //   .catch(function(error) {
+    //   //     console.log("Error getting documents: ", error);
+    //   //   });
+    //   // })
+    // }
 
     if (this.state.members !== prevState.members) {
       console.log('members changed');
@@ -94,71 +99,67 @@ class TavernRoom extends Component {
   }
 
   handleUserReady = e => {
-    firestore.collection("users").doc(this.props.userId).update({
-      isReady: true
-    })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
+    this.props.setUserReady(this.props.tavernId, this.props.userId, true)
   }
 
   handleUserNotReady = e => {
-    firestore.collection("users").doc(this.props.userId).update({
-      isReady: false
-    })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
+    this.props.setUserReady(this.props.tavernId, this.props.userId, false)
   }
 
 
-  createMembersList = array => {
-    return (
-      <ul className="test">
-        {array.map(item => {
-          return(
-            <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
-          );
-        })}
-      </ul>
-    );
+  createMembersList = () => {
+    console.log(this.props.tavernData);
+    if (this.props.tavernData && this.props.tavernData.members){
+      console.log('members')
+      return (
+        <ul className="test">
+          {this.props.tavernData.members.map(item => {
+            return (
+              <li key={item.id}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
+            )
+          })}
+        </ul>
+      );
+    }
   }
 
   render(){
     return (
       <div>
-        <h1>{this.props.tavernName}</h1>
+        <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name}</p>
-        <button onClick={this.handleUserReady}>
+        <button onClick={() => this.handleUserReady()}>
           I'm Ready!
         </button>
-        <button onClick={this.handleUserNotReady}>
+        <button onClick={() => this.handleUserNotReady()}>
           I'm not Ready!
         </button>
         <p>Time limit: {this.props.countdown}</p>
         <p>Members are {this.state.membersReady ? '' : 'not'} ready!</p>
-        {this.createMembersList(this.state.members)}
+        {this.createMembersList()}
       </div>
     );
   };
 }
 
 const TavernRoomUpdate = props => (
-  <ContextConsumer>
+  <ContextUserConsumer>
     {({ userId, userData }) => (
-      <TavernRoom
-        {...props}
-        userId={userId}
-        userData={userData}
-      />
+      <ContextTavernConsumer>
+        {({ tavernData, setTavernData, setUserReady }) => (
+          <TavernRoom
+            {...props}
+            userId={userId}
+            userData={userData}
+            setUserReady={setUserReady}
+            tavernData={tavernData}
+            // setTavernMemberData={setTavernMemberData}
+            setTavernData={setTavernData}
+          />
+        )}
+      </ContextTavernConsumer>
     )}
-  </ContextConsumer>
+  </ContextUserConsumer>
 );
 
 export default TavernRoomUpdate;

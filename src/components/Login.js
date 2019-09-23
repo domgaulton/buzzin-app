@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ContextConsumer } from "../context/ContextFirebaseProvider";
+import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import { firestore } from "../base";
 
 class Login extends Component {
@@ -74,7 +74,7 @@ class Login extends Component {
 }
 
 const LoginUpdate = (props) => (
-  <ContextConsumer>
+  <ContextUserConsumer>
     {({ setUserData }) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
@@ -82,7 +82,7 @@ const LoginUpdate = (props) => (
         setUserData={setUserData}
       />
     )}
-  </ContextConsumer>
+  </ContextUserConsumer>
 );
 
 export default LoginUpdate;
