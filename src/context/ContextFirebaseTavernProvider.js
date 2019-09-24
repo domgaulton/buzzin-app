@@ -14,6 +14,7 @@ class FirebaseTavernProvider extends Component {
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setMemberData: (tavernId) => this.handleSetMemberData(tavernId),
       setTavernData: (data) => this.handleSetTavernData(data),
+      setCountdownActive: (data) => this.handlesetCountdownActive(data),
     };
   }
 
@@ -55,6 +56,19 @@ class FirebaseTavernProvider extends Component {
         const data = querySnapshot.docs.map(doc => doc.data());
         this.setState({ memberData: data });
       });
+  }
+
+  handlesetCountdownActive = bool => {
+    const tavernData = firestore.collection("taverns").doc(this.state.tavernId);
+    return tavernData.update({
+        countdownActive: bool
+    })
+    .then(() => {
+      console.log('done')
+    })
+    .catch(function(error) {
+        console.error("Error updating document: ", error);
+    });
   }
 
   render(){

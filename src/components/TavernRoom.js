@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
+import '../styles/index.css';
 
 class TavernRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tavernName: '',
+      adminUser: false,
       membersReady: false,
+      timePercentLeft: 100,
     };
   }
 
   componentDidMount(){
     this.props.setTavernData(this.props.tavernId);
     this.props.setMemberData(this.props.tavernId);
-
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -25,6 +27,38 @@ class TavernRoom extends Component {
       this.setState({
         membersReady
       })
+    }
+
+    if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
+      if (this.props.tavernData.countdownActive === true) {
+        let countdownTimer = this.props.tavernData.countdown;
+        const timerId = setInterval(() => {
+          if (countdownTimer === 0 ) {
+            clearTimeout(timerId);
+            this.props.setCountdownActive(false);
+            this.setState({
+              timePercentLeft: 100,
+            })
+            return
+          } else if ( this.props.tavernData.countdownActive === true && countdownTimer !== 0 ) {
+            countdownTimer --;
+            const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
+            this.setState({
+              timePercentLeft: percentWidth,
+            })
+          } else {
+            this.setState({
+              timePercentLeft: 100,
+            })
+            return;
+          }
+        }, 1000)
+      } else {
+        this.setState({
+          timePercentLeft: 100,
+        })
+        return
+      }
     }
   }
 
@@ -49,20 +83,42 @@ class TavernRoom extends Component {
     );
   }
 
+  checkAdmin = () => {
+    if (this.props.userId === this.props.tavernData.admin) {
+      return true;
+    }
+  }
+
+  toggleCountdown = () => {
+    if (this.props.tavernData.countdownActive === false){
+      this.props.setCountdownActive(true);
+    } else {
+      this.props.setCountdownActive(false);
+    }
+  }
+
   render(){
     return (
       <div>
         <h1>{this.props.tavernData.name}</h1>
-        <p>Welcome {this.props.userData.name}</p>
+        <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
+        {this.checkAdmin() && (
+          <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? 'Restart timer!' : 'Start timer!'}</button>
+        )}
         <button onClick={() => this.handleUserReady()}>
           I'm Ready!
         </button>
         <button onClick={() => this.handleUserNotReady()}>
           I'm not Ready!
         </button>
-        <p>Time limit: {this.props.countdown}</p>
+        <p>Time remaining: {this.props.tavernData.countdown} seconds</p>
         <p>Members are {this.state.membersReady ? '' : 'not'} ready!</p>
         {this.createMembersList()}
+        <div className="countdown-wrapper">
+          <div className="countdown-wrapper__countdown" style={{width: `${this.state.timePercentLeft}%`}}>
+            {this.props.tavernData.countdownReady ? 'ready' : 'not ready'}
+          </div>
+        </div>
       </div>
     );
   };
@@ -72,7 +128,7 @@ const TavernRoomUpdate = props => (
   <ContextUserConsumer>
     {({ userId, userData }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady }) => (
+        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
           <TavernRoom
             {...props}
             userId={userId}
@@ -82,6 +138,7 @@ const TavernRoomUpdate = props => (
             memberData={memberData}
             setMemberData={setMemberData}
             setUserReady={setUserReady}
+            setCountdownActive={setCountdownActive}
           />
         )}
       </ContextTavernConsumer>
