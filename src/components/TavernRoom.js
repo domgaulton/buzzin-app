@@ -28,6 +28,38 @@ class TavernRoom extends Component {
         membersReady
       })
     }
+
+    if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
+      if (this.props.tavernData.countdownActive === true) {
+        console.log('Start countdown');
+        let countdownTimer = this.props.tavernData.countdown;
+        const timerId = setInterval(() => {
+          if (countdownTimer === 0) {
+            clearTimeout(timerId);
+            this.props.setCountdownActive(false);
+            this.setState({
+              timePercentLeft: 100,
+            })
+            return
+          } else {
+            countdownTimer --;
+            const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
+            this.setState({
+              timePercentLeft: percentWidth,
+            })
+            // const styleString = `${Math.floor(percentWidth)}%`
+            // console.log(styleString);
+            // return  {width: `${styleString}`};
+          }
+        }, 1000)
+      } else {
+        console.log('Reset countdown');
+        this.setState({
+          timePercentLeft: 100,
+        })
+        return
+      }
+    }
   }
 
   handleUserReady = e => {
@@ -57,32 +89,43 @@ class TavernRoom extends Component {
     }
   }
 
-  startCountdown = () => {
-    console.log(this.props.tavernData.countdown)
-    console.log('count down started!');
-    this.props.setCountdownActive(true);
+  toggleCountdown = () => {
+    console.log(this.props.tavernData.countdownActive);
+    console.log('Update countdownReady');
+    this.props.setCountdownActive(!this.props.tavernData.countdownActive);
     this.countdownTimerStyle();
   }
 
   countdownTimerStyle = () => {
-    if (this.props.tavernData && this.props.tavernData.countdownReady === true) {
-      let countdownTimer = this.props.tavernData.countdown;
-      const timerId = setInterval(() => {
-        if (countdownTimer === 0) {
-          clearTimeout(timerId);
-          this.props.setCountdownActive(false);
-        } else {
-          countdownTimer --;
-          const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
-          this.setState({
-            timePercentLeft: percentWidth,
-          })
-          // const styleString = `${Math.floor(percentWidth)}%`
-          // console.log(styleString);
-          // return  {width: `${styleString}`};
-        }
-      }, 1000)
-    }
+    // if (this.props.tavernData.countdownActive === true) {
+    //   console.log('Start countdown');
+    //   let countdownTimer = this.props.tavernData.countdown;
+    //   const timerId = setInterval(() => {
+    //     if (countdownTimer === 0) {
+    //       clearTimeout(timerId);
+    //       this.props.setCountdownActive(false);
+    //       this.setState({
+    //         timePercentLeft: 100,
+    //       })
+    //       return
+    //     } else {
+    //       countdownTimer --;
+    //       const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
+    //       this.setState({
+    //         timePercentLeft: percentWidth,
+    //       })
+    //       // const styleString = `${Math.floor(percentWidth)}%`
+    //       // console.log(styleString);
+    //       // return  {width: `${styleString}`};
+    //     }
+    //   }, 1000)
+    // } else {
+    //   console.log('Reset countdown');
+    //   this.setState({
+    //     timePercentLeft: 100,
+    //   })
+    //   return
+    // }
   }
 
   render(){
@@ -91,7 +134,7 @@ class TavernRoom extends Component {
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
-          <button disabled={!this.state.membersReady} onClick={this.startCountdown}>Start timer!</button>
+          <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? 'Stop timer!' : 'Start timer!'}</button>
         )}
         <button onClick={() => this.handleUserReady()}>
           I'm Ready!

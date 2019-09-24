@@ -61,7 +61,7 @@ class FirebaseTavernProvider extends Component {
   handlesetCountdownActive = bool => {
     const tavernData = firestore.collection("taverns").doc(this.state.tavernId);
     return tavernData.update({
-        countdownReady: bool
+        countdownActive: bool
     })
     .then(() => {
       console.log('done')
