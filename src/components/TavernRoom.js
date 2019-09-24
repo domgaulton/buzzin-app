@@ -70,7 +70,7 @@ class TavernRoom extends Component {
       const timerId = setInterval(() => {
         if (countdownTimer === 0) {
           clearTimeout(timerId);
-          return {width: '100%'}
+          this.props.setCountdownActive(false);
         } else {
           countdownTimer --;
           const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
