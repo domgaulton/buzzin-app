@@ -128,8 +128,8 @@ class Home extends Component {
 
         <h1>{this.props.userData.name}'s Rooms</h1>
 
-        <h1>Dom is {this.props.userData.isReady ? '' : 'not'} ready to play!</h1>
-          {this.createRoomList(this.state.taverns)}
+        {this.createRoomList(this.state.taverns)}
+
       </div>
     );
   }
