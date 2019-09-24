@@ -23,8 +23,11 @@ class FirebaseUserProvider extends Component {
   }
 
   handleLoginUser = (email, password) => {
-    console.log(email, password);
-    auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+    auth.signInWithEmailAndPassword(email, password)
+    .then(function(data) {
+      console.log(data.user.uid);
+    })
+    .catch(function(error) {
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;

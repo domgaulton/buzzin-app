@@ -11,20 +11,7 @@ class Login extends Component {
     };
   }
 
-  // handleLoginEmailInputChange = e => {
-  //   this.setState({
-  //     loginEmail: e.currentTarget.value
-  //   })
-  // }
-
-  // handleLoginPinInputChange = e => {
-  //   this.setState({
-  //     loginPin: e.currentTarget.value
-  //   })
-  // }
-
   handleInputChange(e) {
-    console.log(e.target.name, e.target.value)
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -33,25 +20,6 @@ class Login extends Component {
   handleLogin = e => {
     e.preventDefault();
     this.props.loginUser(this.state.email, this.state.password)
-    // console.log(this.state.loginEmail, this.state.loginPin)
-
-    // const users = firestore.collection("users");
-    // users.where("email", "==", this.state.loginEmail)
-    // .get()
-    // .then(data => {
-    //   if (!data.empty) {
-    //     data.forEach(doc => {
-    //       if (doc.data().pin ===  Number(this.state.loginPin)) {
-    //         this.props.setUserData(doc.id);
-    //       } else {
-    //         console.log('fail');
-    //       }
-    //     });
-    //   }
-    // })
-    // .catch(function(error) {
-    //   console.log("Error getting documents: ", error);
-    // });
   }
 
 
