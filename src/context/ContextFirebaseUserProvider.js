@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { firestore } from "../base";
+import { firestore, auth } from "../base";
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -12,6 +12,7 @@ class FirebaseUserProvider extends Component {
       userData: {},
       userLoggedIn: false,
       setUserData: (data) => this.handleSetUserData(data),
+      loginUser: (email, password) => this.handleLoginUser(email, password),
     };
   }
 
@@ -19,6 +20,17 @@ class FirebaseUserProvider extends Component {
     if ( localStorage.getItem("buzzinApp") ) {
       this.handleSetUserData(localStorage.getItem("buzzinApp"))
     }
+  }
+
+  handleLoginUser = (email, password) => {
+    console.log(email, password);
+    auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage)
+      // ...
+    });
   }
 
   handleSetUserData = userId => {
