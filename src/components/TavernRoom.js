@@ -60,7 +60,7 @@ class TavernRoom extends Component {
   startCountdown = () => {
     console.log(this.props.tavernData.countdown)
     console.log('count down started!');
-    this.props.setCountdownReady(true);
+    this.props.setCountdownActive(true);
     this.countdownTimerStyle();
   }
 
@@ -116,7 +116,7 @@ const TavernRoomUpdate = props => (
   <ContextUserConsumer>
     {({ userId, userData }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownReady }) => (
+        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
           <TavernRoom
             {...props}
             userId={userId}
@@ -126,7 +126,7 @@ const TavernRoomUpdate = props => (
             memberData={memberData}
             setMemberData={setMemberData}
             setUserReady={setUserReady}
-            setCountdownReady={setCountdownReady}
+            setCountdownActive={setCountdownActive}
           />
         )}
       </ContextTavernConsumer>
