@@ -7,7 +7,7 @@ class Index extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <Home />
+      <Home userId={this.props.userId} />
     ) : (
       <Login />
     );
@@ -16,10 +16,11 @@ class Index extends Component {
 
 const IndexUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn }) => (
+    {({ userLoggedIn, userData }) => (
       <Index
         {...props}
         userLoggedIn={userLoggedIn}
+        userData={userData}
       />
     )}
   </ContextUserConsumer>

@@ -24,8 +24,12 @@ class FirebaseUserProvider extends Component {
 
   handleLoginUser = (email, password) => {
     auth.signInWithEmailAndPassword(email, password)
-    .then(function(data) {
+    .then(data => {
       console.log(data.user.uid);
+      this.setState({
+        userId: data.user.uid
+      })
+      this.handleSetUserData(data.user.uid)
     })
     .catch(function(error) {
       // Handle Errors here.
@@ -41,14 +45,11 @@ class FirebaseUserProvider extends Component {
     .onSnapshot({
       includeMetadataChanges: true
     },(doc) => {
-      const userId = doc.id
       const userData = doc.data();
       this.setState({
         userData,
       })
-      this.setState({
-        userId,
-      })
+      console.log(userData)
       this.setState({
         userLoggedIn: true,
       })
