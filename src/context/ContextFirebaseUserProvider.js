@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
+import { Redirect } from 'react-router-dom';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -13,6 +14,7 @@ class FirebaseUserProvider extends Component {
       userLoggedIn: false,
       setUserData: (data) => this.handleSetUserData(data),
       loginUser: (email, password) => this.handleLoginUser(email, password),
+      logoutUser: () => this.handleLogoutUser(),
     };
   }
 
@@ -40,7 +42,18 @@ class FirebaseUserProvider extends Component {
     });
   }
 
+  handleLogoutUser = () => {
+    console.log('logout')
+    this.setState({
+      userLoggedIn: false,
+    })
+    localStorage.removeItem("buzzinApp");
+  }
+
   handleSetUserData = userId => {
+    this.setState({
+      userId: userId
+    })
     firestore.collection("users").doc(userId)
     .onSnapshot({
       includeMetadataChanges: true

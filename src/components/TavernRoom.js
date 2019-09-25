@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
 import '../styles/index.css';
+import { Link } from "react-router-dom";
 
 class TavernRoom extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class TavernRoom extends Component {
   }
 
   handleUserReady = e => {
+    console.log(this.props.userId)
     this.props.setUserReady(this.props.userId, true)
   }
 
@@ -98,8 +100,9 @@ class TavernRoom extends Component {
   }
 
   render(){
-    return (
+    return this.props.userLoggedIn ? (
       <div>
+        <button onClick={this.props.logoutUser}>Logout</button>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -120,19 +123,26 @@ class TavernRoom extends Component {
           </div>
         </div>
       </div>
+    ) : (
+      <div>
+        <h1>You must be logged in</h1>
+        <Link to='/'>Login</Link>
+      </div>
     );
   };
 }
 
 const TavernRoomUpdate = props => (
   <ContextUserConsumer>
-    {({ userId, userData }) => (
+    {({ userLoggedIn, userId, userData, logoutUser }) => (
       <ContextTavernConsumer>
         {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
           <TavernRoom
             {...props}
+            userLoggedIn={userLoggedIn}
             userId={userId}
             userData={userData}
+            logoutUser={logoutUser}
             tavernData={tavernData}
             setTavernData={setTavernData}
             memberData={memberData}
