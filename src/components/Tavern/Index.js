@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
-import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
-import '../styles/index.css';
+import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
+import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
+import { Link } from "react-router-dom";
 
-class TavernRoom extends Component {
+class Tavern extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,8 +15,8 @@ class TavernRoom extends Component {
   }
 
   componentDidMount(){
-    this.props.setTavernData(this.props.tavernId);
-    this.props.setMemberData(this.props.tavernId);
+    this.props.setTavernData(this.props.match.params.tavernId);
+    this.props.setMemberData(this.props.match.params.tavernId);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -63,6 +63,7 @@ class TavernRoom extends Component {
   }
 
   handleUserReady = e => {
+    console.log(this.props.userId)
     this.props.setUserReady(this.props.userId, true)
   }
 
@@ -98,8 +99,9 @@ class TavernRoom extends Component {
   }
 
   render(){
-    return (
+    return this.props.userLoggedIn ? (
       <div>
+        <button onClick={this.props.logoutUser}>Logout</button>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -120,19 +122,26 @@ class TavernRoom extends Component {
           </div>
         </div>
       </div>
+    ) : (
+      <div>
+        <h1>You must be logged in</h1>
+        <Link to='/'>Login</Link>
+      </div>
     );
   };
 }
 
-const TavernRoomUpdate = props => (
+const TavernUpdate = props => (
   <ContextUserConsumer>
-    {({ userId, userData }) => (
+    {({ userLoggedIn, userId, userData, logoutUser }) => (
       <ContextTavernConsumer>
         {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
-          <TavernRoom
+          <Tavern
             {...props}
+            userLoggedIn={userLoggedIn}
             userId={userId}
             userData={userData}
+            logoutUser={logoutUser}
             tavernData={tavernData}
             setTavernData={setTavernData}
             memberData={memberData}
@@ -146,4 +155,4 @@ const TavernRoomUpdate = props => (
   </ContextUserConsumer>
 );
 
-export default TavernRoomUpdate;
+export default TavernUpdate;

@@ -34,6 +34,9 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleSetTavernData = tavernId => {
+    this.setState({
+        tavernId,
+      })
     firestore.collection("taverns").doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true
@@ -41,9 +44,6 @@ class FirebaseTavernProvider extends Component {
       const tavernData = doc.data();
       this.setState({
         tavernData,
-      })
-      this.setState({
-        tavernId,
       })
     });
 
