@@ -12,12 +12,50 @@ class FirebaseTavernProvider extends Component {
       tavernId: '',
       tavernData: {},
       memberData: [],
+      addToExistingTavern: (tavernName, pin, userId, userName) => this.handleAddToExistingTavern(tavernName, pin, userId, userName),
       createNewTavern: (name, pin, userId) => this.handleCreateNewTavern(name, pin, userId),
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setMemberData: (tavernId) => this.handleSetMemberData(tavernId),
       setTavernData: (data) => this.handleSetTavernData(data),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
     };
+  }
+
+  handleAddToExistingTavern = (tavernName, pin, userId, userName) => {
+    console.log(tavernName, pin);
+    firestore.collection("taverns").where("name", "==", tavernName)
+    .get()
+    .then(function(data) {
+      console.log(data)
+      if (!data.empty) {
+        data.forEach(function(doc) {
+          firestore.collection("taverns").doc(doc.id).collection('members')
+          .get()
+          .then(data => {
+            console.log(data.empty);
+            // might not need to owrry about these being empty!
+            if (data.empty) {
+              firestore.collection("taverns").doc(doc.id).collection('members').doc(userId).set({
+                name: userName,
+                isReady: false,
+              })
+            } else {
+              firestore.collection("taverns").doc(doc.id).collection('members').doc(userId).set({
+                name: userName,
+                isReady: false,
+              })
+            }
+            firestore.collection("users").doc(userId).update({
+              taverns: firebase.firestore.FieldValue.arrayUnion(doc.id)
+            });
+          })
+        });
+      }
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
   }
 
   handleCreateNewTavern = (name, pin, userId) => {
@@ -28,10 +66,15 @@ class FirebaseTavernProvider extends Component {
       admin: userId,
     })
     .then(docRef => {
+      console.log(docRef.id)
       // Add this as an array item on tavernAdmin list
       firestore.collection("users").doc(userId).update({
-          tavernAdmins: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+        tavernAdmins: firebase.firestore.FieldValue.arrayUnion(docRef.id)
       });
+      firestore.collection("taverns").doc(docRef.id).collection('members').doc(userId).set({
+        name: name,
+        isReady: false,
+      })
     })
     .catch(function(error) {
       console.error("Error adding document: ", error);

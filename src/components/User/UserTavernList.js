@@ -27,7 +27,7 @@ class User extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.userData.taverns !== prevProps.userData.taverns) {
+    if (this.props.userData.taverns !== prevProps.userData.taverns && this.props.userData.taverns) {
       this.tavernIdsToState(this.props.userData.taverns, 'taverns');
     }
 
