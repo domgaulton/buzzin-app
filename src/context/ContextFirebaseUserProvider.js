@@ -14,6 +14,7 @@ class FirebaseUserProvider extends Component {
       userLoggedIn: false,
       setUserData: (data) => this.handleSetUserData(data),
       loginUser: (email, password) => this.handleLoginUser(email, password),
+      createAuthUser: (email, password, name) => this.handleCreateAuthUser(email, password, name),
       logoutUser: () => this.handleLogoutUser(),
     };
   }
@@ -22,6 +23,38 @@ class FirebaseUserProvider extends Component {
     if ( localStorage.getItem("buzzinApp") ) {
       this.handleSetUserData(localStorage.getItem("buzzinApp"))
     }
+  }
+
+  handleCreateAuthUser = (email, password, name) => {
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(data => {
+      console.log(data.user.uid);
+      this.setState({
+        userId: data.user.uid
+      })
+      console.log('auth:', data.user.uid)
+      this.handleCreateDatabaseUser(data.user.uid, name)
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+  }
+
+  handleCreateDatabaseUser = (userId, name) => {
+    console.log('database:', userId)
+    firestore.collection("users").doc(userId).set({
+      name: name,
+    })
+    .then(() => {
+      this.handleSetUserData(userId);
+      console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
   }
 
   handleLoginUser = (email, password) => {
