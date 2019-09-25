@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import { Link } from "react-router-dom";
+import '../../styles/App.css';
 
 class Tavern extends Component {
   constructor(props) {
@@ -30,16 +31,16 @@ class Tavern extends Component {
     }
 
     if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
+
       if (this.props.tavernData.countdownActive === true) {
         let countdownTimer = this.props.tavernData.countdown;
         const timerId = setInterval(() => {
           if (countdownTimer === 0 ) {
             clearTimeout(timerId);
-            this.props.setCountdownActive(false);
             this.setState({
               timePercentLeft: 100,
             })
-            return
+            this.props.setCountdownActive(false);
           } else if ( this.props.tavernData.countdownActive === true && countdownTimer !== 0 ) {
             countdownTimer --;
             const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
@@ -50,20 +51,17 @@ class Tavern extends Component {
             this.setState({
               timePercentLeft: 100,
             })
-            return;
           }
         }, 1000)
       } else {
         this.setState({
           timePercentLeft: 100,
         })
-        return
       }
     }
   }
 
   handleUserReady = e => {
-    console.log(this.props.userId)
     this.props.setUserReady(this.props.userId, true)
   }
 
