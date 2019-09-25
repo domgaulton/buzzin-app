@@ -4,6 +4,7 @@ import { firestore } from "../../base";
 import { Link } from "react-router-dom";
 import UserTavernList from './UserTavernList';
 import CreateNewTavern from './CreateNewTavern';
+import FindTavern from './FindTavern';
 
 class User extends Component {
   constructor(props) {
@@ -76,6 +77,8 @@ class User extends Component {
         <button onClick={this.props.logoutUser}>Logout</button>
 
         <UserTavernList />
+
+        <FindTavern />
 
         <CreateNewTavern />
 
