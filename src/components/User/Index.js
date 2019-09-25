@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { firestore } from "../../base";
 import { Link } from "react-router-dom";
-import UserTaverns from './UserTaverns'
-
+import UserTavernList from './UserTavernList';
+import CreateNewTavern from './CreateNewTavern';
 
 class User extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class User extends Component {
 
   tavernIdsToState(){
     this.props.userData.taverns.forEach(item => {
-      console.log(item)
+      // console.log(item)
       firestore.collection("taverns").doc(item)
         .onSnapshot({
           includeMetadataChanges: true
@@ -75,9 +75,9 @@ class User extends Component {
 
         <button onClick={this.props.logoutUser}>Logout</button>
 
-        <h1>{this.props.userData.name}'s Rooms</h1>
+        <UserTavernList />
 
-        <UserTaverns />
+        <CreateNewTavern />
 
       </div>
     ) : (

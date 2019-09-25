@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { firestore } from "../base";
+import * as firebase from "firebase/app";
 
 const Context = React.createContext();
 export const ContextTavernConsumer = Context.Consumer;
@@ -11,11 +12,30 @@ class FirebaseTavernProvider extends Component {
       tavernId: '',
       tavernData: {},
       memberData: [],
+      createNewTavern: (name, pin, userId) => this.handleCreateNewTavern(name, pin, userId),
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setMemberData: (tavernId) => this.handleSetMemberData(tavernId),
       setTavernData: (data) => this.handleSetTavernData(data),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
     };
+  }
+
+  handleCreateNewTavern = (name, pin, userId) => {
+    firestore.collection("taverns").add({
+      name: name,
+      pin: pin,
+      countdown: 30,
+      admin: userId,
+    })
+    .then(docRef => {
+      // Add this as an array item on tavernAdmin list
+      firestore.collection("users").doc(userId).update({
+          tavernAdmins: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+      });
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
   }
 
   handleSetUserReady = (userId, bool) => {
