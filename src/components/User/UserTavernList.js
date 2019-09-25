@@ -11,25 +11,34 @@ class User extends Component {
       roomName: '',
       createRoomName: false,
       createPin: '',
-      taverns: []
+      taverns: [],
+      tavernAdmins: [],
     };
   }
 
   componentDidMount(){
     if (this.props.userData && this.props.userData.taverns){
-      this.tavernIdsToState();
+      this.tavernIdsToState(this.props.userData.taverns, 'taverns');
+    }
+
+    if (this.props.userData && this.props.userData.tavernAdmins){
+      this.tavernIdsToState(this.props.userData.tavernAdmins, 'tavernAdmins');
     }
   }
 
   componentDidUpdate(prevProps){
     if (this.props.userData.taverns !== prevProps.userData.taverns) {
-      this.tavernIdsToState();
+      this.tavernIdsToState(this.props.userData.taverns, 'taverns');
+    }
+
+    if (this.props.userData.tavernAdmins !== prevProps.userData.tavernAdmins) {
+      this.tavernIdsToState(this.props.userData.tavernAdmins, 'tavernAdmins');
     }
   }
 
-  tavernIdsToState(){
-    this.props.userData.taverns.forEach(item => {
-      console.log(item)
+  tavernIdsToState = (array, state) => {
+    array.forEach(item => {
+      // console.log(item)
       firestore.collection("taverns").doc(item)
         .onSnapshot({
           includeMetadataChanges: true
@@ -41,7 +50,7 @@ class User extends Component {
             name,
           }
           this.setState(prevState => ({
-            taverns: [...prevState.taverns, tavernObj]
+            [state]: [...prevState[state], tavernObj]
           }))
         });
     })
@@ -49,15 +58,29 @@ class User extends Component {
 
   render(){
     return (
-      <ul className="test">
-        {this.state.taverns.map(item => {
-          return(
-            <Link key={item.id}  to={`/tavern/${item.id}`}>
-              <li>{item.name}</li>
-            </Link>
-          );
-        })}
-      </ul>
+      <React.Fragment>
+        <h1>{this.props.userData.name}'s Rooms</h1>
+        <p>Guests</p>
+        <ul className="test">
+          {this.state.taverns.map(item => {
+            return(
+              <Link key={item.id}  to={`/tavern/${item.id}`}>
+                <li>{item.name}</li>
+              </Link>
+            );
+          })}
+        </ul>
+        <p>Admin Rooms</p>
+        <ul className="test">
+          {this.state.tavernAdmins.map(item => {
+            return(
+              <Link key={item.id}  to={`/tavern/${item.id}`}>
+                <li>{item.name}</li>
+              </Link>
+            );
+          })}
+        </ul>
+      </React.Fragment>
     );
   }
 }

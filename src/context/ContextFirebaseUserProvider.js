@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -38,6 +38,7 @@ class FirebaseUserProvider extends Component {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
+      console.log(errorCode, errorMessage)
       // ...
     });
   }
@@ -93,7 +94,7 @@ class FirebaseUserProvider extends Component {
       this.setState({
         userData,
       })
-      console.log(userData)
+      // console.log(userData)
       this.setState({
         userLoggedIn: true,
       })
