@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
-import { ContextTavernConsumer } from "../context/ContextFirebaseTavernProvider";
-import '../styles/index.css';
+import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
+import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import { Link } from "react-router-dom";
 
-class TavernRoom extends Component {
+class Tavern extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,8 +15,8 @@ class TavernRoom extends Component {
   }
 
   componentDidMount(){
-    this.props.setTavernData(this.props.tavernId);
-    this.props.setMemberData(this.props.tavernId);
+    this.props.setTavernData(this.props.match.params.tavernId);
+    this.props.setMemberData(this.props.match.params.tavernId);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -132,12 +131,12 @@ class TavernRoom extends Component {
   };
 }
 
-const TavernRoomUpdate = props => (
+const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, logoutUser }) => (
       <ContextTavernConsumer>
         {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
-          <TavernRoom
+          <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
             userId={userId}
@@ -156,4 +155,4 @@ const TavernRoomUpdate = props => (
   </ContextUserConsumer>
 );
 
-export default TavernRoomUpdate;
+export default TavernUpdate;

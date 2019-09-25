@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
-// import { firestore } from "../base";
-
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loginFormShowing: true,
       email: '',
       password: '',
       createName: '',
       createEmail: '',
       createPassword: '',
     };
+  }
+
+  toggleLoginCreateUser = () => {
+    this.setState({
+      loginFormShowing: !this.state.loginFormShowing
+    })
   }
 
   handleInputChange(e) {
@@ -33,7 +38,7 @@ class Login extends Component {
 
 
   render(){
-    return (
+    return this.state.loginFormShowing ? (
       <div className="App">
         <h1>Login</h1>
          <form
@@ -55,36 +60,40 @@ class Login extends Component {
           />
           <input type='submit' />
         </form>
-
-        <h1>Create User</h1>
-         <form
-          onSubmit={e => this.handleCreateUser(e)}
-        >
-          <input
-            type='text'
-            placeholder='Name'
-            name="createName"
-            value={this.state.createName}
-            onChange={e => this.handleInputChange(e)}
-          />
-          <input
-            type='email'
-            placeholder='Email'
-            name="createEmail"
-            value={this.state.createEmail}
-            onChange={e => this.handleInputChange(e)}
-          />
-          <input
-            type='password'
-            placeholder='Password'
-            name="createPassword"
-            value={this.state.createPassword}
-            onChange={e => this.handleInputChange(e)}
-          />
-          <input type='submit' />
-        </form>
+        <button onClick={this.toggleLoginCreateUser}>New User</button>
       </div>
-    );
+    ) : (
+      <div className="App">
+        <h1>Create User</h1>
+          <form
+            onSubmit={e => this.handleCreateUser(e)}
+          >
+            <input
+              type='text'
+              placeholder='Name'
+              name="createName"
+              value={this.state.createName}
+              onChange={e => this.handleInputChange(e)}
+            />
+            <input
+              type='email'
+              placeholder='Email'
+              name="createEmail"
+              value={this.state.createEmail}
+              onChange={e => this.handleInputChange(e)}
+            />
+            <input
+              type='password'
+              placeholder='Password'
+              name="createPassword"
+              value={this.state.createPassword}
+              onChange={e => this.handleInputChange(e)}
+            />
+            <input type='submit' />
+          </form>
+          <button onClick={this.toggleLoginCreateUser}>Login</button>
+        </div>
+      );
   }
 }
 

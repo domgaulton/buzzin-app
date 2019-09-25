@@ -32,7 +32,6 @@ class FirebaseUserProvider extends Component {
       this.setState({
         userId: data.user.uid
       })
-      console.log('auth:', data.user.uid)
       this.handleCreateDatabaseUser(data.user.uid, name)
     })
     .catch(function(error) {
@@ -44,7 +43,6 @@ class FirebaseUserProvider extends Component {
   }
 
   handleCreateDatabaseUser = (userId, name) => {
-    console.log('database:', userId)
     firestore.collection("users").doc(userId).set({
       name: name,
     })
@@ -53,7 +51,7 @@ class FirebaseUserProvider extends Component {
       console.log("Document successfully written!");
     })
     .catch(function(error) {
-        console.error("Error writing document: ", error);
+      console.error("Error writing document: ", error);
     });
   }
 

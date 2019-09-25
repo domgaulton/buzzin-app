@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
-// import Home from './Home';
 import Login from './Login';
 import { Redirect } from 'react-router-dom';
 
