@@ -63,6 +63,7 @@ class FirebaseTavernProvider extends Component {
       name: name,
       pin: pin,
       countdown: 30,
+      countdownActive: false,
       admin: userId,
     })
     .then(docRef => {
@@ -122,13 +123,12 @@ class FirebaseTavernProvider extends Component {
   }
 
   handlesetCountdownActive = bool => {
-    const tavernData = firestore.collection("taverns").doc(this.state.tavernId);
-    return tavernData.update({
+    firestore.collection("taverns").doc(this.state.tavernId).update({
         countdownActive: bool
     })
-    .then(() => {
-      console.log('done')
-    })
+    // .then(() => {
+    //   console.log('done')
+    // })
     .catch(function(error) {
         console.error("Error updating document: ", error);
     });
