@@ -13,7 +13,7 @@ class CreateNewTavern extends Component {
 
   handleCreateTavernSubmit = e => {
     e.preventDefault();
-    this.props.createNewTavern(this.state.name, this.state.pin, this.props.userId)
+    this.props.createNewTavern(this.state.name, this.state.pin, this.props.userId, this.props.userData.name)
   }
 
   handleInputChange(e) {
