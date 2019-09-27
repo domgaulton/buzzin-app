@@ -7,47 +7,6 @@ import CreateNewTavern from './CreateNewTavern';
 import FindTavern from './FindTavern';
 
 class User extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      roomName: '',
-      createRoomName: false,
-      createPin: '',
-      taverns: []
-    };
-  }
-
-  componentDidMount(){
-    if (this.props.userData && this.props.userData.taverns){
-      this.tavernIdsToState();
-    }
-  }
-
-  componentDidUpdate(prevProps){
-    if (this.props.userData.taverns !== prevProps.userData.taverns) {
-      this.tavernIdsToState();
-    }
-  }
-
-  tavernIdsToState(){
-    this.props.userData.taverns.forEach(item => {
-      // console.log(item)
-      firestore.collection("taverns").doc(item)
-        .onSnapshot({
-          includeMetadataChanges: true
-        },(doc) => {
-          const id = doc.id;
-          const name = doc.data().name;
-          const tavernObj = {
-            id,
-            name,
-          }
-          this.setState(prevState => ({
-            taverns: [...prevState.taverns, tavernObj]
-          }))
-        });
-    })
-  }
 
   handleInputChange = e => {
     this.setState({

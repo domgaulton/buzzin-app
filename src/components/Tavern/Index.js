@@ -17,12 +17,11 @@ class Tavern extends Component {
 
   componentDidMount(){
     this.props.setTavernData(this.props.match.params.tavernId);
-    this.props.setMemberData(this.props.match.params.tavernId);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.memberData !== prevProps.memberData) {
-      const membersReady = this.props.memberData.every(item => {
+    if (this.props.tavernData.members !== prevProps.tavernData.members) {
+      const membersReady = this.props.tavernData.members.every(item => {
         return item.isReady === true;
       })
       this.setState({
@@ -73,7 +72,7 @@ class Tavern extends Component {
   createMembersList = () => {
     return (
       <ul className="test">
-        {this.props.memberData.map(item => {
+        {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
           return (
             <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
           )
@@ -133,7 +132,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, logoutUser }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, memberData, setMemberData, setUserReady, setCountdownActive }) => (
+        {({ tavernData, setTavernData, setUserReady, setCountdownActive }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -142,8 +141,6 @@ const TavernUpdate = props => (
             logoutUser={logoutUser}
             tavernData={tavernData}
             setTavernData={setTavernData}
-            memberData={memberData}
-            setMemberData={setMemberData}
             setUserReady={setUserReady}
             setCountdownActive={setCountdownActive}
           />
