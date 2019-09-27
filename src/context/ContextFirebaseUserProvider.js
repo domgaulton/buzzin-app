@@ -28,7 +28,6 @@ class FirebaseUserProvider extends Component {
   handleCreateAuthUser = (email, password, name) => {
     auth.createUserWithEmailAndPassword(email, password)
     .then(data => {
-      console.log(data.user.uid);
       this.setState({
         userId: data.user.uid
       })
@@ -59,7 +58,6 @@ class FirebaseUserProvider extends Component {
   handleLoginUser = (email, password) => {
     auth.signInWithEmailAndPassword(email, password)
     .then(data => {
-      console.log(data.user.uid);
       this.setState({
         userId: data.user.uid
       })
@@ -75,7 +73,6 @@ class FirebaseUserProvider extends Component {
   }
 
   handleLogoutUser = () => {
-    console.log('logout')
     this.setState({
       userLoggedIn: false,
     })
