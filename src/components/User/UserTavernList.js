@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
-import { Link } from "react-router-dom";
+import UserTavernListItem from "./UserTavernListItem";
 
 class User extends Component {
+
   render(){
     return (
       <React.Fragment>
         <h1>{this.props.userData.name}'s Rooms</h1>
         <ul className="test">
           {this.props.userData.taverns && this.props.userData.taverns.length && this.props.userData.taverns.map(item => {
-            return(
-              <Link key={item.id}  to={`/tavern/${item.id}`}>
-                <li>{item.name} {item.admin === this.props.userId ? '(admin)' : null}</li>
-              </Link>
-            );
+            return <UserTavernListItem key={item} tavernId={item} />
           })}
         </ul>
       </React.Fragment>

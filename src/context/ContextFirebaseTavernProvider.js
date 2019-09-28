@@ -16,6 +16,7 @@ class FirebaseTavernProvider extends Component {
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setTavernData: (data) => this.handleSetTavernData(data),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
+      getTavernData: (data) => this.handleGetTavernData(data),
     };
   }
 
@@ -37,18 +38,25 @@ class FirebaseTavernProvider extends Component {
           });
 
           firestore.collection("users").doc(userId).update({
-            taverns: firebase.firestore.FieldValue.arrayUnion({
-              id: doc.id,
-              name: tavernName,
-            })
+            taverns: firebase.firestore.FieldValue.arrayUnion(doc.id)
           });
         });
       }
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
+      console.log("Error getting documents: ", error);
     });
 
+  }
+
+  async handleGetTavernData(tavernId) {
+    let data = {}
+    const tavern = firestore.collection("taverns").doc(tavernId);
+    await tavern.get()
+    .then(response => {
+      data = response.data();
+    })
+    return data;
   }
 
   handleCreateNewTavern = (name, pin, userId, memberName) => {
@@ -62,11 +70,7 @@ class FirebaseTavernProvider extends Component {
     .then(docRef => {
       // Add this as an array item on tavernAdmin list
       firestore.collection("users").doc(userId).update({
-        taverns: firebase.firestore.FieldValue.arrayUnion({
-          id: docRef.id,
-          name: name,
-          admin: userId,
-        })
+        taverns: firebase.firestore.FieldValue.arrayUnion(docRef.id)
       });
       firestore.collection("taverns").doc(docRef.id).update({
         members: firebase.firestore.FieldValue.arrayUnion({
