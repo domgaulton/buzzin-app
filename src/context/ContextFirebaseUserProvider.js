@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
-// import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -20,9 +20,22 @@ class FirebaseUserProvider extends Component {
   }
 
   componentDidMount(){
-    if ( localStorage.getItem("buzzinApp") ) {
-      this.handleSetUserData(localStorage.getItem("buzzinApp"))
-    }
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        // console.log('signed in', user)
+        // this.handleSetUserData(user.uid)
+        this.setState({
+          userLoggedIn: true,
+        })
+      } else {
+        // No user is signed in.
+        console.log('signed out!!!!');
+        this.setState({
+          userLoggedIn: false,
+        })
+      }
+    });
   }
 
   handleCreateAuthUser = (email, password, name) => {
@@ -73,10 +86,14 @@ class FirebaseUserProvider extends Component {
   }
 
   handleLogoutUser = () => {
-    this.setState({
-      userLoggedIn: false,
-    })
-    localStorage.removeItem("buzzinApp");
+    auth.signOut()
+    .then(() => {
+      // Sign-out successful.
+      // console.log('signed out!')
+    }).catch(function(error) {
+      // An error happened.
+      console.log(error)
+    });
   }
 
   handleSetUserData = userId => {
@@ -95,7 +112,6 @@ class FirebaseUserProvider extends Component {
       this.setState({
         userLoggedIn: true,
       })
-      localStorage.setItem("buzzinApp", userId);
     });
   }
 

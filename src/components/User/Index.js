@@ -32,7 +32,6 @@ class User extends Component {
   render(){
     return this.props.userLoggedIn ? (
       <div className="App">
-
         <button onClick={this.props.logoutUser}>Logout</button>
 
         <UserTavernList />
@@ -47,8 +46,7 @@ class User extends Component {
         <h1>You must be logged in</h1>
         <Link to='/'>Login</Link>
       </div>
-    )
-    ;
+    );
   }
 }
 
