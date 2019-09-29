@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
+import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
+import { withRouter } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -12,6 +13,22 @@ class Login extends Component {
       createEmail: '',
       createPassword: '',
     };
+  }
+
+  componentDidMount(){
+    if (this.props.userLoggedIn){
+      console.log('logged in');
+      console.log(this.props.userId);
+      this.props.history.push(`/user/${this.props.userId}`);
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if (this.props.userLoggedIn !== prevProps.userLoggedIn){
+      console.log('logged in');
+      console.log(this.props.userLoggedIn, this.props.userId);
+      this.props.history.push(`/user/${this.props.userId}`);
+    }
   }
 
   toggleLoginCreateUser = () => {
@@ -99,10 +116,12 @@ class Login extends Component {
 
 const LoginUpdate = (props) => (
   <ContextUserConsumer>
-    {({ setUserData, loginUser, createAuthUser }) => (
+    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser }) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
+        userLoggedIn={userLoggedIn}
+        userId={userId}
         setUserData={setUserData}
         loginUser={loginUser}
         createAuthUser={createAuthUser}
@@ -111,4 +130,4 @@ const LoginUpdate = (props) => (
   </ContextUserConsumer>
 );
 
-export default LoginUpdate;
+export default withRouter(LoginUpdate);

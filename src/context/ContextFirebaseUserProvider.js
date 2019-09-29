@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -21,22 +21,42 @@ class FirebaseUserProvider extends Component {
 
   componentDidMount(){
     auth.onAuthStateChanged(user => {
+      console.log(user)
       if (user) {
-        // User is signed in.
-        // console.log('signed in', user)
-        // this.handleSetUserData(user.uid)
         this.setState({
           userLoggedIn: true,
         })
+        this.setState({
+          userId: user.uid,
+        })
+        this.handleSetUserData(user.uid)
       } else {
         // No user is signed in.
-        console.log('signed out!!!!');
         this.setState({
           userLoggedIn: false,
         })
       }
     });
   }
+
+  // componentDidUpdate(prevProps, prevState){
+  //   if (this.state.userLoggedIn !== prevState.userLoggedIn){
+  //     auth.onAuthStateChanged(user => {
+  //       console.log(user)
+  //       if (user) {
+  //         this.setState({
+  //           userId: user.uid,
+  //         })
+  //         this.handleSetUserData(user.uid)
+  //       } else {
+  //         // No user is signed in.
+  //         this.setState({
+  //           userLoggedIn: false,
+  //         })
+  //       }
+  //     });
+  //   }
+  // }
 
   handleCreateAuthUser = (email, password, name) => {
     auth.createUserWithEmailAndPassword(email, password)
@@ -71,8 +91,10 @@ class FirebaseUserProvider extends Component {
   handleLoginUser = (email, password) => {
     auth.signInWithEmailAndPassword(email, password)
     .then(data => {
+      console.log(data)
       this.setState({
-        userId: data.user.uid
+        userId: data.user.uid,
+        userLoggedIn: true,
       })
       this.handleSetUserData(data.user.uid)
     })
@@ -90,6 +112,11 @@ class FirebaseUserProvider extends Component {
     .then(() => {
       // Sign-out successful.
       // console.log('signed out!')
+      this.setState({
+        userLoggedIn: false,
+        userId: '',
+      })
+      // this.props.history.push('/new-location')
     }).catch(function(error) {
       // An error happened.
       console.log(error)
@@ -104,10 +131,12 @@ class FirebaseUserProvider extends Component {
     .onSnapshot({
       includeMetadataChanges: true
     },(doc) => {
+      console.log(doc.data())
       const userData = doc.data();
       this.setState({
         userData,
       })
+      // this.props.history.push(`/user/${userId}`);
       // console.log(userData)
       this.setState({
         userLoggedIn: true,
