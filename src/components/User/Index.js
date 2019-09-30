@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { firestore } from "../../base";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import UserTavernList from './UserTavernList';
 import CreateNewTavern from './CreateNewTavern';
 import FindTavern from './FindTavern';
+import Login from '../Auth/Login';
 
 class User extends Component {
 
@@ -33,8 +34,6 @@ class User extends Component {
     return this.props.userLoggedIn ? (
       <div className="App">
 
-        <button onClick={this.props.logoutUser}>Logout</button>
-
         <UserTavernList />
 
         <FindTavern />
@@ -43,12 +42,8 @@ class User extends Component {
 
       </div>
     ) : (
-      <div>
-        <h1>You must be logged in</h1>
-        <Link to='/'>Login</Link>
-      </div>
-    )
-    ;
+      <Login />
+    );
   }
 }
 

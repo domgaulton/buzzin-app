@@ -14,6 +14,9 @@ class Navigation extends Component {
           <li>
             <Link to={`/settings/${this.props.userId}`}>Settings</Link>
           </li>
+          <li>
+            <Link to={`/logout`}>Logout</Link>
+          </li>
         </ul>
       </nav>
     );

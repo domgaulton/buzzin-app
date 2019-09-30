@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
-// import { Redirect } from 'react-router-dom';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -20,9 +19,16 @@ class FirebaseUserProvider extends Component {
   }
 
   componentDidMount(){
-    if ( localStorage.getItem("buzzinApp") ) {
-      this.handleSetUserData(localStorage.getItem("buzzinApp"))
-    }
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        this.handleSetUserData(user.uid)
+      } else {
+        // No user is signed in.
+        this.setState({
+          userLoggedIn: false,
+        })
+      }
+    });
   }
 
   handleCreateAuthUser = (email, password, name) => {
@@ -58,9 +64,6 @@ class FirebaseUserProvider extends Component {
   handleLoginUser = (email, password) => {
     auth.signInWithEmailAndPassword(email, password)
     .then(data => {
-      this.setState({
-        userId: data.user.uid
-      })
       this.handleSetUserData(data.user.uid)
     })
     .catch(function(error) {
@@ -73,10 +76,16 @@ class FirebaseUserProvider extends Component {
   }
 
   handleLogoutUser = () => {
-    this.setState({
-      userLoggedIn: false,
-    })
-    localStorage.removeItem("buzzinApp");
+    auth.signOut()
+    .then(() => {
+      this.setState({
+        userLoggedIn: false,
+        userId: '',
+      })
+    }).catch(function(error) {
+      // An error happened.
+      console.log(error)
+    });
   }
 
   handleSetUserData = userId => {
@@ -90,12 +99,8 @@ class FirebaseUserProvider extends Component {
       const userData = doc.data();
       this.setState({
         userData,
-      })
-      // console.log(userData)
-      this.setState({
         userLoggedIn: true,
       })
-      localStorage.setItem("buzzinApp", userId);
     });
   }
 

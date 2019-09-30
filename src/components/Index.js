@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../context/ContextFirebaseUserProvider";
-import Login from './Login';
 import { Redirect } from 'react-router-dom';
 
 class Index extends Component {
 
   render(){
-    return this.props.userLoggedIn ? (
-      <Redirect push to={`/user/${this.props.userId}`}/>
+    return this.props.userLoggedIn && this.props.userId !== '' ? (
+      <Redirect push to={`/user/${this.props.userId}`} />
     ) : (
-      <Login />
+      <Redirect push to="/login" />
     );
   }
 }
