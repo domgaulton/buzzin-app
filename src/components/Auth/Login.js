@@ -40,7 +40,7 @@ class Login extends Component {
 
   render(){
     return this.state.loginFormShowing ? (
-      <div className="App">
+      <div className="container">
         <h1>Login</h1>
          <form
           onSubmit={e => this.handleLogin(e)}
@@ -64,7 +64,7 @@ class Login extends Component {
         <button onClick={this.toggleLoginCreateUser}>New User</button>
       </div>
     ) : (
-      <div className="App">
+      <div className="container">
         <h1>Create User</h1>
           <form
             onSubmit={e => this.handleCreateUser(e)}

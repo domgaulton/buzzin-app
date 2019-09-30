@@ -32,15 +32,11 @@ class User extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <div className="App">
-
+      <React.Fragment>
         <UserTavernList />
-
         <FindTavern />
-
         <CreateNewTavern />
-
-      </div>
+      </React.Fragment>
     ) : (
       <Login />
     );

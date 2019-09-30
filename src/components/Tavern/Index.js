@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
-import '../../styles/App.css';
 import Login from '../Auth/Login';
 
 class Tavern extends Component {
@@ -97,7 +96,7 @@ class Tavern extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <div>
+      <React.Fragment>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -117,7 +116,7 @@ class Tavern extends Component {
             {this.props.tavernData.countdownReady ? 'ready' : 'not ready'}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     ) : (
       <Login />
     );

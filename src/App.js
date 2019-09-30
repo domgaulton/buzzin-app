@@ -7,7 +7,9 @@ function App() {
   return (
     <FirebaseUserProvider>
       <FirebaseTavernProvider>
-        <AppRouter />
+        <div className="buzzin-app">
+          <AppRouter />
+        </div>
       </FirebaseTavernProvider>
     </FirebaseUserProvider>
   );

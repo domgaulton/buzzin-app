@@ -1,0 +1,17 @@
+.bz-navigation {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px;
+
+  &__wrapper {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  }
+
+  &__wrapper li {
+    padding: 5px 10px;
+  }
+}
