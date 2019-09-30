@@ -2,16 +2,26 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  border-top: 1px;
+  border-top: 1px solid $grey-dark;
+  background: white;
 
   &__wrapper {
-  list-style-type: none;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
   }
 
-  &__wrapper li {
+  &__item {
     padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: $grey-dark;
+
+    i {
+      padding: 15px 0;
+    }
   }
 }

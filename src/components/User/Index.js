@@ -32,11 +32,11 @@ class User extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <React.Fragment>
+      <div className="container">
         <UserTavernList />
         <FindTavern />
         <CreateNewTavern />
-      </React.Fragment>
+      </div>
     ) : (
       <Login />
     );
@@ -45,13 +45,12 @@ class User extends Component {
 
 const UserUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userData, logoutUser }) => (
+    {({ userLoggedIn, userData }) => (
       <User
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
         userLoggedIn={userLoggedIn}
         userData={userData}
-        logoutUser={logoutUser}
       />
     )}
   </ContextUserConsumer>

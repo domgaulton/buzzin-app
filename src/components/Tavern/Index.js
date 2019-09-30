@@ -96,7 +96,7 @@ class Tavern extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <React.Fragment>
+      <div class="container">
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -116,7 +116,7 @@ class Tavern extends Component {
             {this.props.tavernData.countdownReady ? 'ready' : 'not ready'}
           </div>
         </div>
-      </React.Fragment>
+      </div>
     ) : (
       <Login />
     );
