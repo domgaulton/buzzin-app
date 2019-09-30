@@ -15,22 +15,6 @@ class Login extends Component {
     };
   }
 
-  componentDidMount(){
-    if (this.props.userLoggedIn){
-      console.log('logged in');
-      console.log(this.props.userId);
-      this.props.history.push(`/user/${this.props.userId}`);
-    }
-  }
-
-  componentDidUpdate(prevProps){
-    if (this.props.userLoggedIn !== prevProps.userLoggedIn){
-      console.log('logged in');
-      console.log(this.props.userLoggedIn, this.props.userId);
-      this.props.history.push(`/user/${this.props.userId}`);
-    }
-  }
-
   toggleLoginCreateUser = () => {
     this.setState({
       loginFormShowing: !this.state.loginFormShowing

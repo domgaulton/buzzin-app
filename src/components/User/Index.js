@@ -15,10 +15,6 @@ class User extends Component {
     })
   }
 
-  // componentDidMount(){
-  //   this.props.history.push("/user");
-  // }
-
   handleCreateRoom = e => {
     e.preventDefault();
 

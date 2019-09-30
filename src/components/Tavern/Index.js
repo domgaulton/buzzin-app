@@ -3,6 +3,7 @@ import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import { Link } from "react-router-dom";
 import '../../styles/App.css';
+import Login from '../Auth/Login';
 
 class Tavern extends Component {
   constructor(props) {
@@ -98,7 +99,6 @@ class Tavern extends Component {
   render(){
     return this.props.userLoggedIn ? (
       <div>
-        <button onClick={this.props.logoutUser}>Logout</button>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -120,10 +120,7 @@ class Tavern extends Component {
         </div>
       </div>
     ) : (
-      <div>
-        <h1>You must be logged in</h1>
-        <Link to='/'>Login</Link>
-      </div>
+      <Login />
     );
   };
 }
