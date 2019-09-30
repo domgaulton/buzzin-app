@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import { Link } from "react-router-dom";
-// import { firestore } from "../../base";
 
 class User extends Component {
   constructor() {

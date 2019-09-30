@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
+import { Link } from "react-router-dom";
+import TavernUserListItem from './TavernUserListItem';
 import Login from '../Auth/Login';
 
 class Tavern extends Component {
@@ -72,9 +74,7 @@ class Tavern extends Component {
     return (
       <ul className="test">
         {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
-          return (
-            <li key={item.name}>{item.name}, is {item.isReady ? 'ready' : 'not ready'}</li>
-          )
+          return <TavernUserListItem userData={item}/>
         })}
       </ul>
     );
@@ -96,7 +96,8 @@ class Tavern extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <div class="container">
+      <div className="container">
+        <button onClick={this.props.logoutUser}>Logout</button>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (

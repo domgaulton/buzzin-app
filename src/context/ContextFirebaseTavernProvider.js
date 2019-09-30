@@ -31,7 +31,6 @@ class FirebaseTavernProvider extends Component {
           console.log(doc);
           firestore.collection("taverns").doc(doc.id).update({
               members: firebase.firestore.FieldValue.arrayUnion({
-                name: memberName,
                 isReady: false,
                 id: userId,
               })
@@ -74,7 +73,6 @@ class FirebaseTavernProvider extends Component {
       });
       firestore.collection("taverns").doc(docRef.id).update({
         members: firebase.firestore.FieldValue.arrayUnion({
-          name: memberName,
           isReady: false,
           id: userId,
         })
@@ -146,4 +144,3 @@ class FirebaseTavernProvider extends Component {
 }
 
 export default FirebaseTavernProvider;
-
