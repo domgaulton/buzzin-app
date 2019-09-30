@@ -15,7 +15,7 @@ function AppRouter() {
       <Route path="/login" exact component={Login} />
       <Route path="/logout" exact component={Logout} />
       <Route path="/user/:userId" component={User} />
-      <Route path="/settings/:userId" component={Settings} />
+      <Route path="/settings" component={Settings} />
       <Route path="/tavern/:tavernId" component={Tavern} />
       <Navigation />
     </Router>

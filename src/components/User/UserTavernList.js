@@ -8,7 +8,7 @@ class User extends Component {
     return (
       <React.Fragment>
         <h1>{this.props.userData.name}'s Rooms</h1>
-        <ul className="test">
+        <ul className="item-list">
           {this.props.userData.taverns && this.props.userData.taverns.length && this.props.userData.taverns.map(item => {
             return <UserTavernListItem key={item} tavernId={item} />
           })}

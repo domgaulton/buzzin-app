@@ -29,7 +29,7 @@ class CreateNewTavern extends Component {
 
   render(){
     return (
-      <div>
+      <React.Fragment>
         <h1>Join a Tavern</h1>
           <form
             onSubmit={e => this.handleFindTavernSubmit(e)}
@@ -50,7 +50,7 @@ class CreateNewTavern extends Component {
           />
           <input type='submit' />
         </form>
-      </div>
+      </React.Fragment>
     );
   }
 }

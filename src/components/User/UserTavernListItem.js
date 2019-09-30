@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import { Link } from "react-router-dom";
-// import { firestore } from "../../base";
 
 class User extends Component {
   constructor() {
@@ -26,8 +25,8 @@ class User extends Component {
 
   render(){
     return(
-      <Link to={`/tavern/${this.props.tavernId}`}>
-        <li>{this.state.tavernName} {this.state.tavernAdmin === this.props.userId ? '(admin)' : null}</li>
+      <Link className="item-list__link" to={`/tavern/${this.props.tavernId}`}>
+        <li className="item-list__item">{this.state.tavernName} {this.state.tavernAdmin === this.props.userId ? <i class="item-list__icon material-icons">fingerprint</i> : null}</li>
       </Link>
     );
   }

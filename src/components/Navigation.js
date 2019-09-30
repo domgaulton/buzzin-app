@@ -5,17 +5,20 @@ import { Link } from 'react-router-dom';
 class Navigation extends Component {
 
   render(){
-    return (
+    return this.props.userLoggedIn && (
       <nav className="bz-navigation">
         <ul className="bz-navigation__wrapper">
           <li>
-            <Link to={`/user/${this.props.userId}`}>Home</Link>
+            <Link className="bz-navigation__item" to={`/user/${this.props.userId}`}>
+              <i className="material-icons">person</i>
+              <span>Home</span>
+            </Link>
           </li>
           <li>
-            <Link to={`/settings/${this.props.userId}`}>Settings</Link>
-          </li>
-          <li>
-            <Link to={`/logout`}>Logout</Link>
+            <Link className="bz-navigation__item" to={`/settings/${this.props.userId}`}>
+              <i className="material-icons">new_releases</i>
+              <span>Settings</span>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -25,10 +28,11 @@ class Navigation extends Component {
 
 const NavigationUpdate = props => (
   <ContextUserConsumer>
-    {({ userId }) => (
+    {({ userId, userLoggedIn}) => (
       <Navigation
         {...props}
         userId={userId}
+        userLoggedIn={userLoggedIn}
       />
     )}
   </ContextUserConsumer>
