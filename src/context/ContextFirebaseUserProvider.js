@@ -15,6 +15,7 @@ class FirebaseUserProvider extends Component {
       loginUser: (email, password) => this.handleLoginUser(email, password),
       createAuthUser: (email, password, name) => this.handleCreateAuthUser(email, password, name),
       logoutUser: () => this.handleLogoutUser(),
+      getUserData: (data) => this.handleGetUserData(data),
     };
   }
 
@@ -29,6 +30,16 @@ class FirebaseUserProvider extends Component {
         })
       }
     });
+  }
+
+  async handleGetUserData(userId) {
+    let data = {}
+    const users = firestore.collection("users").doc(userId);
+    await users.get()
+    .then(response => {
+      data = response.data();
+    })
+    return data;
   }
 
   handleCreateAuthUser = (email, password, name) => {

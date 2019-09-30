@@ -1,0 +1,23 @@
+.countdown-wrapper {
+  display: flex;
+  border: 1px solid grey;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(100vh - 100px); // $navigation-height
+  box-sizing: border-box;
+  opacity: 0.5;
+  pointer-events: none;
+  transform: rotate(180deg);
+
+  &__countdown{
+    background: red;
+    width: 100%;
+    -webkit-transition: width 0.5s; /* Safari prior 6.1 */
+    transition: width 0.5s;
+    margin: 0 auto;
+    display: block;
+  }
+}

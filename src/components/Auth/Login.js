@@ -40,12 +40,14 @@ class Login extends Component {
 
   render(){
     return this.state.loginFormShowing ? (
-      <div className="App">
+      <div className="container">
         <h1>Login</h1>
          <form
           onSubmit={e => this.handleLogin(e)}
+          className="buzzin-form"
         >
           <input
+            className="buzzin-form__item buzzin-form__item--text-input"
             type='email'
             placeholder='Email'
             name="email"
@@ -53,23 +55,30 @@ class Login extends Component {
             onChange={e => this.handleInputChange(e)}
           />
           <input
+            className="buzzin-form__item buzzin-form__item--text-input"
             type='password'
             placeholder='Password'
             name="password"
             value={this.state.password}
             onChange={e => this.handleInputChange(e)}
           />
-          <input type='submit' />
+          <input
+            className="buzzin-form__item buzzin-form__item--submit"
+            type='submit'
+            value="Login"
+          />
         </form>
-        <button onClick={this.toggleLoginCreateUser}>New User</button>
+        <span onClick={this.toggleLoginCreateUser}>No login? Register here</span>
       </div>
     ) : (
-      <div className="App">
-        <h1>Create User</h1>
+      <div className="container">
+        <h1>Register</h1>
           <form
             onSubmit={e => this.handleCreateUser(e)}
+            className="buzzin-form"
           >
             <input
+              className="buzzin-form__item buzzin-form__item--text-input"
               type='text'
               placeholder='Name'
               name="createName"
@@ -77,6 +86,7 @@ class Login extends Component {
               onChange={e => this.handleInputChange(e)}
             />
             <input
+              className="buzzin-form__item buzzin-form__item--text-input"
               type='email'
               placeholder='Email'
               name="createEmail"
@@ -84,15 +94,20 @@ class Login extends Component {
               onChange={e => this.handleInputChange(e)}
             />
             <input
+              className="buzzin-form__item buzzin-form__item--text-input"
               type='password'
               placeholder='Password'
               name="createPassword"
               value={this.state.createPassword}
               onChange={e => this.handleInputChange(e)}
             />
-            <input type='submit' />
+            <input
+              className="buzzin-form__item buzzin-form__item--submit"
+              type='submit'
+              value="Register"
+            />
           </form>
-          <button onClick={this.toggleLoginCreateUser}>Login</button>
+          <span onClick={this.toggleLoginCreateUser}>Have an account already? Login here</span>
         </div>
       );
   }
