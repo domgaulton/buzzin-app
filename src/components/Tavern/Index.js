@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
-import { Link } from "react-router-dom";
 import '../../styles/App.css';
 import Login from '../Auth/Login';
 

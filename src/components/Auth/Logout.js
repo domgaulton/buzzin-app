@@ -1,20 +1,7 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
-import { Redirect } from 'react-router-dom';
 
 class Logout extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     loginFormShowing: true,
-  //     email: '',
-  //     password: '',
-  //     createName: '',
-  //     createEmail: '',
-  //     createPassword: '',
-  //   };
-  // }
-
   componentDidMount(){
     this.props.logoutUser();
   }
