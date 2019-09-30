@@ -17,7 +17,7 @@ class TavernUserListItem extends Component {
 
   render(){
     return(
-      <li key={this.props.userData.id}>{this.state.name}, is {this.props.userData.isReady ? 'ready' : 'not ready'}</li>
+      <li className="item-list__item" key={this.props.userData.id}>{this.state.name}, is {this.props.userData.isReady ? <i className="item-list__icon material-icons">thumb_up_alt</i> : <i className="item-list__icon material-icons">thumb_down_alt</i>}</li>
     );
   }
 }

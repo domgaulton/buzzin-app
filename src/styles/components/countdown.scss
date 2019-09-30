@@ -1,11 +1,18 @@
 .countdown-wrapper {
   display: flex;
-  width: 90%;
-  height: 20px;
   border: 1px solid grey;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(100vh - 100px); // $navigation-height
+  box-sizing: border-box;
+  opacity: 0.5;
+  pointer-events: none;
+  transform: rotate(180deg);
 
   &__countdown{
-    height: 100%;
     background: red;
     width: 100%;
     -webkit-transition: width 0.5s; /* Safari prior 6.1 */

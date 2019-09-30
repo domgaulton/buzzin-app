@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
-import { Link } from "react-router-dom";
 import TavernUserListItem from './TavernUserListItem';
 import Login from '../Auth/Login';
 
@@ -72,9 +71,9 @@ class Tavern extends Component {
 
   createMembersList = () => {
     return (
-      <ul className="test">
+      <ul className="item-list">
         {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
-          return <TavernUserListItem userData={item}/>
+          return <TavernUserListItem key={item.id} userData={item}/>
         })}
       </ul>
     );
@@ -97,7 +96,6 @@ class Tavern extends Component {
   render(){
     return this.props.userLoggedIn ? (
       <div className="container">
-        <button onClick={this.props.logoutUser}>Logout</button>
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
@@ -110,13 +108,13 @@ class Tavern extends Component {
           I'm not Ready!
         </button>
         <p>Time remaining: {this.props.tavernData.countdown} seconds</p>
-        <p>Members are {this.state.membersReady ? '' : 'not'} ready!</p>
+
         {this.createMembersList()}
         <div className="countdown-wrapper">
-          <div className="countdown-wrapper__countdown" style={{width: `${this.state.timePercentLeft}%`}}>
-            {this.props.tavernData.countdownReady ? 'ready' : 'not ready'}
-          </div>
+          <div className="countdown-wrapper__countdown" style={{height: `${this.state.timePercentLeft}%`}} />
         </div>
+        <p>Everyone Ready? {this.state.membersReady ? <i className="material-icons">thumb_up_alt</i> : <i className="material-icons">thumb_down_alt</i>}</p>
+
       </div>
     ) : (
       <Login />
@@ -126,7 +124,7 @@ class Tavern extends Component {
 
 const TavernUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, userData, logoutUser }) => (
+    {({ userLoggedIn, userId, userData }) => (
       <ContextTavernConsumer>
         {({ tavernData, setTavernData, setUserReady, setCountdownActive }) => (
           <Tavern
@@ -134,7 +132,6 @@ const TavernUpdate = props => (
             userLoggedIn={userLoggedIn}
             userId={userId}
             userData={userData}
-            logoutUser={logoutUser}
             tavernData={tavernData}
             setTavernData={setTavernData}
             setUserReady={setUserReady}

@@ -4,6 +4,7 @@
   width: 100%;
   border-top: 1px solid $grey-dark;
   background: white;
+  max-height: $navigation-height;
 
   &__wrapper {
     list-style-type: none;

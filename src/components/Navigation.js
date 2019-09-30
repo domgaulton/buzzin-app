@@ -10,20 +10,14 @@ class Navigation extends Component {
         <ul className="bz-navigation__wrapper">
           <li>
             <Link className="bz-navigation__item" to={`/user/${this.props.userId}`}>
-              <i class="material-icons">person</i>
+              <i className="material-icons">person</i>
               <span>Home</span>
             </Link>
           </li>
           <li>
             <Link className="bz-navigation__item" to={`/settings/${this.props.userId}`}>
-              <i class="material-icons">new_releases</i>
+              <i className="material-icons">new_releases</i>
               <span>Settings</span>
-            </Link>
-          </li>
-          <li>
-            <Link className="bz-navigation__item" to={`/logout`}>
-              <i class="material-icons">exit_to_app</i>
-              <span>Logout</span>
             </Link>
           </li>
         </ul>
