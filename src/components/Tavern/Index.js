@@ -61,7 +61,6 @@ class Tavern extends Component {
   }
 
   handleToggleUserReady = e => {
-    console.log(e.target.checked);
     this.props.setUserReady(this.props.userId, e.target.checked)
   }
 
