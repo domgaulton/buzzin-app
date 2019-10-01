@@ -55,10 +55,11 @@ class Tavern extends Component {
   }
 
   render(){
-    return this.props.userLoggedIn ? (
+    return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
         <h1>{this.props.tavernData.name}</h1>
-        <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
+        {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
+        <h3>Welcome {this.props.userData.name}!</h3>
         {this.checkAdmin() && (
           <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? <i className="material-icons text-green">stop</i> : <i className="material-icons text-green">av_timer</i>}</button>
         )}

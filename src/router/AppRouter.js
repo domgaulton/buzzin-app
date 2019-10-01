@@ -4,7 +4,8 @@ import Index from "../components/Index";
 import Login from '../components/Auth/Login';
 import Logout from '../components/Auth/Logout';
 import User from "../components/User/Index";
-import Tavern from "../components/Tavern/Index";
+import Room from "../components/Tavern/Room";
+import TavernHome from "../components/Tavern/Home";
 import Settings from "../components/Settings/Index";
 import Navigation from '../components/Navigation';
 
@@ -16,7 +17,8 @@ function AppRouter() {
       <Route path="/logout" exact component={Logout} />
       <Route path="/user/:userId" component={User} />
       <Route path="/settings" component={Settings} />
-      <Route path="/tavern/:tavernId" component={Tavern} />
+      <Route path="/taverns" component={TavernHome} />
+      <Route path="/tavern/:tavernId" component={Room} />
       <Navigation />
     </Router>
   );
