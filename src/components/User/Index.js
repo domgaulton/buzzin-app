@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { firestore } from "../../base";
 // import { Link } from "react-router-dom";
-import UserTavernList from './UserTavernList';
+import TavernList from './TavernList';
 import CreateNewTavern from './CreateNewTavern';
 import FindTavern from './FindTavern';
 import Login from '../Auth/Login';
@@ -33,9 +33,15 @@ class User extends Component {
   render(){
     return this.props.userLoggedIn ? (
       <div className="container">
-        <UserTavernList />
+
+        <h1>{this.props.userData.name}'s Rooms</h1>
+
+        <TavernList />
+
         <FindTavern />
+
         <CreateNewTavern />
+
       </div>
     ) : (
       <Login />

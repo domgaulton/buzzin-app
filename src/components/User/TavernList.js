@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
-import UserTavernListItem from "./UserTavernListItem";
+import TavernListItem from "./TavernListItem";
 
-class User extends Component {
+class TavernList extends Component {
 
   render(){
-    return (
+    return this.props.userData.taverns.length > 0 ? (
       <React.Fragment>
-        <h1>{this.props.userData.name}'s Rooms</h1>
         <ul className="item-list">
           {this.props.userData.taverns && this.props.userData.taverns.length && this.props.userData.taverns.map(item => {
-            return <UserTavernListItem key={item} tavernId={item} />
+            return <TavernListItem key={item} tavernId={item} />
           })}
         </ul>
       </React.Fragment>
+    ) : (
+      <p>Join or create a tavern below</p>
     );
   }
 }
 
-const UserUpdate = props => (
+const TavernListUpdate = props => (
   <ContextUserConsumer>
-    {({ userId, userData, logoutUser }) => (
-      <User
+    {({ userData, logoutUser }) => (
+      <TavernList
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
-        userId={userId}
         userData={userData}
         logoutUser={logoutUser}
       />
@@ -32,4 +32,4 @@ const UserUpdate = props => (
   </ContextUserConsumer>
 );
 
-export default UserUpdate;
+export default TavernListUpdate;
