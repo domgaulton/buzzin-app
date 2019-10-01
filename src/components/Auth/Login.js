@@ -27,6 +27,11 @@ class Login extends Component {
     });
   }
 
+  resetPassword = e => {
+    this.props.resetPassword(this.state.email)
+  }
+
+
   handleLogin = e => {
     e.preventDefault();
     this.props.loginUser(this.state.email, this.state.password)
@@ -68,7 +73,8 @@ class Login extends Component {
             value="Login"
           />
         </form>
-        <span onClick={this.toggleLoginCreateUser}>No login? Register here</span>
+        <p onClick={this.toggleLoginCreateUser}>No login? Register here</p>
+        <p onClick={this.resetPassword}>Reset Password</p>
       </div>
     ) : (
       <div className="container">
@@ -107,7 +113,7 @@ class Login extends Component {
               value="Register"
             />
           </form>
-          <span onClick={this.toggleLoginCreateUser}>Have an account already? Login here</span>
+          <p onClick={this.toggleLoginCreateUser}>Have an account already? Login here</p>
         </div>
       );
   }
@@ -115,7 +121,7 @@ class Login extends Component {
 
 const LoginUpdate = (props) => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser }) => (
+    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser, resetPassword }) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
@@ -124,6 +130,7 @@ const LoginUpdate = (props) => (
         setUserData={setUserData}
         loginUser={loginUser}
         createAuthUser={createAuthUser}
+        resetPassword={resetPassword}
       />
     )}
   </ContextUserConsumer>
