@@ -8,14 +8,14 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1",
-    "firebase-build": "cd master && npm run build && firebase deploy"
+    "react-scripts": "3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "firebase-build": "git checkout master && git fetch && git pull && npm run build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
