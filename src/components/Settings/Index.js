@@ -6,17 +6,18 @@ class Settings extends Component {
 
   render(){
     return (
-      <nav>
-        <ul>
-          <li>
-            <Link to={`/logout`}>
-              <i className="material-icons">exit_to_app</i>
-              <span>Logout</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
+      <React.Fragment>
+        <nav>
+          <ul>
+            <li>
+              <Link to={`/logout`}>
+                <i className="material-icons">exit_to_app</i>
+                <span>Logout</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </React.Fragment>
     );
   }
 }
