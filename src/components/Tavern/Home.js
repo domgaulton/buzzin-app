@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
+import TavernList from './TavernList';
+import CreateNewTavern from './CreateNewTavern';
+import FindTavern from './FindTavern';
 import Login from '../Auth/Login';
 
-class User extends Component {
+class TavernHome extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
       <div className="container">
 
-        <h1>Welcome, {this.props.userData.name}!</h1>
+        <h1>{this.props.userData.name}'s Taverns</h1>
 
-        <h3>Notifications</h3>
-        <p>No new notifications</p>
+        <TavernList />
 
-        <h3>Friends Online</h3>
-        <p>No friends</p>
+        <FindTavern />
 
-        <h3>Score</h3>
-        <p>0</p>
+        <CreateNewTavern />
 
       </div>
     ) : (
@@ -26,10 +26,10 @@ class User extends Component {
   }
 }
 
-const UserUpdate = props => (
+const TavernHomeUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userData }) => (
-      <User
+      <TavernHome
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
         userLoggedIn={userLoggedIn}
@@ -39,4 +39,4 @@ const UserUpdate = props => (
   </ContextUserConsumer>
 );
 
-export default UserUpdate;
+export default TavernHomeUpdate;

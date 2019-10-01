@@ -17,7 +17,31 @@ class FirebaseTavernProvider extends Component {
       setTavernData: (data) => this.handleSetTavernData(data),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
       getTavernData: (data) => this.handleGetTavernData(data),
+      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId)
     };
+  }
+
+  handleDeleteTavern = tavernId => {
+    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    // store members to delete later
+    tavernDoc.get().then(response => {
+      console.log(response);
+      if (!response.empty && response.data().members) {
+        response.data().members.forEach(item => {
+          console.log(item.id);
+          firestore.collection("users").doc(item.id).update({
+              taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
+          });
+        })
+      }
+
+      tavernDoc.delete().then(function() {
+        console.log("Document successfully deleted!");
+      }).catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+
+    });
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
@@ -110,8 +134,8 @@ class FirebaseTavernProvider extends Component {
 
   handleSetTavernData = tavernId => {
     this.setState({
-        tavernId,
-      })
+      tavernId,
+    })
     firestore.collection("taverns").doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true

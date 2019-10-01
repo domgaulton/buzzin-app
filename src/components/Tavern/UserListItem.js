@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 
-class TavernUserListItem extends Component {
+class UserListItem extends Component {
   constructor() {
     super();
     this.state = {
@@ -22,10 +22,10 @@ class TavernUserListItem extends Component {
   }
 }
 
-const TavernUserListItemUpdate = props => (
+const UserListItemUpdate = props => (
   <ContextUserConsumer>
     {({ getUserData }) => (
-      <TavernUserListItem
+      <UserListItem
         {...props}
         getUserData={getUserData}
       />
@@ -33,4 +33,4 @@ const TavernUserListItemUpdate = props => (
   </ContextUserConsumer>
 );
 
-export default TavernUserListItemUpdate;
+export default UserListItemUpdate;

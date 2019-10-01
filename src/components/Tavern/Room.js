@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
-import TavernUserListItem from './TavernUserListItem';
 import TavernCountdown from './TavernCountdown';
+import UserList from './UserList';
 import Login from '../Auth/Login';
 
 class Tavern extends Component {
@@ -42,17 +42,6 @@ class Tavern extends Component {
     this.props.setUserReady(this.props.userId, e.target.checked)
   }
 
-
-  createMembersList = () => {
-    return (
-      <ul className="item-list">
-        {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
-          return <TavernUserListItem key={item.id} userData={item}/>
-        })}
-      </ul>
-    );
-  }
-
   checkAdmin = () => {
     if (this.props.userId === this.props.tavernData.admin) {
       return true;
@@ -66,16 +55,18 @@ class Tavern extends Component {
   }
 
   render(){
-    return this.props.userLoggedIn ? (
+    return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
         <h1>{this.props.tavernData.name}</h1>
-        <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
+        {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
+        <h3>Welcome {this.props.userData.name}!</h3>
         {this.checkAdmin() && (
           <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? <i className="material-icons text-green">stop</i> : <i className="material-icons text-green">av_timer</i>}</button>
         )}
         <p>Time remaining: {this.props.tavernData.countdown} seconds</p>
 
-        {this.createMembersList()}
+        <UserList />
+
         <p className="members-ready">Everyone Ready? {this.state.membersReady ? <i className="material-icons text-green">thumb_up_alt</i> : <i className="material-icons text-red">thumb_down_alt</i>}</p>
 
         <TavernCountdown
