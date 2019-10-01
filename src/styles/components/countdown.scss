@@ -10,7 +10,8 @@
   box-sizing: border-box;
   opacity: 0.5;
   pointer-events: none;
-  transform: rotate(180deg);
+  // transform: rotate(180deg);
+  width: 100px;
 
   &__countdown{
     background: red;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import TavernUserListItem from './TavernUserListItem';
+import TavernCountdown from './TavernCountdown';
 import Login from '../Auth/Login';
 
 class Tavern extends Component {
@@ -11,6 +12,7 @@ class Tavern extends Component {
       tavernName: '',
       adminUser: false,
       membersReady: false,
+      countdownActive: false,
       timePercentLeft: 100,
     };
   }
@@ -30,42 +32,14 @@ class Tavern extends Component {
     }
 
     if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
-
-      if (this.props.tavernData.countdownActive === true) {
-        let countdownTimer = this.props.tavernData.countdown;
-        const timerId = setInterval(() => {
-          if (countdownTimer === 0 ) {
-            clearTimeout(timerId);
-            this.setState({
-              timePercentLeft: 100,
-            })
-            this.props.setCountdownActive(false);
-          } else if ( this.props.tavernData.countdownActive === true && countdownTimer !== 0 ) {
-            countdownTimer --;
-            const percentWidth = (countdownTimer / this.props.tavernData.countdown) * 100;
-            this.setState({
-              timePercentLeft: percentWidth,
-            })
-          } else {
-            this.setState({
-              timePercentLeft: 100,
-            })
-          }
-        }, 1000)
-      } else {
-        this.setState({
-          timePercentLeft: 100,
-        })
-      }
+      this.setState({
+        countdownActive: this.props.tavernData.countdownActive,
+      })
     }
   }
 
-  handleUserReady = e => {
-    this.props.setUserReady(this.props.userId, true)
-  }
-
-  handleUserNotReady = e => {
-    this.props.setUserReady(this.props.userId, false)
+  handleToggleUserReady = e => {
+    this.props.setUserReady(this.props.userId, e.target.checked)
   }
 
 
@@ -86,11 +60,9 @@ class Tavern extends Component {
   }
 
   toggleCountdown = () => {
-    if (this.props.tavernData.countdownActive === false){
-      this.props.setCountdownActive(true);
-    } else {
-      this.props.setCountdownActive(false);
-    }
+    this.setState({
+      countdownActive: !this.props.tavernData.countdownActive,
+    })
   }
 
   render(){
@@ -99,22 +71,24 @@ class Tavern extends Component {
         <h1>{this.props.tavernData.name}</h1>
         <p>Welcome {this.props.userData.name} {this.checkAdmin() ? '(admin)' : '(guest)'}</p>
         {this.checkAdmin() && (
-          <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? 'Restart timer!' : 'Start timer!'}</button>
+          <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? <i className="material-icons text-green">stop</i> : <i className="material-icons text-green">av_timer</i>}</button>
         )}
-        <button onClick={() => this.handleUserReady()}>
-          I'm Ready!
-        </button>
-        <button onClick={() => this.handleUserNotReady()}>
-          I'm not Ready!
-        </button>
         <p>Time remaining: {this.props.tavernData.countdown} seconds</p>
 
         {this.createMembersList()}
-        <div className="countdown-wrapper">
-          <div className="countdown-wrapper__countdown" style={{height: `${this.state.timePercentLeft}%`}} />
-        </div>
-        <p>Everyone Ready? {this.state.membersReady ? <i className="material-icons">thumb_up_alt</i> : <i className="material-icons">thumb_down_alt</i>}</p>
+        <p className="members-ready">Everyone Ready? {this.state.membersReady ? <i className="material-icons text-green">thumb_up_alt</i> : <i className="material-icons text-red">thumb_down_alt</i>}</p>
 
+        <TavernCountdown
+          countdownActive={this.state.countdownActive}
+          countdownTime={this.props.tavernData.countdown}
+        />
+
+        <div className="toggle-user-ready">
+          Ready?
+          <label htmlFor="userReady" />
+          <input className="toggle-user-ready" type="checkbox" name="userReady" id="userReady" onClick={(e) => this.handleToggleUserReady(e)}/>
+          <span className="toggle-user-ready__display"/>
+        </div>
       </div>
     ) : (
       <Login />
