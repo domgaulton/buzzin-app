@@ -18,6 +18,7 @@ class FirebaseUserProvider extends Component {
       logoutUser: () => this.handleLogoutUser(),
       getUserData: (data) => this.handleGetUserData(data),
       deleteUser: (userId) => this.handleDeleteUser(userId),
+      resetPassword: (email) => this.handleResetPassword(email),
     };
   }
 
@@ -31,6 +32,14 @@ class FirebaseUserProvider extends Component {
           userLoggedIn: false,
         })
       }
+    });
+  }
+
+  handleResetPassword = email => {
+    auth.sendPasswordResetEmail(email).then(function() {
+      // Email sent.
+    }).catch(function(error) {
+      // An error happened.
     });
   }
 
