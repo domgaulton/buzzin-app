@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { Link } from 'react-router-dom';
+import Login from '../Auth/Login';
 
 class Settings extends Component {
 
   render(){
-    return (
+    return this.props.userLoggedIn ? (
       <React.Fragment>
         <nav>
           <ul>
@@ -15,20 +16,28 @@ class Settings extends Component {
                 <span>Logout</span>
               </Link>
             </li>
+            <li onClick={() => this.props.deleteUser(this.props.userId)}>
+              <i className="material-icons">exit_to_app</i>
+              <span>Delete User</span>
+            </li>
           </ul>
         </nav>
       </React.Fragment>
-    );
+    ) : (
+      <Login />
+    );;
   }
 }
 
 const SettingsUpdate = props => (
   <ContextUserConsumer>
-    {({ userId, logoutUser }) => (
+    {({ userId, logoutUser, userLoggedIn, deleteUser  }) => (
       <Settings
         {...props}
         userId={userId}
         logoutUser={logoutUser}
+        userLoggedIn={userLoggedIn}
+        deleteUser={deleteUser}
       />
     )}
   </ContextUserConsumer>

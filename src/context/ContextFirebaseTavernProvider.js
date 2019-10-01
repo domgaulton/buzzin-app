@@ -25,7 +25,6 @@ class FirebaseTavernProvider extends Component {
     const tavernDoc = firestore.collection("taverns").doc(tavernId);
     // store members to delete later
     tavernDoc.get().then(response => {
-      console.log(response);
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
           console.log(item.id);

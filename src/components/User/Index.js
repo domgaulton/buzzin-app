@@ -5,7 +5,7 @@ import Login from '../Auth/Login';
 class User extends Component {
 
   render(){
-    return this.props.userLoggedIn ? (
+    return this.props.userLoggedIn && this.props.userData ? (
       <div className="container">
 
         <h1>Welcome, {this.props.userData.name}!</h1>
