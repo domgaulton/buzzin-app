@@ -5,7 +5,7 @@ import TavernListItem from "./TavernListItem";
 class TavernList extends Component {
 
   render(){
-    return this.props.userData.taverns.length > 0 ? (
+    return this.props.userData.taverns && this.props.userData.taverns.length > 0 ? (
       <React.Fragment>
         <ul className="item-list">
           {this.props.userData.taverns && this.props.userData.taverns.length && this.props.userData.taverns.map(item => {
