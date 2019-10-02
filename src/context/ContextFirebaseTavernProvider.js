@@ -160,9 +160,9 @@ class FirebaseTavernProvider extends Component {
 
   handleUserBuzzedIn = userId => {
     const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
-    console.log(userId);
     tavernDoc.update({
       buzzedIn: userId,
+      countdownActive: false,
     });
   }
 

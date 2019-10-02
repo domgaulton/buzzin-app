@@ -59,6 +59,7 @@ class Tavern extends Component {
   componentWillUnmount = () => {
     this.props.resetUsersNotReady(this.props.match.params.tavernId);
     this.props.setCountdownActive(false);
+    // this.props.userAnswered(false);
   }
 
   handleToggleUserReady = e => {
@@ -95,7 +96,7 @@ class Tavern extends Component {
         <h1>{this.props.tavernData.name}</h1>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
 
-        <p>Buzzed: {this.state.buzzedIn}</p>
+        <span className={`buzzed-in ${this.state.buzzedIn ? 'buzzed-in--display' : ''}`}>{this.state.buzzedIn} buzzed!</span>
 
         <h3>Welcome {this.props.userData.name}!</h3>
         {this.checkAdmin() ? (
@@ -121,7 +122,7 @@ class Tavern extends Component {
 
         <UserList />
 
-        {this.checkAdmin() & this.state.buzzedIn !== '' && (
+        {this.checkAdmin() & this.state.buzzedIn !== '' ? (
           <form
             onClick={(e) => this.handleAdjudication(e)}
             className='admin-adjudication'
@@ -139,7 +140,7 @@ class Tavern extends Component {
               <input id="answerIncorrect" type="radio" name="admin-adjudication" value={true} />
             </div>
           </form>
-        ) }
+        ) : null}
 
         <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive}/>
 
