@@ -59,7 +59,7 @@ class Tavern extends Component {
   componentWillUnmount = () => {
     this.props.resetUsersNotReady(this.props.match.params.tavernId);
     this.props.setCountdownActive(false);
-    // this.props.userAnswered(false);
+    this.props.userAnswered(false);
   }
 
   handleToggleUserReady = e => {
@@ -79,14 +79,12 @@ class Tavern extends Component {
   }
 
   handleUserBuzzer = () => {
-    console.log(this.props.userId)
     this.props.userBuzzedIn(this.props.userId);
   }
 
   handleAdjudication = (e) => {
-    console.log(e.target.value)
     if (e.target.value) {
-      this.props.userAnswered(e.target.value);
+      this.props.userAnswered(e.target.value, this.props.userId);
     }
   }
 
