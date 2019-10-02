@@ -25,7 +25,7 @@ class TavernCountdown extends Component {
   }
 
   handleStartTimer = () => {
-    const countdownVariable = 43;
+    const countdownVariable = (this.props.countdownTime / 1.428);
     let tempCountdownTime = this.props.countdownTime;
     this.timerId = setInterval(() => {
       if (tempCountdownTime === 0 ) {

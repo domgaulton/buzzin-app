@@ -44,7 +44,7 @@ class Tavern extends Component {
   }
 
   handleToggleUserReady = e => {
-    this.props.setUserReady(this.props.userId, e.target.checked)
+    this.props.setUserReady(this.props.userId, e.target.checked);
   }
 
   checkAdmin = () => {
@@ -64,27 +64,31 @@ class Tavern extends Component {
       <div className="container">
         <h1>{this.props.tavernData.name}</h1>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
+
         <h3>Welcome {this.props.userData.name}!</h3>
+
+        {this.checkAdmin() ? (
+          <div className={`countdown-start-stop ${!this.state.membersReady ? 'countdown-start-stop--disabled' : null}`}>
+            <button
+              disabled={!this.state.membersReady}
+              onClick={this.toggleCountdown}
+            >
+                <i className="material-icons">{this.props.tavernData.countdownActive ? 'stop' : 'timer'}</i>
+            </button>
+          </div>
+        ) : (
+          <p className="room-ready">
+            <p>Room Ready?</p>
+            <i className="material-icons">{this.state.membersReady ? 'check' : 'close'}</i>
+          </p>
+        )}
 
         <TavernCountdown
           countdownActive={this.state.countdownActive}
           countdownTime={this.props.tavernData.countdown}
         />
 
-        {this.checkAdmin() && (
-          <div className="countdown-start-stop">
-            <button
-              disabled={!this.state.membersReady}
-              onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive
-                ? <i className="material-icons text-green">stop</i>
-                : <i className="material-icons text-green">av_timer</i>}
-            </button>
-          </div>
-        )}
-
         <UserList />
-
-        <p className="members-ready">Everyone Ready? {this.state.membersReady ? <i className="material-icons text-green">thumb_up_alt</i> : <i className="material-icons text-red">thumb_down_alt</i>}</p>
 
         <Toggle handleToggle={this.handleToggleUserReady} />
       </div>
