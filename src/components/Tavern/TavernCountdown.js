@@ -25,6 +25,7 @@ class TavernCountdown extends Component {
   }
 
   handleStartTimer = () => {
+    const countdownVariable = 43;
     let tempCountdownTime = this.props.countdownTime;
     this.timerId = setInterval(() => {
       if (tempCountdownTime === 0 ) {
@@ -34,7 +35,7 @@ class TavernCountdown extends Component {
         })
         this.props.setCountdownActive(false);
       } else if ( this.props.countdownActive === true && tempCountdownTime !== 0 ) {
-        tempCountdownTime --;
+        tempCountdownTime = tempCountdownTime - (countdownVariable / 1000);
         const percent = (tempCountdownTime / this.props.countdownTime) * 100;
         this.setState({
           percentLeft: percent,
@@ -44,7 +45,7 @@ class TavernCountdown extends Component {
           percentLeft: 100,
         })
       }
-    }, 1000)
+    }, countdownVariable)
   }
 
   handleStopTimer = () => {
@@ -58,14 +59,19 @@ class TavernCountdown extends Component {
   }
 
   render(){
+    // return (
+    //   <div className="container">
+    //     <div className="countdown-wrapper">
+    //       {`Time left: ${Math.round((this.state.percentLeft / 100) * this.props.countdownTime)} seconds`}
+    //       <div className="countdown-wrapper__countdown" style={{height: `${this.state.percentLeft}%`}} />
+    //     </div>
+    //   </div>
+    // );
     return (
-      <div className="container">
-        <div className="countdown-wrapper">
-          {`Time left: ${Math.round((this.state.percentLeft / 100) * this.props.countdownTime)} seconds`}
-          <div className="countdown-wrapper__countdown" style={{height: `${this.state.percentLeft}%`}} />
-        </div>
+      <div className="countdown-timer">
+        <p>{((this.state.percentLeft / 100) * this.props.countdownTime).toFixed(2)}</p>
       </div>
-    );
+    )
   };
 }
 

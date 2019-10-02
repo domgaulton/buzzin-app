@@ -65,19 +65,26 @@ class Tavern extends Component {
         <h1>{this.props.tavernData.name}</h1>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
         <h3>Welcome {this.props.userData.name}!</h3>
-        {this.checkAdmin() && (
-          <button disabled={!this.state.membersReady} onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive ? <i className="material-icons text-green">stop</i> : <i className="material-icons text-green">av_timer</i>}</button>
-        )}
-        <p>Time remaining: {this.props.tavernData.countdown} seconds</p>
-
-        <UserList />
-
-        <p className="members-ready">Everyone Ready? {this.state.membersReady ? <i className="material-icons text-green">thumb_up_alt</i> : <i className="material-icons text-red">thumb_down_alt</i>}</p>
 
         <TavernCountdown
           countdownActive={this.state.countdownActive}
           countdownTime={this.props.tavernData.countdown}
         />
+
+        {this.checkAdmin() && (
+          <div className="countdown-start-stop">
+            <button
+              disabled={!this.state.membersReady}
+              onClick={this.toggleCountdown}>{this.props.tavernData.countdownActive
+                ? <i className="material-icons text-green">stop</i>
+                : <i className="material-icons text-green">av_timer</i>}
+            </button>
+          </div>
+        )}
+
+        <UserList />
+
+        <p className="members-ready">Everyone Ready? {this.state.membersReady ? <i className="material-icons text-green">thumb_up_alt</i> : <i className="material-icons text-red">thumb_down_alt</i>}</p>
 
         <Toggle handleToggle={this.handleToggleUserReady} />
       </div>
