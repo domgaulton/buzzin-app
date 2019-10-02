@@ -3,6 +3,7 @@ import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 import TavernCountdown from './TavernCountdown';
 import UserList from './UserList';
+import Toggle from './Toggle';
 import Login from '../Auth/Login';
 
 class Tavern extends Component {
@@ -36,6 +37,10 @@ class Tavern extends Component {
         countdownActive: this.props.tavernData.countdownActive,
       })
     }
+  }
+
+  componentWillUnmount = () => {
+    this.props.resetUsersNotReady(this.props.match.params.tavernId);
   }
 
   handleToggleUserReady = e => {
@@ -74,12 +79,7 @@ class Tavern extends Component {
           countdownTime={this.props.tavernData.countdown}
         />
 
-        <div className="toggle-user-ready">
-          Ready?
-          <label htmlFor="userReady" />
-          <input className="toggle-user-ready" type="checkbox" name="userReady" id="userReady" onClick={(e) => this.handleToggleUserReady(e)}/>
-          <span className="toggle-user-ready__display"/>
-        </div>
+        <Toggle handleToggle={this.handleToggleUserReady} />
       </div>
     ) : (
       <Login />
@@ -91,7 +91,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData }) => (
       <ContextTavernConsumer>
-        {({ tavernData, setTavernData, setUserReady, setCountdownActive }) => (
+        {({ tavernData, setTavernData, setUserReady, resetUsersNotReady}) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -100,7 +100,7 @@ const TavernUpdate = props => (
             tavernData={tavernData}
             setTavernData={setTavernData}
             setUserReady={setUserReady}
-            setCountdownActive={setCountdownActive}
+            resetUsersNotReady={resetUsersNotReady}
           />
         )}
       </ContextTavernConsumer>

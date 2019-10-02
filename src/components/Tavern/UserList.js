@@ -9,7 +9,7 @@ class UserList extends Component {
       <React.Fragment>
         <ul className="item-list">
           {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
-            return <UserListItem key={item} userData={item} />
+            return <UserListItem key={item.id} userData={item} />
           })}
         </ul>
       </React.Fragment>

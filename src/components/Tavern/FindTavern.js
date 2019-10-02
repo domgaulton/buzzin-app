@@ -33,8 +33,10 @@ class CreateNewTavern extends Component {
         <h1>Join a Tavern</h1>
           <form
             onSubmit={e => this.handleFindTavernSubmit(e)}
+            className="buzzin-form"
           >
           <input
+            className="buzzin-form__item buzzin-form__item--text-input"
             type='text'
             placeholder='Tavern Name'
             name="name"
@@ -42,13 +44,18 @@ class CreateNewTavern extends Component {
             onChange={e => this.handleInputChange(e)}
           />
           <input
+            className="buzzin-form__item buzzin-form__item--text-input"
             type='number'
             placeholder='Tavern Pin'
             name="pin"
             value={this.state.pin}
             onChange={e => this.handleInputChange(e)}
           />
-          <input type='submit' />
+          <input
+            type='submit'
+            className="buzzin-form__item buzzin-form__item--submit"
+            value="Find Tavern"
+          />
         </form>
       </React.Fragment>
     );
