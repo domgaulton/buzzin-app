@@ -9,10 +9,6 @@ class TavernCountdown extends Component {
     };
   }
 
-  // componentDidUnmount() {
-  //   this.props.setCountdownActive(false);
-  // }
-
   componentDidUpdate(prevProps, prevState) {
     if (this.props.countdownActive !== prevProps.countdownActive) {
       this.props.setCountdownActive(this.props.countdownActive);
@@ -22,6 +18,10 @@ class TavernCountdown extends Component {
         this.handleStopTimer();
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.handleStopTimer();
   }
 
   handleStartTimer = () => {
@@ -50,6 +50,7 @@ class TavernCountdown extends Component {
   handleStopTimer = () => {
     if (this.timerId){
       clearInterval(this.timerId);
+      this.props.setCountdownActive(false);
       this.setState({
         percentLeft: 100,
       })

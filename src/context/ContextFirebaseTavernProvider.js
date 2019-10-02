@@ -17,8 +17,20 @@ class FirebaseTavernProvider extends Component {
       setTavernData: (data) => this.handleSetTavernData(data),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
       getTavernData: (data) => this.handleGetTavernData(data),
-      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId)
+      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
+      resetUsersNotReady: (tavernId) => this.handleResetUsersNotReady(tavernId),
     };
+  }
+
+  handleResetUsersNotReady = tavernId => {
+    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    tavernDoc.get().then(response => {
+      if (!response.empty && response.data().members) {
+        response.data().members.forEach(item => {
+          this.handleSetUserReady(item.id, false)
+        })
+      }
+    });
   }
 
   handleDeleteTavern = tavernId => {
