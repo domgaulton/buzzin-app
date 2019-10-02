@@ -39,10 +39,7 @@ class FirebaseTavernProvider extends Component {
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
-          console.log(item.id);
-          firestore.collection("users").doc(item.id).update({
-              taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
-          });
+          this.updateUserTaverns('remove', item.id, tavernId);
         })
       }
 
@@ -59,21 +56,19 @@ class FirebaseTavernProvider extends Component {
     // console.log(tavernName, pin);
     firestore.collection("taverns").where("name", "==", tavernName)
     .get()
-    .then(function(data) {
-      // console.log(data)
-      if (!data.empty) {
-        data.forEach(function(doc) {
-          // console.log(doc);
-          firestore.collection("taverns").doc(doc.id).update({
-              members: firebase.firestore.FieldValue.arrayUnion({
-                isReady: false,
-                id: userId,
-              })
-          });
-
-          firestore.collection("users").doc(userId).update({
-            taverns: firebase.firestore.FieldValue.arrayUnion(doc.id)
-          });
+    .then(query => {
+      // if tavern exists
+      if (!query.empty) {
+        query.forEach(response => {
+          // if user exists in tavern listing already do nothing
+          const userExists = response.data().members.some(member => member.id === userId)
+          if (!userExists) {
+            this.updateUserTaverns('add', userId, response.id);
+            this.updateTavernMembers('add', response.id, userId);
+          } else {
+            return
+            //console.log('user exists')
+          }
         });
       }
     })
@@ -101,17 +96,10 @@ class FirebaseTavernProvider extends Component {
       countdownActive: false,
       admin: userId,
     })
-    .then(docRef => {
+    .then(response => {
       // Add this as an array item on tavernAdmin list
-      firestore.collection("users").doc(userId).update({
-        taverns: firebase.firestore.FieldValue.arrayUnion(docRef.id)
-      });
-      firestore.collection("taverns").doc(docRef.id).update({
-        members: firebase.firestore.FieldValue.arrayUnion({
-          isReady: false,
-          id: userId,
-        })
-      });
+      this.updateUserTaverns('add', userId, response.id);
+      this.updateTavernMembers('add', response.id, userId);
     })
     .catch(function(error) {
       console.error("Error adding document: ", error);
@@ -122,16 +110,16 @@ class FirebaseTavernProvider extends Component {
     let newMembers = []
     firestore.collection("taverns").doc(this.state.tavernId)
     .get()
-    .then(data => {
-      let members = data.data().members;
+    .then(response => {
+      let members = response.data().members;
       // create a temp array to set whole member data later
       newMembers = members
-      newMembers.map(doc => {
-        if (doc.id === userId) {
-          doc.isReady = bool;
-          return doc.isReady;
+      newMembers.map(member => {
+        if (member.id === userId) {
+          member.isReady = bool;
+          return member.isReady;
         } else {
-          return doc;
+          return member;
         }
       });
     })
@@ -150,8 +138,8 @@ class FirebaseTavernProvider extends Component {
     firestore.collection("taverns").doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true
-    },(doc) => {
-      const tavernData = doc.data();
+    },(response) => {
+      const tavernData = response.data();
       this.setState({
         tavernData,
       })
@@ -168,7 +156,7 @@ class FirebaseTavernProvider extends Component {
     });
   }
 
-  updateTavernMembers(task, tavernId, userId){
+  updateTavernMembers = (task, tavernId, userId)  => {
     // only do something current if we are adding a user
     if (task === 'add') {
       firestore.collection("taverns").doc(tavernId).update({
@@ -182,14 +170,14 @@ class FirebaseTavernProvider extends Component {
     }
   }
 
-  updateUserTaverns(task, userId, tavernId){
+  updateUserTaverns = (task, userId, tavernId) => {
     if (task === 'add') {
       firestore.collection("users").doc(userId).update({
-        taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
+        taverns: firebase.firestore.FieldValue.arrayUnion(tavernId)
       });
     } else if (task === 'remove') {
       firestore.collection("users").doc(userId).update({
-        taverns: firebase.firestore.FieldValue.arrayUnion(tavernId)
+        taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
       });
     }
   }

@@ -69,12 +69,12 @@ class FirebaseUserProvider extends Component {
       //Find taverns where user is admin member
       firestore.collection("taverns").where("admin", "==", userId)
       .get()
-      .then(function(data) {
+      .then(function(query) {
         // console.log(data)
-        if (!data.empty) {
-          data.forEach(function(doc) {
+        if (!query.empty) {
+          query.forEach(function(response) {
             // console.log(doc);
-            firestore.collection("taverns").doc(doc.id).delete().then(function() {
+            firestore.collection("taverns").doc(response.id).delete().then(function() {
               // console.log("Document successfully deleted!");
             }).catch(function(error) {
               console.error("Error removing document: ", error);
@@ -118,11 +118,11 @@ class FirebaseUserProvider extends Component {
 
   handleCreateAuthUser = (email, password, name) => {
     auth.createUserWithEmailAndPassword(email, password)
-    .then(data => {
+    .then(response => {
       this.setState({
-        userId: data.user.uid
+        userId: response.user.uid
       })
-      this.handleCreateDatabaseUser(data.user.uid, name)
+      this.handleCreateDatabaseUser(response.user.uid, name)
     })
     .catch(function(error) {
       // Handle Errors here.
@@ -148,8 +148,8 @@ class FirebaseUserProvider extends Component {
 
   handleLoginUser = (email, password) => {
     auth.signInWithEmailAndPassword(email, password)
-    .then(data => {
-      this.handleSetUserData(data.user.uid)
+    .then(response => {
+      this.handleSetUserData(response.user.uid)
     })
     .catch(function(error) {
       // Handle Errors here.
@@ -180,8 +180,8 @@ class FirebaseUserProvider extends Component {
     firestore.collection("users").doc(userId)
     .onSnapshot({
       includeMetadataChanges: true
-    },(doc) => {
-      const userData = doc.data();
+    },(response) => {
+      const userData = response.data();
       this.setState({
         userData,
         userLoggedIn: true,
