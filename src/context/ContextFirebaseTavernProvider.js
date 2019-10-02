@@ -11,44 +11,73 @@ class FirebaseTavernProvider extends Component {
     this.state = {
       tavernId: '',
       tavernData: {},
-      addToExistingTavern: (tavernName, pin, userId, memberName) => this.handleAddToExistingTavern(tavernName, pin, userId, memberName),
-      createNewTavern: (name, pin, userId, memberName) => this.handleCreateNewTavern(name, pin, userId, memberName),
-      setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
+
+      // Tavern Data
       setTavernData: (data) => this.handleSetTavernData(data),
-      setCountdownActive: (data) => this.handlesetCountdownActive(data),
       getTavernData: (data) => this.handleGetTavernData(data),
-      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
+
+      // Update / New Taverns
+      createNewTavern: (name, pin, userId, memberName) => this.handleCreateNewTavern(name, pin, userId, memberName),
+      addToExistingTavern: (tavernName, pin, userId, memberName) => this.handleAddToExistingTavern(tavernName, pin, userId, memberName),
+
+      // Tavern Room Functionality
+      setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
+      setCountdownActive: (data) => this.handlesetCountdownActive(data),
       resetUsersNotReady: (tavernId) => this.handleResetUsersNotReady(tavernId),
+
+      // Settings
+      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
     };
   }
 
-  handleResetUsersNotReady = tavernId => {
-    const tavernDoc = firestore.collection("taverns").doc(tavernId);
-    tavernDoc.get().then(response => {
-      if (!response.empty && response.data().members) {
-        response.data().members.forEach(item => {
-          this.handleSetUserReady(item.id, false)
-        })
-      }
+  // // // // // //
+  // Tavern Data
+  // // // // // //
+
+  handleSetTavernData = tavernId => {
+    this.setState({
+      tavernId,
+    })
+    firestore.collection("taverns").doc(tavernId)
+    .onSnapshot({
+      includeMetadataChanges: true
+    },(response) => {
+      const tavernData = response.data();
+      this.setState({
+        tavernData,
+      })
     });
   }
 
-  handleDeleteTavern = tavernId => {
-    const tavernDoc = firestore.collection("taverns").doc(tavernId);
-    // store members to delete later
-    tavernDoc.get().then(response => {
-      if (!response.empty && response.data().members) {
-        response.data().members.forEach(item => {
-          this.updateUserTaverns('remove', item.id, tavernId);
-        })
-      }
+  async handleGetTavernData(tavernId) {
+    let data = {}
+    const tavern = firestore.collection("taverns").doc(tavernId);
+    await tavern.get()
+    .then(response => {
+      data = response.data();
+    })
+    return data;
+  }
 
-      tavernDoc.delete().then(function() {
-        console.log("Document successfully deleted!");
-      }).catch(function(error) {
-        console.error("Error removing document: ", error);
-      });
+  // // // // // //
+  // Update / New Taverns
+  // // // // // //
 
+  handleCreateNewTavern = (name, pin, userId, memberName) => {
+    firestore.collection("taverns").add({
+      name: name,
+      pin: pin,
+      countdown: 30,
+      countdownActive: false,
+      admin: userId,
+    })
+    .then(response => {
+      // Add this as an array item on tavernAdmin list
+      this.updateUserTaverns('add', userId, response.id);
+      this.updateTavernMembers('add', response.id, userId);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
     });
   }
 
@@ -75,36 +104,11 @@ class FirebaseTavernProvider extends Component {
     .catch(function(error) {
       console.log("Error getting documents: ", error);
     });
-
   }
 
-  async handleGetTavernData(tavernId) {
-    let data = {}
-    const tavern = firestore.collection("taverns").doc(tavernId);
-    await tavern.get()
-    .then(response => {
-      data = response.data();
-    })
-    return data;
-  }
-
-  handleCreateNewTavern = (name, pin, userId, memberName) => {
-    firestore.collection("taverns").add({
-      name: name,
-      pin: pin,
-      countdown: 30,
-      countdownActive: false,
-      admin: userId,
-    })
-    .then(response => {
-      // Add this as an array item on tavernAdmin list
-      this.updateUserTaverns('add', userId, response.id);
-      this.updateTavernMembers('add', response.id, userId);
-    })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
-    });
-  }
+  // // // // // //
+  // Tavern Room Functionality
+  // // // // // //
 
   handleSetUserReady = (userId, bool) => {
     let newMembers = []
@@ -131,22 +135,6 @@ class FirebaseTavernProvider extends Component {
     })
   }
 
-  handleSetTavernData = tavernId => {
-    this.setState({
-      tavernId,
-    })
-    firestore.collection("taverns").doc(tavernId)
-    .onSnapshot({
-      includeMetadataChanges: true
-    },(response) => {
-      const tavernData = response.data();
-      this.setState({
-        tavernData,
-      })
-    });
-
-  }
-
   handlesetCountdownActive = bool => {
     firestore.collection("taverns").doc(this.state.tavernId).update({
       countdownActive: bool
@@ -155,6 +143,44 @@ class FirebaseTavernProvider extends Component {
       console.error("Error updating document: ", error);
     });
   }
+
+  handleResetUsersNotReady = tavernId => {
+    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    tavernDoc.get().then(response => {
+      if (!response.empty && response.data().members) {
+        response.data().members.forEach(item => {
+          this.handleSetUserReady(item.id, false)
+        })
+      }
+    });
+  }
+
+  // // // // // //
+  // Settings
+  // // // // // //
+
+  handleDeleteTavern = tavernId => {
+    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    // store members to delete later
+    tavernDoc.get().then(response => {
+      if (!response.empty && response.data().members) {
+        response.data().members.forEach(item => {
+          this.updateUserTaverns('remove', item.id, tavernId);
+        })
+      }
+
+      tavernDoc.delete().then(function() {
+        console.log("Document successfully deleted!");
+      }).catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+
+    });
+  }
+
+  // // // // // //
+  // Global Functions
+  // // // // // //
 
   updateTavernMembers = (task, tavernId, userId)  => {
     // only do something current if we are adding a user

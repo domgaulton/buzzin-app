@@ -78,7 +78,7 @@ class Tavern extends Component {
           </div>
         ) : (
           <p className="room-ready">
-            <p>Room Ready?</p>
+            <span>Room Ready?</span>
             <i className="material-icons">{this.state.membersReady ? 'check' : 'close'}</i>
           </p>
         )}

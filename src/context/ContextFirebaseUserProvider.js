@@ -12,12 +12,18 @@ class FirebaseUserProvider extends Component {
       userId: '',
       userData: {},
       userLoggedIn: false,
-      setUserData: (data) => this.handleSetUserData(data),
+
+      // Auth
       loginUser: (email, password) => this.handleLoginUser(email, password),
       createAuthUser: (email, password, name) => this.handleCreateAuthUser(email, password, name),
       logoutUser: () => this.handleLogoutUser(),
-      getUserData: (data) => this.handleGetUserData(data),
       deleteUser: (userId) => this.handleDeleteUser(userId),
+
+      // Set User Data
+      getUserData: (data) => this.handleGetUserData(data),
+      setUserData: (data) => this.handleSetUserData(data),
+
+      // Settings
       resetPassword: (email) => this.handleResetPassword(email),
     };
   }
@@ -35,11 +41,64 @@ class FirebaseUserProvider extends Component {
     });
   }
 
-  handleResetPassword = email => {
-    auth.sendPasswordResetEmail(email).then(function() {
-      // Email sent.
+  // // // // // //
+  // Auth
+  // // // // // //
+
+  handleLoginUser = (email, password) => {
+    auth.signInWithEmailAndPassword(email, password)
+    .then(response => {
+      this.handleSetUserData(response.user.uid)
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage)
+      // ...
+    });
+  }
+
+  handleCreateAuthUser = (email, password, name) => {
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(response => {
+      this.setState({
+        userId: response.user.uid
+      })
+      this.handleCreateDatabaseUser(response.user.uid, name)
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode, errorMessage)
+      // ...
+    });
+  }
+
+  handleCreateDatabaseUser = (userId, name) => {
+    firestore.collection("users").doc(userId).set({
+      name: name,
+    })
+    .then(() => {
+      this.handleSetUserData(userId);
+      console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+      console.error("Error writing document: ", error);
+    });
+  }
+
+  handleLogoutUser = () => {
+    auth.signOut()
+    .then(() => {
+      this.setState({
+        userLoggedIn: false,
+        userId: '',
+      })
     }).catch(function(error) {
       // An error happened.
+      console.log(error)
     });
   }
 
@@ -106,6 +165,11 @@ class FirebaseUserProvider extends Component {
     })
   }
 
+  // // // // // //
+  // Set User Data
+  // // // // // //
+
+
   async handleGetUserData(userId) {
     let data = {}
     const users = firestore.collection("users").doc(userId);
@@ -114,63 +178,6 @@ class FirebaseUserProvider extends Component {
       data = response.data();
     })
     return data;
-  }
-
-  handleCreateAuthUser = (email, password, name) => {
-    auth.createUserWithEmailAndPassword(email, password)
-    .then(response => {
-      this.setState({
-        userId: response.user.uid
-      })
-      this.handleCreateDatabaseUser(response.user.uid, name)
-    })
-    .catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode, errorMessage)
-      // ...
-    });
-  }
-
-  handleCreateDatabaseUser = (userId, name) => {
-    firestore.collection("users").doc(userId).set({
-      name: name,
-    })
-    .then(() => {
-      this.handleSetUserData(userId);
-      console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-      console.error("Error writing document: ", error);
-    });
-  }
-
-  handleLoginUser = (email, password) => {
-    auth.signInWithEmailAndPassword(email, password)
-    .then(response => {
-      this.handleSetUserData(response.user.uid)
-    })
-    .catch(function(error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage)
-      // ...
-    });
-  }
-
-  handleLogoutUser = () => {
-    auth.signOut()
-    .then(() => {
-      this.setState({
-        userLoggedIn: false,
-        userId: '',
-      })
-    }).catch(function(error) {
-      // An error happened.
-      console.log(error)
-    });
   }
 
   handleSetUserData = userId => {
@@ -189,6 +196,17 @@ class FirebaseUserProvider extends Component {
     });
   }
 
+  // // // // // //
+  // Settings
+  // // // // // //
+
+  handleResetPassword = email => {
+    auth.sendPasswordResetEmail(email).then(function() {
+      // Email sent.
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
 
   render(){
     return (
