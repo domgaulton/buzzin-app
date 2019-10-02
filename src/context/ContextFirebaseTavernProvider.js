@@ -167,7 +167,8 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleUserAnswered = (correct, userId, score) => {
-    if (correct){
+    console.log(correct);
+    if (correct == 'true'){
       console.log('correct - handle score')
     }
     const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
