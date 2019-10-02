@@ -1,0 +1,21 @@
+.admin-adjudication {
+  display: flex;
+  justify-content: space-around;
+
+  &__button {
+    border: 1px solid $colour-grey-light;
+    width: 45%;
+    display: inline-block;
+
+    label {
+
+      .material-icons {
+        font-size: 3em;
+      }
+    }
+
+    input {
+      display: none;
+    }
+  }
+}

@@ -24,6 +24,8 @@ class FirebaseTavernProvider extends Component {
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setCountdownActive: (data) => this.handlesetCountdownActive(data),
       resetUsersNotReady: (tavernId) => this.handleResetUsersNotReady(tavernId),
+      userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
+      userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
 
       // Settings
       deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
@@ -70,6 +72,7 @@ class FirebaseTavernProvider extends Component {
       countdown: 30,
       countdownActive: false,
       admin: userId,
+      buzzedIn: '',
     })
     .then(response => {
       // Add this as an array item on tavernAdmin list
@@ -152,6 +155,24 @@ class FirebaseTavernProvider extends Component {
           this.handleSetUserReady(item.id, false)
         })
       }
+    });
+  }
+
+  handleUserBuzzedIn = userId => {
+    const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
+    console.log(userId);
+    tavernDoc.update({
+      buzzedIn: userId,
+    });
+  }
+
+  handleUserAnswered = (correct, userId, score) => {
+    if (correct){
+      console.log('correct - handle score')
+    }
+    const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
+    tavernDoc.update({
+      buzzedIn: '',
     });
   }
 
