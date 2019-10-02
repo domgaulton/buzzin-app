@@ -6,7 +6,7 @@ class Toggle extends Component {
     return (
       <div className="toggle-switch">
         <label className="switch">
-          <input type="checkbox" onChange={(e) => this.props.handleToggle(e)}/>
+          <input type="checkbox" onChange={(e) => this.props.handleToggle(e)} />
           <span className="slider round"></span>
         </label>
       </div>
