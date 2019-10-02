@@ -159,17 +159,25 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleUserBuzzedIn = userId => {
-    const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
-    tavernDoc.update({
-      buzzedIn: userId,
-      countdownActive: false,
-    });
+    let buzzedIn = '';
+    firestore.collection("users").doc(userId)
+    .get()
+    .then(response => {
+      buzzedIn = response.data().name;
+    })
+    .then(() => {
+      const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
+      tavernDoc.update({
+        buzzedIn: buzzedIn,
+        countdownActive: false,
+      });
+    })
   }
 
   handleUserAnswered = (correct, userId, score) => {
-    console.log(correct);
-    if (correct == 'true'){
-      console.log('correct - handle score')
+    // console.log(correct);
+    if (correct === 'true'){
+      //console.log('correct - handle score')
     }
     const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
     tavernDoc.update({

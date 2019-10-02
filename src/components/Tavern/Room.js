@@ -41,13 +41,10 @@ class Tavern extends Component {
     }
 
     if (this.props.tavernData.buzzedIn !== prevProps.tavernData.buzzedIn) {
-      console.log('buzzedIn', this.props.tavernData.buzzedIn)
       if (this.props.tavernData.buzzedIn !== ''){
-        // const name = this.props.getUserData(this.props.tavernData.buzzedIn).then(result => result.name)
-        // console.log(name)
-        this.props.getUserData(this.props.tavernData.buzzedIn).then(result => this.setState({
-          buzzedIn: result.name,
-        }))
+        this.setState({
+          buzzedIn: this.props.tavernData.buzzedIn
+        })
       } else {
         this.setState({
           buzzedIn: '',
@@ -94,7 +91,14 @@ class Tavern extends Component {
         <h1>{this.props.tavernData.name}</h1>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
 
-        <span className={`buzzed-in ${this.state.buzzedIn ? 'buzzed-in--display' : ''}`}>{this.state.buzzedIn} buzzed!</span>
+        {this.state.buzzedIn !== '' ? (
+          <span
+            className={`buzzed-in ${this.state.buzzedIn ? 'buzzed-in--display' : ''}`}
+          >
+            {`${this.state.buzzedIn} buzzed!`}
+          </span>
+        ) : null }
+
 
         <h3>Welcome {this.props.userData.name}!</h3>
         {this.checkAdmin() ? (
@@ -103,7 +107,7 @@ class Tavern extends Component {
               disabled={!this.state.membersReady}
               onClick={this.toggleCountdown}
             >
-                <i className="material-icons">{this.props.tavernData.countdownActive ? 'stop' : 'timer'}</i>
+              <i className="material-icons">{this.props.tavernData.countdownActive ? 'stop' : 'timer'}</i>
             </button>
           </div>
         ) : (
