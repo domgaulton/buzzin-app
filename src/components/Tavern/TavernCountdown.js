@@ -28,7 +28,7 @@ class TavernCountdown extends Component {
     const countdownVariable = (this.props.countdownTime / 1.428);
     let tempCountdownTime = this.props.countdownTime;
     this.timerId = setInterval(() => {
-      if (tempCountdownTime === 0 ) {
+      if (tempCountdownTime <= 0 ) {
         clearInterval(this.timerId);
         this.setState({
           percentLeft: 100,

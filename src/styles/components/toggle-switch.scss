@@ -29,7 +29,7 @@
 .toggle-switch {
   position: fixed;
   right: 30px;
-  bottom: 100px;
+  bottom: $navigation-height + 100px;
   height: 34px;
   width: 62px;
 }
