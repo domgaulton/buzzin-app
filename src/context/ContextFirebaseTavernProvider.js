@@ -56,14 +56,14 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
-    console.log(tavernName, pin);
+    // console.log(tavernName, pin);
     firestore.collection("taverns").where("name", "==", tavernName)
     .get()
     .then(function(data) {
-      console.log(data)
+      // console.log(data)
       if (!data.empty) {
         data.forEach(function(doc) {
-          console.log(doc);
+          // console.log(doc);
           firestore.collection("taverns").doc(doc.id).update({
               members: firebase.firestore.FieldValue.arrayUnion({
                 isReady: false,
@@ -161,11 +161,37 @@ class FirebaseTavernProvider extends Component {
 
   handlesetCountdownActive = bool => {
     firestore.collection("taverns").doc(this.state.tavernId).update({
-        countdownActive: bool
+      countdownActive: bool
     })
     .catch(function(error) {
-        console.error("Error updating document: ", error);
+      console.error("Error updating document: ", error);
     });
+  }
+
+  updateTavernMembers(task, tavernId, userId){
+    // only do something current if we are adding a user
+    if (task === 'add') {
+      firestore.collection("taverns").doc(tavernId).update({
+        members: firebase.firestore.FieldValue.arrayUnion({
+          isReady: false,
+          id: userId,
+        })
+      });
+    } else {
+      return;
+    }
+  }
+
+  updateUserTaverns(task, userId, tavernId){
+    if (task === 'add') {
+      firestore.collection("users").doc(userId).update({
+        taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
+      });
+    } else if (task === 'remove') {
+      firestore.collection("users").doc(userId).update({
+        taverns: firebase.firestore.FieldValue.arrayUnion(tavernId)
+      });
+    }
   }
 
   render(){
