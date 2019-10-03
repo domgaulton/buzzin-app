@@ -11,24 +11,24 @@ class TavernCountdown extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // if (this.props.countdownActive !== prevProps.countdownActive) {
-    //   this.props.setCountdownActive(this.props.countdownActive);
-    //   if (this.props.countdownActive === true) {
-    //     this.handleStartTimer();
-    //   } else {
-    //     this.handleStopTimer();
-    //   }
-    // }
+    if (this.props.countdownActive !== prevProps.countdownActive) {
+      this.props.setCountdownActive(this.props.countdownActive);
+      if (this.props.countdownActive === true) {
+        this.handleStartTimer();
+      } else {
+        this.handleStopTimer();
+      }
+    }
 
-    // if (this.props.paused !== prevProps.paused) {
-    //   if (this.props.paused) {
-    //     console.log('pause')
-    //     this.handlePauseTimer();
-    //   } else {
-    //     console.log('resume')
-    //     this.handleStartTimer();
-    //   }
-    // }
+    if (this.props.paused !== prevProps.paused) {
+      if (this.props.paused) {
+        console.log('pause')
+        this.handlePauseTimer();
+      } else {
+        console.log('resume')
+        this.handleStartTimer();
+      }
+    }
 
     // if (this.props.countdownActive !== prevProps.countdownActive) {
     //   this.props.setCountdownActive(this.props.countdownActive);
@@ -46,21 +46,23 @@ class TavernCountdown extends Component {
     //   }
     // }
 
-    if (this.props.countdownActive !== prevProps.countdownActive || this.props.paused !== prevProps.paused) {
-      this.props.setCountdownActive(this.props.countdownActive);
-      if (this.props.countdownActive === true) {
-        console.log('countdownActive');
-        if (this.props.paused) {
-          console.log('pause')
-          this.handlePauseTimer();
-        } else {
-          console.log('resume')
-          this.handleStartTimer();
-        }
-      } else {
-        this.handleStopTimer();
-      }
-    }
+    // if (this.props.countdownActive !== prevProps.countdownActive || this.props.paused !== prevProps.paused) {
+    //   console.log('set countdownactive to', this.props.countdownActive);
+    //   this.props.setCountdownActive(this.props.countdownActive);
+    //   if (this.props.countdownActive === true) {
+    //     console.log('countdownActive true - check paused');
+    //     if (this.props.paused) {
+    //       console.log('paused true - pause timer')
+    //       this.handlePauseTimer();
+    //     } else {
+    //       console.log('paused false - resume timer')
+    //       this.handleStartTimer();
+    //     }
+    //   } else {
+    //     console.log('countdownActive false - stop timer');
+    //     this.handleStopTimer();
+    //   }
+    // }
   }
 
   componentWillUnmount() {
@@ -94,9 +96,8 @@ class TavernCountdown extends Component {
   handlePauseTimer = () => {
     if (this.timerId){
       clearInterval(this.timerId);
-      this.props.setCountdownActive(false);
       this.setState({
-        pausedAt: (this.state.percentLeft / 100) * this.props.countdownTime,
+        pausedAt: this.state.percentLeft,
       })
     }
   }
