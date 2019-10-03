@@ -10,7 +10,7 @@ class UserList extends Component {
         <h3>Members Ready?</h3>
         <ul className="item-list">
           {this.props.tavernData && this.props.tavernData.members && this.props.tavernData.members.length && this.props.tavernData.members.map(item => {
-            return <UserListItem key={item.id} userData={item} />
+            return <UserListItem key={item.id} userData={item} buzzedIn={this.props.tavernData.buzzedIn} />
           })}
         </ul>
       </React.Fragment>

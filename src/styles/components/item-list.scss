@@ -16,6 +16,10 @@
     display: flex;
     justify-content: center;
     align-content: center;
+
+    &--highlight {
+      font-weight: bold;
+    }
   }
 
   button, &__icon {
