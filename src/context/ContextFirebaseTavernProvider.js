@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { firestore } from "../base";
 import * as firebase from "firebase/app";
+import { ContextMessageConsumer } from './ContextMessageProvider';
 
 const Context = React.createContext();
 export const ContextTavernConsumer = Context.Consumer;
@@ -82,8 +83,8 @@ class FirebaseTavernProvider extends Component {
       this.updateUserTaverns('add', userId, response.id);
       this.updateTavernMembers('add', response.id, userId);
     })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
+    .catch(error => {
+      this.props.addMessage(error);
     });
   }
 
@@ -101,14 +102,14 @@ class FirebaseTavernProvider extends Component {
             this.updateUserTaverns('add', userId, response.id);
             this.updateTavernMembers('add', response.id, userId);
           } else {
+            this.props.addMessage("You're already in this tavern!");
             return
-            //console.log('user exists')
           }
         });
       }
     })
-    .catch(function(error) {
-      console.log("Error getting documents: ", error);
+    .catch(error => {
+      this.props.addMessage(error);
     });
   }
 
@@ -145,8 +146,8 @@ class FirebaseTavernProvider extends Component {
     firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
       countdownActive: bool
     })
-    .catch(function(error) {
-      console.error("Error updating document: ", error);
+    .catch(error => {
+      this.props.addMessage(error);
     });
   }
 
@@ -204,8 +205,8 @@ class FirebaseTavernProvider extends Component {
 
       tavernDoc.delete().then(function() {
         console.log("Document successfully deleted!");
-      }).catch(function(error) {
-        console.error("Error removing document: ", error);
+      }).catch(error => {
+        this.props.addMessage(error);
       });
 
     });
@@ -248,7 +249,18 @@ class FirebaseTavernProvider extends Component {
       </Context.Provider>
     );
   }
-
 }
 
-export default FirebaseTavernProvider;
+const FirebaseTavernProviderUpdate = props => (
+  <ContextMessageConsumer>
+    {({ addMessage }) => (
+      <FirebaseTavernProvider
+        // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
+        {...props}
+        addMessage={addMessage}
+      />
+    )}
+  </ContextMessageConsumer>
+);
+
+export default FirebaseTavernProviderUpdate;

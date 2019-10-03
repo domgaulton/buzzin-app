@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
 // import * as firebase from "firebase/app";
+import { ContextMessageConsumer } from './ContextMessageProvider';
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -53,12 +54,9 @@ class FirebaseUserProvider extends Component {
     .then(response => {
       this.handleSetUserData(response.user.uid)
     })
-    .catch(function(error) {
-      // Handle Errors here.
-      const errorCode = error.code;
+    .catch(error => {
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage)
-      // ...
+      this.props.addMessage(errorMessage)
     });
   }
 
@@ -70,12 +68,9 @@ class FirebaseUserProvider extends Component {
       })
       this.handleCreateDatabaseUser(response.user.uid, name)
     })
-    .catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode, errorMessage)
-      // ...
+    .catch(error => {
+      const errorMessage = error.message;
+      this.props.addMessage(errorMessage);
     });
   }
 
@@ -85,10 +80,10 @@ class FirebaseUserProvider extends Component {
     })
     .then(() => {
       this.handleSetUserData(userId);
-      console.log("Document successfully written!");
     })
-    .catch(function(error) {
-      console.error("Error writing document: ", error);
+    .catch(error => {
+      // console.error("Error writing document: ", error);
+      this.props.addMessage(error);
     });
   }
 
@@ -99,9 +94,9 @@ class FirebaseUserProvider extends Component {
         userLoggedIn: false,
         userId: '',
       })
-    }).catch(function(error) {
+    }).catch(error => {
       // An error happened.
-      console.log(error)
+      this.props.addMessage(error);
     });
   }
 
@@ -206,8 +201,8 @@ class FirebaseUserProvider extends Component {
   handleResetPassword = email => {
     auth.sendPasswordResetEmail(email).then(function() {
       // Email sent.
-    }).catch(function(error) {
-      // An error happened.
+    }).catch(error => {
+      this.props.addMessage(error);
     });
   }
 
@@ -221,5 +216,20 @@ class FirebaseUserProvider extends Component {
 
 }
 
-export default FirebaseUserProvider;
+// export default FirebaseUserProvider;
+
+const FirebaseUserProviderUpdate = props => (
+  <ContextMessageConsumer>
+    {({ addMessage }) => (
+      <FirebaseUserProvider
+        // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
+        {...props}
+        addMessage={addMessage}
+      />
+    )}
+  </ContextMessageConsumer>
+);
+
+export default FirebaseUserProviderUpdate;
+
 

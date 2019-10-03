@@ -34,7 +34,11 @@ class Login extends Component {
 
   handleLogin = e => {
     e.preventDefault();
-    this.props.loginUser(this.state.email, this.state.password)
+    this.props.loginUser(this.state.email, this.state.password);
+    this.setState({
+      email: '',
+      password: '',
+    })
   }
 
   handleCreateUser = e => {

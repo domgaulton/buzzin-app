@@ -8,10 +8,12 @@ import Room from "../components/Tavern/Room";
 import TavernHome from "../components/Tavern/Home";
 import Settings from "../components/Settings/Index";
 import Navigation from '../components/Navigation';
+import MessageBanner from '../components/General/MessageBanner';
 
 function AppRouter() {
   return (
     <Router>
+      <MessageBanner />
       <Route path="/" component={Index} />
       <Route path="/login" exact component={Login} />
       <Route path="/logout" exact component={Logout} />
