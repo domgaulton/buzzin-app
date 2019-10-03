@@ -26,7 +26,7 @@ class FirebaseTavernProvider extends Component {
 
       // Tavern Room Functionality
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
-      setCountdownActive: (data) => this.handlesetCountdownActive(data),
+      setCountdownActive: (data) => this.handleSetCountdownActive(data),
       resetUsersNotReady: (tavernId) => this.handleResetUsersNotReady(tavernId),
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
@@ -142,7 +142,7 @@ class FirebaseTavernProvider extends Component {
     })
   }
 
-  handlesetCountdownActive = bool => {
+  handleSetCountdownActive = bool => {
     firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
       countdownActive: bool,
       buzzedIn: '',
@@ -164,19 +164,10 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleUserBuzzedIn = userId => {
-    let buzzedIn = '';
-    firestore.collection(usersCollection).doc(userId)
-    .get()
-    .then(response => {
-      buzzedIn = response.data().name;
-    })
-    .then(() => {
-      const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
-      tavernDoc.update({
-        buzzedIn: buzzedIn,
-        // countdownActive: false,
-      });
-    })
+    const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
+    tavernDoc.update({
+      buzzedIn: userId,
+    });
   }
 
   handleUserAnswered = (correct, userId, score) => {

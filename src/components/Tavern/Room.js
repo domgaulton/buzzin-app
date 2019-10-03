@@ -91,15 +91,6 @@ class Tavern extends Component {
         <h1>{this.props.tavernData.name}</h1>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
 
-        {this.state.buzzedIn !== '' ? (
-          <span
-            className={`buzzed-in ${this.state.buzzedIn ? 'buzzed-in--display' : ''}`}
-          >
-            {`${this.state.buzzedIn} buzzed!`}
-          </span>
-        ) : null }
-
-
         <h3>Welcome {this.props.userData.name}!</h3>
         {this.checkAdmin() ? (
           <div className={`countdown-start-stop ${!this.state.membersReady ? 'countdown-start-stop--disabled' : null}`}>
