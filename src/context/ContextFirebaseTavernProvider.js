@@ -179,6 +179,7 @@ class FirebaseTavernProvider extends Component {
       tavernDoc.update({
         countdownActive: false,
       });
+      this.props.addMessage('Answered Correct!');
       // also set everyone to not ready!
     }
   }

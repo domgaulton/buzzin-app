@@ -88,7 +88,7 @@ class Tavern extends Component {
   render(){
     return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
-        <h1>{this.props.tavernData.name}</h1>
+        <p>{this.props.tavernData.name}</p>
         {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}
 
         <h3>Welcome {this.props.userData.name}!</h3>
