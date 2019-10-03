@@ -5,6 +5,9 @@ import { firestore, auth } from "../base";
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
 
+const tavernsCollection = process.env.REACT_APP_FIREBASE_TAVERNS_COLLECTION;
+const usersCollection = process.env.REACT_APP_FIREBASE_USERS_COLLECTION;
+
 class FirebaseUserProvider extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +80,7 @@ class FirebaseUserProvider extends Component {
   }
 
   handleCreateDatabaseUser = (userId, name) => {
-    firestore.collection("users").doc(userId).set({
+    firestore.collection(usersCollection).doc(userId).set({
       name: name,
     })
     .then(() => {
@@ -104,18 +107,18 @@ class FirebaseUserProvider extends Component {
 
   handleDeleteUser = userId => {
     let newMembers = [];
-    const userDoc = firestore.collection("users").doc(userId);
+    const userDoc = firestore.collection(usersCollection).doc(userId);
     userDoc.get()
     .then(response => {
       if (response.exists && response.data().taverns) {
         // Go through each tavern you're a member of and delete trace!
         response.data().taverns.forEach(item => {
           // console.log(item);
-          firestore.collection("taverns").doc(item).get().then(response => {
+          firestore.collection(tavernsCollection).doc(item).get().then(response => {
             const members = response.data().members;
             if (members) {
               newMembers = members.filter(item => item.id !== userId);
-              firestore.collection("taverns").doc(item).update({
+              firestore.collection(tavernsCollection).doc(item).update({
                 members: newMembers
               })
             }
@@ -126,14 +129,14 @@ class FirebaseUserProvider extends Component {
     })
     .then(() => {
       //Find taverns where user is admin member
-      firestore.collection("taverns").where("admin", "==", userId)
+      firestore.collection(tavernsCollection).where("admin", "==", userId)
       .get()
       .then(function(query) {
         // console.log(data)
         if (!query.empty) {
           query.forEach(function(response) {
             // console.log(doc);
-            firestore.collection("taverns").doc(response.id).delete().then(function() {
+            firestore.collection(tavernsCollection).doc(response.id).delete().then(function() {
               // console.log("Document successfully deleted!");
             }).catch(function(error) {
               console.error("Error removing document: ", error);
@@ -172,7 +175,7 @@ class FirebaseUserProvider extends Component {
 
   async handleGetUserData(userId) {
     let data = {}
-    const users = firestore.collection("users").doc(userId);
+    const users = firestore.collection(usersCollection).doc(userId);
     await users.get()
     .then(response => {
       data = response.data();
@@ -184,7 +187,7 @@ class FirebaseUserProvider extends Component {
     this.setState({
       userId: userId
     })
-    firestore.collection("users").doc(userId)
+    firestore.collection(usersCollection).doc(userId)
     .onSnapshot({
       includeMetadataChanges: true
     },(response) => {

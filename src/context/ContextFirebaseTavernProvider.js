@@ -5,6 +5,9 @@ import * as firebase from "firebase/app";
 const Context = React.createContext();
 export const ContextTavernConsumer = Context.Consumer;
 
+const tavernsCollection = process.env.REACT_APP_FIREBASE_TAVERNS_COLLECTION;
+const usersCollection = process.env.REACT_APP_FIREBASE_USERS_COLLECTION;
+
 class FirebaseTavernProvider extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +43,7 @@ class FirebaseTavernProvider extends Component {
     this.setState({
       tavernId,
     })
-    firestore.collection("taverns").doc(tavernId)
+    firestore.collection(tavernsCollection).doc(tavernId)
     .onSnapshot({
       includeMetadataChanges: true
     },(response) => {
@@ -53,7 +56,7 @@ class FirebaseTavernProvider extends Component {
 
   async handleGetTavernData(tavernId) {
     let data = {}
-    const tavern = firestore.collection("taverns").doc(tavernId);
+    const tavern = firestore.collection(tavernsCollection).doc(tavernId);
     await tavern.get()
     .then(response => {
       data = response.data();
@@ -66,7 +69,7 @@ class FirebaseTavernProvider extends Component {
   // // // // // //
 
   handleCreateNewTavern = (name, pin, userId, memberName) => {
-    firestore.collection("taverns").add({
+    firestore.collection(tavernsCollection).add({
       name: name,
       pin: pin,
       countdown: 30,
@@ -86,7 +89,7 @@ class FirebaseTavernProvider extends Component {
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
     // console.log(tavernName, pin);
-    firestore.collection("taverns").where("name", "==", tavernName)
+    firestore.collection(tavernsCollection).where("name", "==", tavernName)
     .get()
     .then(query => {
       // if tavern exists
@@ -115,7 +118,7 @@ class FirebaseTavernProvider extends Component {
 
   handleSetUserReady = (userId, bool) => {
     let newMembers = []
-    firestore.collection("taverns").doc(this.state.tavernId)
+    firestore.collection(tavernsCollection).doc(this.state.tavernId)
     .get()
     .then(response => {
       let members = response.data().members;
@@ -132,14 +135,14 @@ class FirebaseTavernProvider extends Component {
     })
     .then(() => {
       // set the member data from temp above!
-      firestore.collection("taverns").doc(this.state.tavernId).update({
+      firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
         members: newMembers
       });
     })
   }
 
   handlesetCountdownActive = bool => {
-    firestore.collection("taverns").doc(this.state.tavernId).update({
+    firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
       countdownActive: bool
     })
     .catch(function(error) {
@@ -148,7 +151,7 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleResetUsersNotReady = tavernId => {
-    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
@@ -160,13 +163,13 @@ class FirebaseTavernProvider extends Component {
 
   handleUserBuzzedIn = userId => {
     let buzzedIn = '';
-    firestore.collection("users").doc(userId)
+    firestore.collection(usersCollection).doc(userId)
     .get()
     .then(response => {
       buzzedIn = response.data().name;
     })
     .then(() => {
-      const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
+      const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
       tavernDoc.update({
         buzzedIn: buzzedIn,
         countdownActive: false,
@@ -179,7 +182,7 @@ class FirebaseTavernProvider extends Component {
     if (correct === 'true'){
       //console.log('correct - handle score')
     }
-    const tavernDoc = firestore.collection("taverns").doc(this.state.tavernId);
+    const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
     tavernDoc.update({
       buzzedIn: '',
     });
@@ -190,7 +193,7 @@ class FirebaseTavernProvider extends Component {
   // // // // // //
 
   handleDeleteTavern = tavernId => {
-    const tavernDoc = firestore.collection("taverns").doc(tavernId);
+    const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
     // store members to delete later
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
@@ -215,7 +218,7 @@ class FirebaseTavernProvider extends Component {
   updateTavernMembers = (task, tavernId, userId)  => {
     // only do something current if we are adding a user
     if (task === 'add') {
-      firestore.collection("taverns").doc(tavernId).update({
+      firestore.collection(tavernsCollection).doc(tavernId).update({
         members: firebase.firestore.FieldValue.arrayUnion({
           isReady: false,
           id: userId,
@@ -228,11 +231,11 @@ class FirebaseTavernProvider extends Component {
 
   updateUserTaverns = (task, userId, tavernId) => {
     if (task === 'add') {
-      firestore.collection("users").doc(userId).update({
+      firestore.collection(usersCollection).doc(userId).update({
         taverns: firebase.firestore.FieldValue.arrayUnion(tavernId)
       });
     } else if (task === 'remove') {
-      firestore.collection("users").doc(userId).update({
+      firestore.collection(usersCollection).doc(userId).update({
         taverns: firebase.firestore.FieldValue.arrayRemove(tavernId)
       });
     }
