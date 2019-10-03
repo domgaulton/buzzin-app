@@ -6,6 +6,7 @@ class TavernCountdown extends Component {
     super(props);
     this.state = {
       percentLeft: 100,
+      pausedAt: '',
     };
   }
 
@@ -14,6 +15,20 @@ class TavernCountdown extends Component {
       this.props.setCountdownActive(this.props.countdownActive);
       if (this.props.countdownActive === true) {
         this.handleStartTimer();
+      } else {
+        this.handleStopTimer();
+      }
+    }
+
+    if (this.props.paused !== prevProps.paused) {
+      if ( this.props.countdownActive ) {
+        if (this.props.paused ) {
+          // console.log('pause')
+          this.handlePauseTimer();
+        } else {
+          // console.log('resume')
+          this.handleStartTimer();
+        }
       } else {
         this.handleStopTimer();
       }
@@ -27,6 +42,9 @@ class TavernCountdown extends Component {
   handleStartTimer = () => {
     const countdownVariable = (this.props.countdownTime / 1.428);
     let tempCountdownTime = this.props.countdownTime;
+    if (this.state.pausedAt !== '') {
+      tempCountdownTime = this.percentageToTime(this.state.pausedAt)
+    }
     this.timerId = setInterval(() => {
       if (tempCountdownTime <= 0 ) {
         clearInterval(this.timerId);
@@ -48,6 +66,15 @@ class TavernCountdown extends Component {
     }, countdownVariable)
   }
 
+  handlePauseTimer = () => {
+    if (this.timerId){
+      clearInterval(this.timerId);
+      this.setState({
+        pausedAt: this.state.percentLeft,
+      })
+    }
+  }
+
   handleStopTimer = () => {
     if (this.timerId){
       clearInterval(this.timerId);
@@ -58,18 +85,14 @@ class TavernCountdown extends Component {
     }
   }
 
+  percentageToTime = percentage => {
+    return ((percentage / 100) * this.props.countdownTime).toFixed(2);
+  }
+
   render(){
-    // return (
-    //   <div className="container">
-    //     <div className="countdown-wrapper">
-    //       {`Time left: ${Math.round((this.state.percentLeft / 100) * this.props.countdownTime)} seconds`}
-    //       <div className="countdown-wrapper__countdown" style={{height: `${this.state.percentLeft}%`}} />
-    //     </div>
-    //   </div>
-    // );
     return (
       <div className="countdown-timer">
-        <p>{((this.state.percentLeft / 100) * this.props.countdownTime).toFixed(2)}</p>
+        <p>{this.props.paused ? this.percentageToTime(this.state.pausedAt) : this.percentageToTime(this.state.percentLeft)}</p>
       </div>
     )
   };

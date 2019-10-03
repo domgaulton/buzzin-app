@@ -143,7 +143,8 @@ class FirebaseTavernProvider extends Component {
 
   handlesetCountdownActive = bool => {
     firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
-      countdownActive: bool
+      countdownActive: bool,
+      buzzedIn: '',
     })
     .catch(function(error) {
       console.error("Error updating document: ", error);
@@ -172,20 +173,22 @@ class FirebaseTavernProvider extends Component {
       const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
       tavernDoc.update({
         buzzedIn: buzzedIn,
-        countdownActive: false,
+        // countdownActive: false,
       });
     })
   }
 
   handleUserAnswered = (correct, userId, score) => {
-    // console.log(correct);
-    if (correct === 'true'){
-      //console.log('correct - handle score')
-    }
     const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
     tavernDoc.update({
       buzzedIn: '',
     });
+    if (correct === 'true'){
+      tavernDoc.update({
+        countdownActive: false,
+      });
+      // also set everyone to not ready!
+    }
   }
 
   // // // // // //

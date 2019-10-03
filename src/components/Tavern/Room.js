@@ -120,6 +120,7 @@ class Tavern extends Component {
         <TavernCountdown
           countdownActive={this.state.countdownActive}
           countdownTime={this.props.tavernData.countdown}
+          paused={this.state.buzzedIn !== ''}
         />
 
         <UserList />
