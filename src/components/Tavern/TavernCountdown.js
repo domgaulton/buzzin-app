@@ -21,8 +21,6 @@ class TavernCountdown extends Component {
     }
 
     if (this.props.paused !== prevProps.paused) {
-      // console.log('pause props changed to ', this.props.paused)
-      // console.log('also check countdown is active which is ', this.props.countdownActive)
       if ( this.props.countdownActive ) {
         if (this.props.paused ) {
           // console.log('pause')
@@ -35,40 +33,6 @@ class TavernCountdown extends Component {
         this.handleStopTimer();
       }
     }
-
-    // if (this.props.countdownActive !== prevProps.countdownActive) {
-    //   this.props.setCountdownActive(this.props.countdownActive);
-    //   if (this.props.countdownActive === true) {
-    //     console.log('countdownActive');
-    //     if (this.props.paused) {
-    //       console.log('pause')
-    //       this.handlePauseTimer();
-    //     } else {
-    //       console.log('resume')
-    //       this.handleStartTimer();
-    //     }
-    //   } else {
-    //     this.handleStopTimer();
-    //   }
-    // }
-
-    // if (this.props.countdownActive !== prevProps.countdownActive || this.props.paused !== prevProps.paused) {
-    //   console.log('set countdownactive to', this.props.countdownActive);
-    //   this.props.setCountdownActive(this.props.countdownActive);
-    //   if (this.props.countdownActive === true) {
-    //     console.log('countdownActive true - check paused');
-    //     if (this.props.paused) {
-    //       console.log('paused true - pause timer')
-    //       this.handlePauseTimer();
-    //     } else {
-    //       console.log('paused false - resume timer')
-    //       this.handleStartTimer();
-    //     }
-    //   } else {
-    //     console.log('countdownActive false - stop timer');
-    //     this.handleStopTimer();
-    //   }
-    // }
   }
 
   componentWillUnmount() {
@@ -126,7 +90,6 @@ class TavernCountdown extends Component {
   }
 
   render(){
-    // console.log(this.props.paused)
     return (
       <div className="countdown-timer">
         <p>{this.props.paused ? this.percentageToTime(this.state.pausedAt) : this.percentageToTime(this.state.percentLeft)}</p>
