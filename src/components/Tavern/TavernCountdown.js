@@ -21,12 +21,18 @@ class TavernCountdown extends Component {
     }
 
     if (this.props.paused !== prevProps.paused) {
-      if (this.props.paused) {
-        console.log('pause')
-        this.handlePauseTimer();
+      // console.log('pause props changed to ', this.props.paused)
+      // console.log('also check countdown is active which is ', this.props.countdownActive)
+      if ( this.props.countdownActive ) {
+        if (this.props.paused ) {
+          // console.log('pause')
+          this.handlePauseTimer();
+        } else {
+          // console.log('resume')
+          this.handleStartTimer();
+        }
       } else {
-        console.log('resume')
-        this.handleStartTimer();
+        this.handleStopTimer();
       }
     }
 
@@ -71,7 +77,10 @@ class TavernCountdown extends Component {
 
   handleStartTimer = () => {
     const countdownVariable = (this.props.countdownTime / 1.428);
-    let tempCountdownTime = this.state.pausedAt || this.props.countdownTime;
+    let tempCountdownTime = this.props.countdownTime;
+    if (this.state.pausedAt !== '') {
+      tempCountdownTime = this.percentageToTime(this.state.pausedAt)
+    }
     this.timerId = setInterval(() => {
       if (tempCountdownTime <= 0 ) {
         clearInterval(this.timerId);
@@ -117,15 +126,7 @@ class TavernCountdown extends Component {
   }
 
   render(){
-    console.log(this.props.paused)
-    // return (
-    //   <div className="container">
-    //     <div className="countdown-wrapper">
-    //       {`Time left: ${Math.round((this.state.percentLeft / 100) * this.props.countdownTime)} seconds`}
-    //       <div className="countdown-wrapper__countdown" style={{height: `${this.state.percentLeft}%`}} />
-    //     </div>
-    //   </div>
-    // );
+    // console.log(this.props.paused)
     return (
       <div className="countdown-timer">
         <p>{this.props.paused ? this.percentageToTime(this.state.pausedAt) : this.percentageToTime(this.state.percentLeft)}</p>
