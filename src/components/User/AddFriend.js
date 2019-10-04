@@ -42,7 +42,7 @@ class AddFriend extends Component {
           <input
             type='submit'
             className="buzzin-form__item buzzin-form__item--submit"
-            value="Find Tavern"
+            value="Add Friend"
           />
         </form>
       </div>

@@ -30,6 +30,7 @@ class FirebaseUserProvider extends Component {
 
       // Friends
       addNewFriend: (username) => this.handleAddNewFriend(username),
+      confirmFriendRequest: (userId) => this.handleConfirmFriendRequest(userId),
 
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
@@ -48,6 +49,12 @@ class FirebaseUserProvider extends Component {
         })
       }
     });
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (this.state.userData.friendsPending !== prevState.userData.friendsPending) {
+      this.props.addMessage("New friend request");
+    }
   }
 
   // // // // // //
@@ -230,18 +237,32 @@ class FirebaseUserProvider extends Component {
       // console.log(data)
       if (!query.empty) {
         query.forEach(response => {
-          firestore.collection(usersCollection).doc(this.state.userId).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(response.id)
-          });
-
           firestore.collection(usersCollection).doc(response.id).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
+            friendsPending: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
           });
         });
-      } else {
-        this.props.addMessage("Sorry, couldn't find that user");
       }
+      this.props.addMessage("If that user exists they will be sent a message");
     })
+  }
+
+  handleConfirmFriendRequest = userId => {
+    // Add them to your friendlist
+    firestore.collection(usersCollection).doc(this.state.userId).update({
+      friends: firebase.firestore.FieldValue.arrayUnion(userId)
+    });
+
+    // Remove them from temp list
+    firestore.collection(usersCollection).doc(this.state.userId).update({
+      friendsPending: firebase.firestore.FieldValue.arrayRemove(userId)
+    });
+
+    // Add you to their friend list
+    firestore.collection(usersCollection).doc(userId).update({
+      friends: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
+    });
+
+
   }
 
   // // // // // //
