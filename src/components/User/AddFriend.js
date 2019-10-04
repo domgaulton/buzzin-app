@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
-import { ContextTavernConsumer } from "../../context/ContextFirebaseTavernProvider";
 
 class AddFriend extends Component {
   constructor(props) {
@@ -12,7 +11,10 @@ class AddFriend extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.addNewFriend(this.state.username)
+    this.props.addNewFriend(this.state.username);
+    this.setState({
+      username: '',
+    })
   }
 
   handleInputChange(e) {
@@ -23,7 +25,7 @@ class AddFriend extends Component {
 
   render(){
     return (
-      <React.Fragment>
+      <div className="container">
         <h1>Add a friend</h1>
           <form
             onSubmit={e => this.handleSubmit(e)}
@@ -43,7 +45,7 @@ class AddFriend extends Component {
             value="Find Tavern"
           />
         </form>
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -226,15 +226,20 @@ class FirebaseUserProvider extends Component {
   handleAddNewFriend = username => {
     firestore.collection(usersCollection).where("name", "==", username)
     .get()
-    .then(function(query) {
+    .then(query => {
       // console.log(data)
       if (!query.empty) {
-        query.forEach(function(response) {
-          console.log(response.id);
+        query.forEach(response => {
           firestore.collection(usersCollection).doc(this.state.userId).update({
             friends: firebase.firestore.FieldValue.arrayUnion(response.id)
           });
+
+          firestore.collection(usersCollection).doc(response.id).update({
+            friends: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
+          });
         });
+      } else {
+        this.props.addMessage("Sorry, couldn't find that user");
       }
     })
   }
