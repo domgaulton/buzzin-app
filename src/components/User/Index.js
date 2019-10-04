@@ -13,7 +13,7 @@ class User extends Component {
         <h3>Notifications</h3>
         <p>No new notifications</p>
 
-        <h3>Friends {this.props.userData.friends.length}</h3>
+        <h3>Friends {this.props.userData.friends && this.props.userData.friends.length}</h3>
         <Link className="bz-navigation__item" to='/add-friend'>Add Friend</Link>
 
         <h3>Score</h3>
