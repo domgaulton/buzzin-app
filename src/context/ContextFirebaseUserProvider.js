@@ -26,6 +26,7 @@ class FirebaseUserProvider extends Component {
       // Set User Data
       getUserData: (data) => this.handleGetUserData(data),
       setUserData: (data) => this.handleSetUserData(data),
+      updateUserData: (userId, fieldName, update) => this.handleUpdateUserData(userId, fieldName, update),
 
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
@@ -192,6 +193,13 @@ class FirebaseUserProvider extends Component {
         userLoggedIn: true,
       })
     });
+  }
+
+  handleUpdateUserData = (userId, fieldName, update) => {
+    const user = firestore.collection(usersCollection).doc(userId)
+    user.update({
+      [fieldName]: update,
+    })
   }
 
   // // // // // //

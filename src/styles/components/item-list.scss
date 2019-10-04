@@ -12,9 +12,6 @@
     position: relative;
     padding: 0.5em 0;
     margin-bottom: 0.5em;
-    display: flex;
-    justify-content: center;
-    align-content: center;
     font-size: 1.5em;
     display: flex;
     align-content: center;
@@ -36,6 +33,10 @@
       animation-iteration-count: infinite;
       animation-direction: alternate;
     }
+  }
+
+  &__score {
+    font-size: 0.7em;
   }
 
   button, &__icon {

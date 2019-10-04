@@ -16,7 +16,7 @@ class User extends Component {
         <p>No friends</p>
 
         <h3>Score</h3>
-        <p>0</p>
+        <p>{this.props.userData.score}</p>
 
       </div>
     ) : (

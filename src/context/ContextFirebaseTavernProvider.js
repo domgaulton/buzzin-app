@@ -27,7 +27,7 @@ class FirebaseTavernProvider extends Component {
       // Tavern Room Functionality
       setUserReady: (userId, bool) => this.handleSetUserReady(userId, bool),
       setCountdownActive: (data) => this.handleSetCountdownActive(data),
-      resetUsersNotReady: (tavernId) => this.handleResetUsersNotReady(tavernId),
+      resetUsersToNotReady: (tavernId) => this.handleResetUsersToNotReady(tavernId),
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
 
@@ -152,7 +152,7 @@ class FirebaseTavernProvider extends Component {
     });
   }
 
-  handleResetUsersNotReady = tavernId => {
+  handleResetUsersToNotReady = tavernId => {
     const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
@@ -179,7 +179,8 @@ class FirebaseTavernProvider extends Component {
       tavernDoc.update({
         countdownActive: false,
       });
-      this.handleResetUsersNotReady(this.state.tavernId);
+      this.updateTavernMembersIndividually(userId, 'score');
+      this.handleResetUsersToNotReady(this.state.tavernId);
     }
   }
 
@@ -221,6 +222,31 @@ class FirebaseTavernProvider extends Component {
     } else {
       return;
     }
+  }
+
+  updateTavernMembersIndividually = (userId, field) => {
+    let newMembers = []
+    firestore.collection(tavernsCollection).doc(this.state.tavernId)
+    .get()
+    .then(response => {
+      let members = response.data().members;
+      // create a temp array to set whole member data later
+      newMembers = members
+      newMembers.map(member => {
+        if (member.id === userId) {
+          member[field] = member[field] + 5;
+          return member[field];
+        } else {
+          return member;
+        }
+      });
+    })
+    .then(() => {
+      // set the member data from temp above!
+      firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
+        members: newMembers
+      });
+    })
   }
 
   updateUserTaverns = (task, userId, tavernId) => {

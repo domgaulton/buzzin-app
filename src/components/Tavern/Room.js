@@ -54,9 +54,13 @@ class Tavern extends Component {
   }
 
   componentWillUnmount = () => {
-    this.props.resetUsersNotReady(this.props.match.params.tavernId);
+    this.props.resetUsersToNotReady(this.props.match.params.tavernId);
     this.props.setCountdownActive(false);
     this.props.userAnswered(false);
+    this.props.tavernData.members.forEach(item => {
+      // console.log(item.id, item.score);
+      this.props.updateUserData(item.id, 'score', item.score)
+    })
   }
 
   handleToggleUserReady = e => {
@@ -134,7 +138,10 @@ class Tavern extends Component {
 
         <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive}/>
 
-        <Toggle handleToggle={this.handleToggleUserReady} />
+        {!this.state.membersReady ? (
+          <Toggle handleToggle={this.handleToggleUserReady} />
+        ) : null }
+
       </div>
     ) : (
       <Login />
@@ -144,19 +151,20 @@ class Tavern extends Component {
 
 const TavernUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, userData, getUserData }) => (
+    {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, resetUsersNotReady, setCountdownActive, userBuzzedIn, userAnswered }) => (
+        {({ tavernData,setTavernData, setUserReady, resetUsersToNotReady, setCountdownActive, userBuzzedIn, userAnswered }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
             userId={userId}
             userData={userData}
             getUserData={getUserData}
+            updateUserData={updateUserData}
             tavernData={tavernData}
             setTavernData={setTavernData}
             setUserReady={setUserReady}
-            resetUsersNotReady={resetUsersNotReady}
+            resetUsersToNotReady={resetUsersToNotReady}
             setCountdownActive={setCountdownActive}
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
