@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from "../base";
-// import * as firebase from "firebase/app";
+import * as firebase from "firebase/app";
 import { ContextMessageConsumer } from './ContextMessageProvider';
 
 const Context = React.createContext();
@@ -28,6 +28,9 @@ class FirebaseUserProvider extends Component {
       setUserData: (data) => this.handleSetUserData(data),
       updateUserData: (userId, fieldName, update) => this.handleUpdateUserData(userId, fieldName, update),
 
+      // Friends
+      addNewFriend: (username) => this.handleAddNewFriend(username),
+
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
     };
@@ -37,6 +40,7 @@ class FirebaseUserProvider extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         this.handleSetUserData(user.uid)
+
       } else {
         // No user is signed in.
         this.setState({
@@ -214,6 +218,30 @@ class FirebaseUserProvider extends Component {
         [fieldName]: update,
       })
     }
+  }
+
+  // // // // // //
+  // Friends
+  // // // // // //
+  handleAddNewFriend = username => {
+    firestore.collection(usersCollection).where("name", "==", username)
+    .get()
+    .then(query => {
+      // console.log(data)
+      if (!query.empty) {
+        query.forEach(response => {
+          firestore.collection(usersCollection).doc(this.state.userId).update({
+            friends: firebase.firestore.FieldValue.arrayUnion(response.id)
+          });
+
+          firestore.collection(usersCollection).doc(response.id).update({
+            friends: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
+          });
+        });
+      } else {
+        this.props.addMessage("Sorry, couldn't find that user");
+      }
+    })
   }
 
   // // // // // //

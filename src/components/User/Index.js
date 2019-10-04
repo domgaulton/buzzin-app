@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import Login from '../Auth/Login';
+import { Link } from 'react-router-dom';
 
 class User extends Component {
 
@@ -12,8 +13,8 @@ class User extends Component {
         <h3>Notifications</h3>
         <p>No new notifications</p>
 
-        <h3>Friends Online</h3>
-        <p>No friends</p>
+        <h3>Friends {this.props.userData.friends.length}</h3>
+        <Link className="bz-navigation__item" to='/add-friend'>Add Friend</Link>
 
         <h3>Score</h3>
         <p>{this.props.userData.score}</p>
