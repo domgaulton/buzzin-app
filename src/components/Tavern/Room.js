@@ -54,25 +54,24 @@ class Tavern extends Component {
   }
 
   componentWillUnmount = () => {
-    // set score first
-    this.handleScoresAndTavernStates();
-    // this.props.resetUsersToNotReady(this.props.match.params.tavernId);
-    // this.props.setCountdownActive(false);
-    // this.props.userAnswered(false);
+    this.handleScoresAndTavernStates(this.props.tavernData.members);
   }
 
-  handleScoresAndTavernStates = () => {
+  handleScoresAndTavernStates = members => {
     // Set and reset score
-    this.props.tavernData.members.forEach(item => {
-      // update individual scores on user collection
-      this.props.updateUserData(item.id, 'score', item.score)
-      // reset all users to 0
-      this.props.resetTavernScores(item.id)
-    }, () => {
-      this.props.resetUsersToNotReady(this.props.match.params.tavernId);
-      this.props.setCountdownActive(false);
-      this.props.userAnswered(false);
-    })
+    if (members) {
+      members.forEach(item => {
+        // update individual scores on user collection
+        this.props.updateUserData(item.id, 'score', item.score)
+        // reset all users to 0
+        this.props.resetTavernScores(item.id)
+      }, () => {
+        // then reset the tavern data
+        this.props.resetUsersToNotReady(this.props.match.params.tavernId);
+        this.props.setCountdownActive(false);
+        this.props.userAnswered(false);
+      })
+    }
   }
 
   handleToggleUserReady = e => {

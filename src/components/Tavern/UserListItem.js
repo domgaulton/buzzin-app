@@ -16,14 +16,11 @@ class UserListItem extends Component {
   }
 
   render(){
-    // console.log(this.props.buzzedIn);
     return(
       <li
         className=
-          {`item-list__item item-list__item${this.props.userData.isReady
-          ? '--ready' : '--not-ready'}
-          ${this.props.buzzedIn === this.props.userData.id
-          ? 'item-list__item--buzzed-in' : ''}`}
+          {`item-list__item item-list__item${this.props.userData.isReady ? '--ready' : '--not-ready'}
+          ${this.props.buzzedIn === this.props.userData.id ? 'item-list__item--buzzed-in' : ''}`}
         key={this.props.userData.id}
       >
         <span>{this.state.name}</span>
