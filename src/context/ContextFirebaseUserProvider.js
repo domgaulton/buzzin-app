@@ -26,6 +26,7 @@ class FirebaseUserProvider extends Component {
       // Set User Data
       getUserData: (data) => this.handleGetUserData(data),
       setUserData: (data) => this.handleSetUserData(data),
+      updateUserData: (userId, fieldName, update) => this.handleUpdateUserData(userId, fieldName, update),
 
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
@@ -77,6 +78,7 @@ class FirebaseUserProvider extends Component {
   handleCreateDatabaseUser = (userId, name) => {
     firestore.collection(usersCollection).doc(userId).set({
       name: name,
+      score: 0,
     })
     .then(() => {
       this.handleSetUserData(userId);
@@ -192,6 +194,26 @@ class FirebaseUserProvider extends Component {
         userLoggedIn: true,
       })
     });
+  }
+
+  handleUpdateUserData = (userId, fieldName, update) => {
+    const user = firestore.collection(usersCollection).doc(userId)
+    if (fieldName === 'score') {
+      let currentScore = 0;
+      user.get()
+      .then(response => {
+        currentScore = response.data().score;
+      })
+      .then(() => {
+        user.update({
+          [fieldName]: currentScore + update,
+        })
+      })
+    } else {
+      user.update({
+        [fieldName]: update,
+      })
+    }
   }
 
   // // // // // //

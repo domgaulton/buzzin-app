@@ -54,9 +54,24 @@ class Tavern extends Component {
   }
 
   componentWillUnmount = () => {
-    this.props.resetUsersNotReady(this.props.match.params.tavernId);
-    this.props.setCountdownActive(false);
-    this.props.userAnswered(false);
+    this.handleScoresAndTavernStates(this.props.tavernData.members);
+  }
+
+  handleScoresAndTavernStates = members => {
+    // Set and reset score
+    if (members) {
+      members.forEach(item => {
+        // update individual scores on user collection
+        this.props.updateUserData(item.id, 'score', item.score)
+        // reset all users to 0
+        this.props.resetTavernScores(item.id)
+      }, () => {
+        // then reset the tavern data
+        this.props.resetUsersToNotReady(this.props.match.params.tavernId);
+        this.props.setCountdownActive(false);
+        this.props.userAnswered(false);
+      })
+    }
   }
 
   handleToggleUserReady = e => {
@@ -134,7 +149,10 @@ class Tavern extends Component {
 
         <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive}/>
 
-        <Toggle handleToggle={this.handleToggleUserReady} />
+        {!this.state.membersReady ? (
+          <Toggle handleToggle={this.handleToggleUserReady} />
+        ) : null }
+
       </div>
     ) : (
       <Login />
@@ -144,22 +162,24 @@ class Tavern extends Component {
 
 const TavernUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, userData, getUserData }) => (
+    {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, resetUsersNotReady, setCountdownActive, userBuzzedIn, userAnswered }) => (
+        {({ tavernData,setTavernData, setUserReady, resetUsersToNotReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernScores }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
             userId={userId}
             userData={userData}
             getUserData={getUserData}
+            updateUserData={updateUserData}
             tavernData={tavernData}
             setTavernData={setTavernData}
             setUserReady={setUserReady}
-            resetUsersNotReady={resetUsersNotReady}
+            resetUsersToNotReady={resetUsersToNotReady}
             setCountdownActive={setCountdownActive}
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
+            resetTavernScores={resetTavernScores}
           />
         )}
       </ContextTavernConsumer>
