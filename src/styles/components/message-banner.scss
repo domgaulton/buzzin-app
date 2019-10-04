@@ -37,7 +37,6 @@
 
 @include mobile {
   .message-banner {
-    background: green;
     &__close {
       position: fixed;
       right: 0;

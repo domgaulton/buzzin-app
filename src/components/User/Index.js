@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 
 class User extends Component {
 
+  confirmFriend = userId => {
+    this.props.confirmFriendRequest(userId);
+  }
+
   render(){
     return this.props.userLoggedIn && this.props.userData ? (
       <div className="container">
@@ -14,6 +18,17 @@ class User extends Component {
         <p>No new notifications</p>
 
         <h3>Friends {this.props.userData.friends && this.props.userData.friends.length}</h3>
+        {this.props.userData.friends ? (
+          this.props.userData.friends.map(item => {
+            return <p>{item}</p>
+          })
+        ) : null }
+
+        {this.props.userData.friendsPending ? (
+          this.props.userData.friendsPending.map(item => {
+            return <p>{item} <span onClick={() => this.confirmFriend(item)}>Accept</span></p>
+          })
+        ) : null }
         <Link className="bz-navigation__item" to='/add-friend'>Add Friend</Link>
 
         <h3>Score</h3>
@@ -28,12 +43,13 @@ class User extends Component {
 
 const UserUpdate = props => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userData }) => (
+    {({ userLoggedIn, userData, confirmFriendRequest }) => (
       <User
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
         userLoggedIn={userLoggedIn}
         userData={userData}
+        confirmFriendRequest={confirmFriendRequest}
       />
     )}
   </ContextUserConsumer>
