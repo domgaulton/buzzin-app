@@ -30,6 +30,7 @@ class FirebaseTavernProvider extends Component {
       resetUsersToNotReady: (tavernId) => this.handleResetUsersToNotReady(tavernId),
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
+      resetTavernScores:  (userId) => this.handleResetTavernScores(userId),
 
       // Settings
       deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
@@ -89,7 +90,6 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
-    // console.log(tavernName, pin);
     firestore.collection(tavernsCollection).where("name", "==", tavernName)
     .get()
     .then(query => {
@@ -118,28 +118,29 @@ class FirebaseTavernProvider extends Component {
   // // // // // //
 
   handleSetUserReady = (userId, bool) => {
-    let newMembers = []
-    firestore.collection(tavernsCollection).doc(this.state.tavernId)
-    .get()
-    .then(response => {
-      let members = response.data().members;
-      // create a temp array to set whole member data later
-      newMembers = members
-      newMembers.map(member => {
-        if (member.id === userId) {
-          member.isReady = bool;
-          return member.isReady;
-        } else {
-          return member;
-        }
-      });
-    })
-    .then(() => {
-      // set the member data from temp above!
-      firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
-        members: newMembers
-      });
-    })
+    this.updateTavernMembersIndividually(userId, 'isReady', bool);
+    // let newMembers = []
+    // firestore.collection(tavernsCollection).doc(this.state.tavernId)
+    // .get()
+    // .then(response => {
+    //   let members = response.data().members;
+    //   // create a temp array to set whole member data later
+    //   newMembers = members
+    //   newMembers.map(member => {
+    //     if (member.id === userId) {
+    //       member.isReady = bool;
+    //       return member.isReady;
+    //     } else {
+    //       return member;
+    //     }
+    //   });
+    // })
+    // .then(() => {
+    //   // set the member data from temp above!
+    //   firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
+    //     members: newMembers
+    //   });
+    // })
   }
 
   handleSetCountdownActive = bool => {
@@ -179,9 +180,13 @@ class FirebaseTavernProvider extends Component {
       tavernDoc.update({
         countdownActive: false,
       });
-      this.updateTavernMembersIndividually(userId, 'score');
+      this.updateTavernMembersIndividually(userId, 'score', 5);
       this.handleResetUsersToNotReady(this.state.tavernId);
     }
+  }
+
+  handleResetTavernScores = (userId) => {
+    this.updateTavernMembersIndividually(userId, 'score', 0);
   }
 
   // // // // // //
@@ -198,8 +203,8 @@ class FirebaseTavernProvider extends Component {
         })
       }
 
-      tavernDoc.delete().then(function() {
-        console.log("Document successfully deleted!");
+      tavernDoc.delete().then(() => {
+        this.props.addMessage('Tavern Deleted');
       }).catch(error => {
         this.props.addMessage(error);
       });
@@ -217,6 +222,7 @@ class FirebaseTavernProvider extends Component {
         members: firebase.firestore.FieldValue.arrayUnion({
           isReady: false,
           id: userId,
+          score: 0,
         })
       });
     } else {
@@ -224,7 +230,7 @@ class FirebaseTavernProvider extends Component {
     }
   }
 
-  updateTavernMembersIndividually = (userId, field) => {
+  updateTavernMembersIndividually = (userId, fieldName, update) => {
     let newMembers = []
     firestore.collection(tavernsCollection).doc(this.state.tavernId)
     .get()
@@ -234,8 +240,12 @@ class FirebaseTavernProvider extends Component {
       newMembers = members
       newMembers.map(member => {
         if (member.id === userId) {
-          member[field] = member[field] + 5;
-          return member[field];
+          if (fieldName === 'score' && update !== 0) {
+            member[fieldName] = member[fieldName] + update;
+          } else {
+            member[fieldName] = update
+          }
+          return member[fieldName];
         } else {
           return member;
         }

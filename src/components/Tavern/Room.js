@@ -54,12 +54,24 @@ class Tavern extends Component {
   }
 
   componentWillUnmount = () => {
-    this.props.resetUsersToNotReady(this.props.match.params.tavernId);
-    this.props.setCountdownActive(false);
-    this.props.userAnswered(false);
+    // set score first
+    this.handleScoresAndTavernStates();
+    // this.props.resetUsersToNotReady(this.props.match.params.tavernId);
+    // this.props.setCountdownActive(false);
+    // this.props.userAnswered(false);
+  }
+
+  handleScoresAndTavernStates = () => {
+    // Set and reset score
     this.props.tavernData.members.forEach(item => {
-      // console.log(item.id, item.score);
+      // update individual scores on user collection
       this.props.updateUserData(item.id, 'score', item.score)
+      // reset all users to 0
+      this.props.resetTavernScores(item.id)
+    }, () => {
+      this.props.resetUsersToNotReady(this.props.match.params.tavernId);
+      this.props.setCountdownActive(false);
+      this.props.userAnswered(false);
     })
   }
 
@@ -153,7 +165,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, resetUsersToNotReady, setCountdownActive, userBuzzedIn, userAnswered }) => (
+        {({ tavernData,setTavernData, setUserReady, resetUsersToNotReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernScores }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -168,6 +180,7 @@ const TavernUpdate = props => (
             setCountdownActive={setCountdownActive}
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
+            resetTavernScores={resetTavernScores}
           />
         )}
       </ContextTavernConsumer>

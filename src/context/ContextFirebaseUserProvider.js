@@ -78,6 +78,7 @@ class FirebaseUserProvider extends Component {
   handleCreateDatabaseUser = (userId, name) => {
     firestore.collection(usersCollection).doc(userId).set({
       name: name,
+      score: 0,
     })
     .then(() => {
       this.handleSetUserData(userId);
@@ -197,9 +198,22 @@ class FirebaseUserProvider extends Component {
 
   handleUpdateUserData = (userId, fieldName, update) => {
     const user = firestore.collection(usersCollection).doc(userId)
-    user.update({
-      [fieldName]: update,
-    })
+    if (fieldName === 'score') {
+      let currentScore = 0;
+      user.get()
+      .then(response => {
+        currentScore = response.data().score;
+      })
+      .then(() => {
+        user.update({
+          [fieldName]: currentScore + update,
+        })
+      })
+    } else {
+      user.update({
+        [fieldName]: update,
+      })
+    }
   }
 
   // // // // // //
