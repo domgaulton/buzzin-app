@@ -179,8 +179,7 @@ class FirebaseTavernProvider extends Component {
       tavernDoc.update({
         countdownActive: false,
       });
-      this.props.addMessage('Answered Correct!');
-      // also set everyone to not ready!
+      this.handleResetUsersNotReady(this.state.tavernId);
     }
   }
 
@@ -203,7 +202,6 @@ class FirebaseTavernProvider extends Component {
       }).catch(error => {
         this.props.addMessage(error);
       });
-
     });
   }
 
