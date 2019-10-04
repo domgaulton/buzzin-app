@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import Login from '../Auth/Login';
+import FriendsList from './FriendsList';
 import { Link } from 'react-router-dom';
 
 class User extends Component {
@@ -17,18 +18,8 @@ class User extends Component {
         <h3>Notifications</h3>
         <p>No new notifications</p>
 
-        <h3>Friends {this.props.userData.friends && this.props.userData.friends.length}</h3>
-        {this.props.userData.friends ? (
-          this.props.userData.friends.map(item => {
-            return <p>{item}</p>
-          })
-        ) : null }
+        <FriendsList />
 
-        {this.props.userData.friendsPending ? (
-          this.props.userData.friendsPending.map(item => {
-            return <p>{item} <span onClick={() => this.confirmFriend(item)}>Accept</span></p>
-          })
-        ) : null }
         <Link className="bz-navigation__item" to='/add-friend'>Add Friend</Link>
 
         <h3>Score</h3>
