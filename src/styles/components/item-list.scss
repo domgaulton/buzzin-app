@@ -15,16 +15,42 @@
     display: flex;
     justify-content: center;
     align-content: center;
+    font-size: 1.5em;
+    display: flex;
+    align-content: center;
+    justify-content: center;
 
-    &--highlight {
+    &--not-ready {
+      color: $colour-grey-light;
+    }
+
+    &--ready {
+      color: $colour-grey-dark;
+    }
+
+    &--buzzed-in {
       font-weight: bold;
+      color: red;
+      animation-name: buzzed-in-loop;
+      animation-duration: 0.4s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
     }
   }
 
   button, &__icon {
-    position: absolute;
-    right: 80px;
     -webkit-appearance:inherit;
     border: 0;
+    background: none;
+  }
+}
+
+@keyframes buzzed-in-loop {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.2);
   }
 }

@@ -17,7 +17,9 @@ class MessageProvider extends Component {
     this.setState({
       messages: [message]
     })
-
+    setTimeout(() => {
+      this.handleClearMessages();
+    }, 3000)
   }
 
   handleClearMessages = () => {

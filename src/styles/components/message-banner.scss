@@ -12,7 +12,7 @@
   &__content {
     text-align: center;
     position: relative;
-    width: $container-width - 100px;
+    max-width: $container-width - 100px;
     margin: 0 auto;
   }
 
@@ -23,10 +23,25 @@
     position: absolute;
     right: -50px;
     top: -5px;
+
+    &:focus {
+      outline:0;
+    }
   }
 
   &--showing {
     top: 0;
     height: unset;
+  }
+}
+
+@include mobile {
+  .message-banner {
+    background: green;
+    &__close {
+      position: fixed;
+      right: 0;
+      top: 10px;
+    }
   }
 }
