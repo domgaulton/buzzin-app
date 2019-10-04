@@ -16,21 +16,23 @@ class FriendsListItem extends Component {
   }
 
   confirmFriend = userId => {
+    console.log(userId)
     this.props.confirmFriendRequest(userId);
   }
 
   render(){
     return (
-      <li className="item-list__item">{this.state.name} {this.props.true ? <span onClick={() => this.confirmFriend(this.props.data)}>Accept</span> : null}</li>
+      <li className="item-list__item">{this.state.name} {this.props.confirm ? <button onClick={() => this.confirmFriend(this.props.data)}>Accept</button> : null}</li>
     );
   }
 }
 
 const FriendsListItemUpdate = props => (
   <ContextUserConsumer>
-    {({ getUserData }) => (
+    {({ getUserData, confirmFriendRequest }) => (
       <FriendsListItem
         {...props}
+        confirmFriendRequest={confirmFriendRequest}
         getUserData={getUserData}
       />
     )}

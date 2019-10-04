@@ -13,20 +13,24 @@ class FriendsList extends Component {
       <React.Fragment>
         <h3>Total Friends: ({this.props.userData.friends && this.props.userData.friends.length})</h3>
 
-        {this.props.userData.friends ? (
+        {this.props.userData.friends && this.props.userData.friends.length ? (
           <ul className="item-list">
             {this.props.userData.friends.map(item => {
-              return <FriendsListItem data={item} confirm={true} />
+              return <FriendsListItem key={item} data={item} confirm={false} />
             })}
           </ul>
         ) : null }
 
-        {this.props.userData.friendsPending ? (
-          <ul className="item-list">
-            {this.props.userData.friendsPending.map(item => {
-              return <FriendsListItem data={item} confirm={false} />
-            })}
-          </ul>
+
+        {this.props.userData.friendsPending && this.props.userData.friendsPending.length ? (
+          <React.Fragment>
+            <p>Pending...</p>
+            <ul className="item-list">
+              {this.props.userData.friendsPending.map(item => {
+                return <FriendsListItem key={item} data={item} confirm={true} />
+              })}
+            </ul>
+          </React.Fragment>
         ) : null }
       </React.Fragment>
     );
