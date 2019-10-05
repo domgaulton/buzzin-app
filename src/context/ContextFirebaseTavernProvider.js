@@ -71,22 +71,34 @@ class FirebaseTavernProvider extends Component {
   // // // // // //
 
   handleCreateNewTavern = (name, pin, userId, memberName) => {
-    firestore.collection(tavernsCollection).add({
-      name: name,
-      pin: pin,
-      countdown: 30,
-      countdownActive: false,
-      admin: userId,
-      buzzedIn: '',
+    // Check if tavern exists first
+    firestore.collection(tavernsCollection).where("name", "==", name)
+    .get()
+    .then(query => {
+      if (query.empty) {
+        firestore.collection(tavernsCollection).add({
+          name: name,
+          pin: pin,
+          countdown: 30,
+          countdownActive: false,
+          admin: userId,
+          buzzedIn: '',
+        })
+        .then(response => {
+          // Add this as an array item on tavernAdmin list
+          this.updateUserTaverns('add', userId, response.id);
+          this.updateTavernMembers('add', response.id, userId);
+        })
+        .catch(error => {
+          this.props.addMessage(error);
+        });
+        this.props.addMessage("Tavern added");
+      } else {
+        this.props.addMessage("Tavern name already exists, please pick another");
+      }
     })
-    .then(response => {
-      // Add this as an array item on tavernAdmin list
-      this.updateUserTaverns('add', userId, response.id);
-      this.updateTavernMembers('add', response.id, userId);
-    })
-    .catch(error => {
-      this.props.addMessage(error);
-    });
+
+
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
@@ -101,6 +113,7 @@ class FirebaseTavernProvider extends Component {
           if (!userExists) {
             this.updateUserTaverns('add', userId, response.id);
             this.updateTavernMembers('add', response.id, userId);
+            this.props.addMessage("You've been added!");
           } else {
             this.props.addMessage("You're already in this tavern!");
             return

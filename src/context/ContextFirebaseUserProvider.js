@@ -52,7 +52,7 @@ class FirebaseUserProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if (this.state.userData.friendsPending !== prevState.userData.friendsPending && this.state.userData.friendsPending.length) {
+    if (this.state.userData && this.state.userData.friendsPending && this.state.userData.friendsPending !== prevState.userData.friendsPending && this.state.userData.friendsPending.length) {
       this.props.addMessage("New friend request");
     }
   }

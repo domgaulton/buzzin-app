@@ -16,6 +16,11 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    box-shadow: 1px 0px 2px 1px $colour-grey-light;
+
+    &:hover, &:active {
+      box-shadow: 1px 0px 5px 1px $colour-grey-light;
+    }
 
     &--not-ready {
       color: $colour-grey-light;
@@ -43,6 +48,13 @@
     -webkit-appearance:inherit;
     border: 0;
     background: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+
   }
 }
 
