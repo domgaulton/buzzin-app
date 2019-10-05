@@ -8,7 +8,10 @@ class CreateNewTavern extends Component {
     this.state = {
       name: '',
       pin: '',
+      submitBtnDisabled: true,
     };
+
+    this.form = React.createRef();
   }
 
   handleCreateTavernSubmit = e => {
@@ -22,27 +25,40 @@ class CreateNewTavern extends Component {
     });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.name !== prevState.name || this.state.pin !== prevState.pin){
+      this.setState({
+        submitBtnDisabled: !this.form.current.checkValidity(),
+      });
+    }
+  }
+
   render(){
     return (
-      <React.Fragment>
+      <div className='container'>
         <h1>Create a new tavern</h1>
           <form
+            ref={this.form}
             onSubmit={e => this.handleCreateTavernSubmit(e)}
             className="buzzin-form"
           >
+          <label htmlFor='name'>Tavern Name (no spaces or special characters)</label>
           <input
             className="buzzin-form__item buzzin-form__item--text-input"
             type='text'
             placeholder='Tavern Name'
             name="name"
+            pattern="[a-zA-Z0-9]+"
             value={this.state.name}
             onChange={e => this.handleInputChange(e)}
           />
+          <label htmlFor='pin'>Pin (4 characters you'll remember)</label>
           <input
             className="buzzin-form__item buzzin-form__item--text-input"
-            type='number'
+            type='text'
             placeholder='Tavern Pin'
             name="pin"
+            pattern="[0-9]{4}"
             value={this.state.pin}
             onChange={e => this.handleInputChange(e)}
           />
@@ -50,9 +66,10 @@ class CreateNewTavern extends Component {
             type='submit'
             className="buzzin-form__item buzzin-form__item--submit"
             value="Create Tavern"
+            disabled={this.state.submitBtnDisabled}
           />
         </form>
-      </React.Fragment>
+      </div>
     );
   }
 }

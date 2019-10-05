@@ -20,7 +20,9 @@ class User extends Component {
 
         <FriendsList />
 
-        <Link className="bz-navigation__item" to='/add-friend'>Add Friend</Link>
+        <div className="item-block">
+          <Link className="item-block__block" to='/add-friend'>Add Friend</Link>
+        </div>
 
         <h3>Score</h3>
         <p>{this.props.userData.score}</p>
