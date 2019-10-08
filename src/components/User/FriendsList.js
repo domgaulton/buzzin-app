@@ -11,7 +11,9 @@ class FriendsList extends Component {
   render(){
     return (
       <React.Fragment>
-        <h3>Total Friends: ({this.props.userData.friends && this.props.userData.friends.length})</h3>
+        {this.props.userData.friends && this.props.userData.friends.length ? (
+          <h3>Total Friends: ({this.props.userData.friends && this.props.userData.friends.length})</h3>
+        ) : null }
 
         {this.props.userData.friends && this.props.userData.friends.length ? (
           <ul className="item-list">
