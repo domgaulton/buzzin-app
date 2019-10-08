@@ -23,7 +23,7 @@ function AppRouter() {
       <Route path="/user/:userId" component={User} />
       <Route path="/add-friend" exact component={AddFriend} />
       <Route path="/settings" component={Settings} />
-      <Route path="/tavern" component={TavernHome} />
+      <Route path="/tavern" exact component={TavernHome} />
       <Route path="/find-tavern" exact component={FindTavern} />
       <Route path="/create-tavern" exact component={CreateNewTavern} />
       <Route path="/tavern/:tavernId" component={Room} />
