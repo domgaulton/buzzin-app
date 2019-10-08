@@ -31,6 +31,7 @@ class FirebaseTavernProvider extends Component {
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
       resetTavernScores:  (userId) => this.handleResetTavernScores(userId),
+      resetTavernMembers:  () => this.handleResetTavernMembers(),
 
       // Settings
       deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
@@ -171,7 +172,7 @@ class FirebaseTavernProvider extends Component {
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
-          this.handleSetUserReady(item.id, false)
+          this.updateTavernMembersIndividually(item.id, 'isReady', false);
         })
       }
     });
@@ -263,6 +264,31 @@ class FirebaseTavernProvider extends Component {
           return member;
         }
       });
+    })
+    .then(() => {
+      // set the member data from temp above!
+      firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
+        members: newMembers
+      });
+    })
+  }
+
+  handleResetTavernMembers = () => {
+    let newMembers = []
+    firestore.collection(tavernsCollection).doc(this.state.tavernId)
+    .get()
+    .then(response => {
+      let members = response.data().members;
+      // create a temp array to set whole member data later
+      newMembers = members
+      return newMembers.map(member => {
+        let temp = Object.assign({}, member);
+        temp.isReady = false;
+        temp.score = 0;
+        console.log(temp)
+        return {...temp, temp};
+      });
+      console.log(newMembers)
     })
     .then(() => {
       // set the member data from temp above!
