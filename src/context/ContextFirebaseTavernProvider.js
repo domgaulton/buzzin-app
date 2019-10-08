@@ -281,16 +281,16 @@ class FirebaseTavernProvider extends Component {
       let members = response.data().members;
       // create a temp array to set whole member data later
       newMembers = members
-      return newMembers.map(member => {
+      newMembers.map(member => {
         let temp = Object.assign({}, member);
         temp.isReady = false;
         temp.score = 0;
         console.log(temp)
-        return {...temp, temp};
+        return {temp};
       });
-      console.log(newMembers)
     })
     .then(() => {
+      console.log(newMembers)
       // set the member data from temp above!
       firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
         members: newMembers
