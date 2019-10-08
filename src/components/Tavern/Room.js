@@ -96,7 +96,7 @@ class Tavern extends Component {
 
   handleAdjudication = (e) => {
     if (e.target.value) {
-      this.props.userAnswered(e.target.value, this.props.userId);
+      this.props.userAnswered(e.target.value, this.state.buzzedIn);
     }
   }
 
