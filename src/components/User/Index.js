@@ -3,6 +3,7 @@ import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import Login from '../Auth/Login';
 import FriendsList from './FriendsList';
 import { Link } from 'react-router-dom';
+import PageHeader from '../General/PageHeader';
 
 class User extends Component {
 
@@ -12,9 +13,9 @@ class User extends Component {
 
   render(){
     return this.props.userLoggedIn && this.props.userData ? (
-      <div className="container">
-        <h1>Welcome, {this.props.userData.name}!</h1>
 
+      <div className="container">
+      <PageHeader title={`Welcome, ${this.props.userData.name}!`}/>
         <h3>Notifications</h3>
         <p>No new notifications</p>
 

@@ -3,14 +3,14 @@ import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import TavernList from './TavernList';
 import Login from '../Auth/Login';
 import { Link } from 'react-router-dom';
+import PageHeader from '../General/PageHeader';
 
 class Index extends Component {
 
   render(){
     return this.props.userLoggedIn && this.props.userData ? (
       <div className="container">
-
-        <h1>{this.props.userData.name}'s Taverns</h1>
+        <PageHeader title={`${this.props.userData.name}'s Taverns`}/>
 
         {this.props.userData.taverns && this.props.userData.taverns.length ? (
           <React.Fragment>
