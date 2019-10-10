@@ -6,6 +6,7 @@ import UserList from './UserList';
 import Buzzer from './Buzzer';
 import Toggle from './Toggle';
 import Login from '../Auth/Login';
+import PageHeader from '../General/PageHeader';
 
 class Tavern extends Component {
   constructor(props) {
@@ -60,11 +61,14 @@ class Tavern extends Component {
   handleScoresAndTavernStates = members => {
     // Set and reset score
     if (members) {
-      members.forEach(item => {
+      console.log(members);
+      members.forEach(member => {
+        console.log(member)
         // update individual scores on user collection
-        this.props.updateUserData(item.id, 'score', item.score)
+        this.props.updateUserData(member.id, 'score', member.score)
       })
     }
+    console.log('does this run!?')
     this.props.resetTavernMembers(this.props.match.params.tavernId);
   }
 
@@ -97,8 +101,10 @@ class Tavern extends Component {
   render(){
     return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
-        <p>{this.props.tavernData.name} {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}</p>
-
+        <PageHeader title={`
+          ${this.props.tavernData.name}
+          ${this.checkAdmin() ? `(Pin:${this.props.tavernData.pin})` : ''}
+        `}/>
 
         {this.checkAdmin() ? (
           <div className={`countdown-start-stop ${!this.state.membersReady ? 'countdown-start-stop--disabled' : null}`}>

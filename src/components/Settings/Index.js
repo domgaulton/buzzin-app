@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { Link } from 'react-router-dom';
 import Login from '../Auth/Login';
+import PageHeader from '../General/PageHeader';
 
 class Settings extends Component {
 
   render(){
     return this.props.userLoggedIn ? (
-      <React.Fragment>
+      <div className="container">
+        <PageHeader title={this.props.userId}/>
         <nav>
           <ul>
             <li>
@@ -22,7 +24,7 @@ class Settings extends Component {
             </li>
           </ul>
         </nav>
-      </React.Fragment>
+      </div>
     ) : (
       <Login />
     );;

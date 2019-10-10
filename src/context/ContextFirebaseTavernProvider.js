@@ -200,6 +200,7 @@ class FirebaseTavernProvider extends Component {
   }
 
   handleResetTavernScores = (userId) => {
+    console.log('resetScores', userId)
     this.updateTavernMembersIndividually(userId, 'score', 0);
   }
 
@@ -245,6 +246,7 @@ class FirebaseTavernProvider extends Component {
   }
 
   updateTavernMembersIndividually = (userId, fieldName, update) => {
+    console.log('updateIndividually')
     let newMembers = []
     firestore.collection(tavernsCollection).doc(this.state.tavernId)
     .get()
@@ -278,19 +280,18 @@ class FirebaseTavernProvider extends Component {
     firestore.collection(tavernsCollection).doc(this.state.tavernId)
     .get()
     .then(response => {
-      let members = response.data().members;
+      const members = response.data().members;
       // create a temp array to set whole member data later
-      newMembers = members
-      newMembers.map(member => {
-        let temp = Object.assign({}, member);
-        temp.isReady = false;
-        temp.score = 0;
-        console.log(temp)
-        return {temp};
+      members.map(member => {
+        member = {
+          ...member,
+          isReady: false,
+          score: 0,
+        }
+        newMembers.push(member);
       });
     })
     .then(() => {
-      console.log(newMembers)
       // set the member data from temp above!
       firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
         members: newMembers
