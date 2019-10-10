@@ -30,7 +30,6 @@ class FirebaseTavernProvider extends Component {
       resetUsersToNotReady: (tavernId) => this.handleResetUsersToNotReady(tavernId),
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
-      resetTavernScores:  (userId) => this.handleResetTavernScores(userId),
       resetTavernMembers:  () => this.handleResetTavernMembers(),
 
       // Settings
@@ -133,28 +132,6 @@ class FirebaseTavernProvider extends Component {
 
   handleSetUserReady = (userId, bool) => {
     this.updateTavernMembersIndividually(userId, 'isReady', bool);
-    // let newMembers = []
-    // firestore.collection(tavernsCollection).doc(this.state.tavernId)
-    // .get()
-    // .then(response => {
-    //   let members = response.data().members;
-    //   // create a temp array to set whole member data later
-    //   newMembers = members
-    //   newMembers.map(member => {
-    //     if (member.id === userId) {
-    //       member.isReady = bool;
-    //       return member.isReady;
-    //     } else {
-    //       return member;
-    //     }
-    //   });
-    // })
-    // .then(() => {
-    //   // set the member data from temp above!
-    //   firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
-    //     members: newMembers
-    //   });
-    // })
   }
 
   handleSetCountdownActive = bool => {
@@ -199,11 +176,6 @@ class FirebaseTavernProvider extends Component {
     }
   }
 
-  handleResetTavernScores = (userId) => {
-    console.log('resetScores', userId)
-    this.updateTavernMembersIndividually(userId, 'score', 0);
-  }
-
   // // // // // //
   // Settings
   // // // // // //
@@ -246,7 +218,6 @@ class FirebaseTavernProvider extends Component {
   }
 
   updateTavernMembersIndividually = (userId, fieldName, update) => {
-    console.log('updateIndividually')
     let newMembers = []
     firestore.collection(tavernsCollection).doc(this.state.tavernId)
     .get()
@@ -282,13 +253,13 @@ class FirebaseTavernProvider extends Component {
     .then(response => {
       const members = response.data().members;
       // create a temp array to set whole member data later
-      members.map(member => {
+      newMembers = members.map(member => {
         member = {
           ...member,
           isReady: false,
           score: 0,
         }
-        newMembers.push(member);
+        return member;
       });
     })
     .then(() => {

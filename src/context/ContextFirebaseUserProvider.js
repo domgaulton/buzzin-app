@@ -121,7 +121,6 @@ class FirebaseUserProvider extends Component {
       if (response.exists && response.data().taverns) {
         // Go through each tavern you're a member of and delete trace!
         response.data().taverns.forEach(item => {
-          // console.log(item);
           firestore.collection(tavernsCollection).doc(item).get().then(response => {
             const members = response.data().members;
             if (members) {
@@ -140,12 +139,9 @@ class FirebaseUserProvider extends Component {
       firestore.collection(tavernsCollection).where("admin", "==", userId)
       .get()
       .then(function(query) {
-        // console.log(data)
         if (!query.empty) {
           query.forEach(function(response) {
-            // console.log(doc);
             firestore.collection(tavernsCollection).doc(response.id).delete().then(function() {
-              // console.log("Document successfully deleted!");
             }).catch(function(error) {
               console.error("Error removing document: ", error);
             });
@@ -156,7 +152,6 @@ class FirebaseUserProvider extends Component {
     .then(() => {
       //Finally delete the user
       userDoc.delete().then(function() {
-        // console.log("Document successfully deleted!");
         const user = auth.currentUser;
         user.delete().then(function() {
           //user deleted
@@ -234,7 +229,6 @@ class FirebaseUserProvider extends Component {
     firestore.collection(usersCollection).where("name", "==", username)
     .get()
     .then(query => {
-      // console.log(data)
       if (!query.empty) {
         query.forEach(response => {
           firestore.collection(usersCollection).doc(response.id).update({
