@@ -99,8 +99,6 @@ class FirebaseTavernProvider extends Component {
         this.props.addMessage("Tavern name already exists, please pick another");
       }
     })
-
-
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
@@ -116,6 +114,7 @@ class FirebaseTavernProvider extends Component {
             this.updateUserTaverns('add', userId, response.id);
             this.updateTavernMembers('add', response.id, userId);
             this.props.addMessage("You've been added!");
+            this.props.history.push("/tavern")
           } else {
             this.props.addMessage("You're already in this tavern!");
             return
@@ -194,6 +193,7 @@ class FirebaseTavernProvider extends Component {
 
       tavernDoc.delete().then(() => {
         this.props.addMessage('Tavern Deleted');
+        this.props.history.push("/tavern")
       }).catch(error => {
         this.props.addMessage(error);
       });

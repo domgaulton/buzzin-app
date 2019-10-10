@@ -55,7 +55,9 @@ class Tavern extends Component {
   }
 
   componentWillUnmount = () => {
-    this.handleScoresAndTavernStates(this.props.tavernData.members);
+    if (this.props.tavernData && this.props.tavernData.members) {
+      this.handleScoresAndTavernStates(this.props.tavernData.members);
+    }
   }
 
   handleScoresAndTavernStates = members => {
@@ -98,10 +100,13 @@ class Tavern extends Component {
   render(){
     return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
-        <PageHeader title={`
-          ${this.props.tavernData.name}
-          ${this.checkAdmin() ? `(Pin:${this.props.tavernData.pin})` : ''}
-        `}/>
+        <PageHeader
+          title={`
+            ${this.props.tavernData.name}
+            ${this.checkAdmin() ? `(Pin:${this.props.tavernData.pin})` : ''}
+          `}
+          settings={this.checkAdmin() ? this.props.deleteTavern : ''}
+        />
 
         {this.checkAdmin() ? (
           <div className={`countdown-start-stop ${!this.state.membersReady ? 'countdown-start-stop--disabled' : null}`}>
@@ -161,7 +166,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers }) => (
+        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers, deleteTavern }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -176,6 +181,7 @@ const TavernUpdate = props => (
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
             resetTavernMembers={resetTavernMembers}
+            deleteTavern={deleteTavern}
           />
         )}
       </ContextTavernConsumer>

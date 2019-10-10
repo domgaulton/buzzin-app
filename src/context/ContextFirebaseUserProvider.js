@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { firestore, auth } from "../base";
 import * as firebase from "firebase/app";
 import { ContextMessageConsumer } from './ContextMessageProvider';
+import { withRouter } from "react-router";
 
 const Context = React.createContext();
 export const ContextUserConsumer = Context.Consumer;
@@ -237,6 +238,7 @@ class FirebaseUserProvider extends Component {
         });
       }
       this.props.addMessage("If that user exists they will be sent a message");
+      this.props.history('/user')
     })
   }
 
@@ -295,6 +297,6 @@ const FirebaseUserProviderUpdate = props => (
   </ContextMessageConsumer>
 );
 
-export default FirebaseUserProviderUpdate;
+export default  withRouter(FirebaseUserProviderUpdate);
 
 
