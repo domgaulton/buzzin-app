@@ -238,7 +238,7 @@ class FirebaseUserProvider extends Component {
         });
       }
       this.props.addMessage("If that user exists they will be sent a message");
-      this.props.history('/user')
+      this.props.history.push(`/user/${this.state.userId}`)
     })
   }
 
