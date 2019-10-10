@@ -15,10 +15,12 @@ import CreateNewTavern from "../components/Tavern/CreateNewTavern";
 import Settings from "../components/Settings/Index";
 import Navigation from '../components/Navigation';
 import MessageBanner from '../components/General/MessageBanner';
+import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
 
 function AppRouter() {
   return (
-    <Router>
+    <Router history={history}>
       <MessageProvider>
         <FirebaseUserProvider>
           <FirebaseTavernProvider>
