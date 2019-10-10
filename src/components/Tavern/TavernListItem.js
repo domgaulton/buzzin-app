@@ -40,12 +40,11 @@ const TavernListItemUpdate = props => (
   <ContextUserConsumer>
     {({ userId }) => (
       <ContextTavernConsumer>
-        {({ getTavernData, deleteTavern }) => (
+        {({ getTavernData }) => (
           <TavernListItem
             {...props}
             userId={userId}
             getTavernData={getTavernData}
-            deleteTavern={deleteTavern}
           />
         )}
       </ContextTavernConsumer>

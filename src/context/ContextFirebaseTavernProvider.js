@@ -33,7 +33,7 @@ class FirebaseTavernProvider extends Component {
       resetTavernMembers:  () => this.handleResetTavernMembers(),
 
       // Settings
-      deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
+      deleteTavern: () => this.handleDeleteTavern(),
     };
   }
 
@@ -97,8 +97,6 @@ class FirebaseTavernProvider extends Component {
         this.props.addMessage("Tavern name already exists, please pick another");
       }
     })
-
-
   }
 
   handleAddToExistingTavern = (tavernName, pin, userId, memberName) => {
@@ -180,16 +178,15 @@ class FirebaseTavernProvider extends Component {
   // Settings
   // // // // // //
 
-  handleDeleteTavern = tavernId => {
-    const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
+  handleDeleteTavern = () => {
+    const tavernDoc = firestore.collection(tavernsCollection).doc(this.state.tavernId);
     // store members to delete later
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
-          this.updateUserTaverns('remove', item.id, tavernId);
+          this.updateUserTaverns('remove', item.id, this.state.tavernId);
         })
       }
-
       tavernDoc.delete().then(() => {
         this.props.addMessage('Tavern Deleted');
       }).catch(error => {
