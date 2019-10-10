@@ -30,7 +30,7 @@ class FirebaseTavernProvider extends Component {
       resetUsersToNotReady: (tavernId) => this.handleResetUsersToNotReady(tavernId),
       userBuzzedIn: (userId) => this.handleUserBuzzedIn(userId),
       userAnswered: (correct, userId, score) => this.handleUserAnswered(correct, userId, score),
-      resetTavernScores:  (userId) => this.handleResetTavernScores(userId),
+      resetTavernMembers:  () => this.handleResetTavernMembers(),
 
       // Settings
       deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
@@ -132,28 +132,6 @@ class FirebaseTavernProvider extends Component {
 
   handleSetUserReady = (userId, bool) => {
     this.updateTavernMembersIndividually(userId, 'isReady', bool);
-    // let newMembers = []
-    // firestore.collection(tavernsCollection).doc(this.state.tavernId)
-    // .get()
-    // .then(response => {
-    //   let members = response.data().members;
-    //   // create a temp array to set whole member data later
-    //   newMembers = members
-    //   newMembers.map(member => {
-    //     if (member.id === userId) {
-    //       member.isReady = bool;
-    //       return member.isReady;
-    //     } else {
-    //       return member;
-    //     }
-    //   });
-    // })
-    // .then(() => {
-    //   // set the member data from temp above!
-    //   firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
-    //     members: newMembers
-    //   });
-    // })
   }
 
   handleSetCountdownActive = bool => {
@@ -171,7 +149,7 @@ class FirebaseTavernProvider extends Component {
     tavernDoc.get().then(response => {
       if (!response.empty && response.data().members) {
         response.data().members.forEach(item => {
-          this.handleSetUserReady(item.id, false)
+          this.updateTavernMembersIndividually(item.id, 'isReady', false);
         })
       }
     });
@@ -196,10 +174,6 @@ class FirebaseTavernProvider extends Component {
       this.updateTavernMembersIndividually(userId, 'score', 5);
       this.handleResetUsersToNotReady(this.state.tavernId);
     }
-  }
-
-  handleResetTavernScores = (userId) => {
-    this.updateTavernMembersIndividually(userId, 'score', 0);
   }
 
   // // // // // //
@@ -262,6 +236,30 @@ class FirebaseTavernProvider extends Component {
         } else {
           return member;
         }
+      });
+    })
+    .then(() => {
+      // set the member data from temp above!
+      firestore.collection(tavernsCollection).doc(this.state.tavernId).update({
+        members: newMembers
+      });
+    })
+  }
+
+  handleResetTavernMembers = () => {
+    let newMembers = []
+    firestore.collection(tavernsCollection).doc(this.state.tavernId)
+    .get()
+    .then(response => {
+      const members = response.data().members;
+      // create a temp array to set whole member data later
+      newMembers = members.map(member => {
+        member = {
+          ...member,
+          isReady: false,
+          score: 0,
+        }
+        return member;
       });
     })
     .then(() => {

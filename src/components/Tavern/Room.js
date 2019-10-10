@@ -6,6 +6,7 @@ import UserList from './UserList';
 import Buzzer from './Buzzer';
 import Toggle from './Toggle';
 import Login from '../Auth/Login';
+import PageHeader from '../General/PageHeader';
 
 class Tavern extends Component {
   constructor(props) {
@@ -60,18 +61,12 @@ class Tavern extends Component {
   handleScoresAndTavernStates = members => {
     // Set and reset score
     if (members) {
-      members.forEach(item => {
+      members.forEach(member => {
         // update individual scores on user collection
-        this.props.updateUserData(item.id, 'score', item.score)
-        // reset all users to 0
-        this.props.resetTavernScores(item.id)
-      }, () => {
-        // then reset the tavern data
-        this.props.resetUsersToNotReady(this.props.match.params.tavernId);
-        this.props.setCountdownActive(false);
-        this.props.userAnswered(false);
+        this.props.updateUserData(member.id, 'score', member.score)
       })
     }
+    this.props.resetTavernMembers(this.props.match.params.tavernId);
   }
 
   handleToggleUserReady = e => {
@@ -96,15 +91,17 @@ class Tavern extends Component {
 
   handleAdjudication = (e) => {
     if (e.target.value) {
-      this.props.userAnswered(e.target.value, this.props.userId);
+      this.props.userAnswered(e.target.value, this.state.buzzedIn);
     }
   }
 
   render(){
     return this.props.userLoggedIn && this.props.tavernData ? (
       <div className="container">
-        <p>{this.props.tavernData.name} {this.checkAdmin() && `(Pin:${this.props.tavernData.pin})`}</p>
-
+        <PageHeader title={`
+          ${this.props.tavernData.name}
+          ${this.checkAdmin() ? `(Pin:${this.props.tavernData.pin})` : ''}
+        `}/>
 
         {this.checkAdmin() ? (
           <div className={`countdown-start-stop ${!this.state.membersReady ? 'countdown-start-stop--disabled' : null}`}>
@@ -164,7 +161,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, resetUsersToNotReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernScores }) => (
+        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -175,11 +172,10 @@ const TavernUpdate = props => (
             tavernData={tavernData}
             setTavernData={setTavernData}
             setUserReady={setUserReady}
-            resetUsersToNotReady={resetUsersToNotReady}
             setCountdownActive={setCountdownActive}
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
-            resetTavernScores={resetTavernScores}
+            resetTavernMembers={resetTavernMembers}
           />
         )}
       </ContextTavernConsumer>
