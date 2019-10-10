@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { firestore } from "../base";
 import * as firebase from "firebase/app";
 import { ContextMessageConsumer } from './ContextMessageProvider';
+import { withRouter } from "react-router";
 
 const Context = React.createContext();
 export const ContextTavernConsumer = Context.Consumer;
@@ -93,6 +94,7 @@ class FirebaseTavernProvider extends Component {
           this.props.addMessage(error);
         });
         this.props.addMessage("Tavern added");
+        this.props.history.push("/tavern")
       } else {
         this.props.addMessage("Tavern name already exists, please pick another");
       }
@@ -300,4 +302,4 @@ const FirebaseTavernProviderUpdate = props => (
   </ContextMessageConsumer>
 );
 
-export default FirebaseTavernProviderUpdate;
+export default withRouter(FirebaseTavernProviderUpdate);
