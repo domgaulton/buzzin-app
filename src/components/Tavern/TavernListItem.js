@@ -14,13 +14,11 @@ class TavernListItem extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      tavernId: this.props.tavernId
-    });
     this.props.getTavernData(this.props.tavernId).then(result =>
       this.setState({
         tavernName: result.name,
-        tavernAdmin: result.admin
+        tavernAdmin: result.admin,
+        tavernId: this.props.tavernId
       })
     );
   }

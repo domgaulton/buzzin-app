@@ -10,13 +10,14 @@ class FriendsListItem extends Component {
   }
 
   componentDidMount(){
-    this.props.getUserData(this.props.data).then(result => this.setState({
-      name: result.name,
-    }))
+    this.props.getUserData(this.props.data).then(result =>
+      this.setState({
+        name: result.name,
+      })
+    )
   }
 
   confirmFriend = userId => {
-    console.log(userId)
     this.props.confirmFriendRequest(userId);
   }
 

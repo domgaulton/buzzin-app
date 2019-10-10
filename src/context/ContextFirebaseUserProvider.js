@@ -176,16 +176,19 @@ class FirebaseUserProvider extends Component {
   // Set User Data
   // // // // // //
 
-
-  async handleGetUserData(userId) {
-    let data = {}
-    const users = firestore.collection(usersCollection).doc(userId);
-    await users.get()
-    .then(response => {
-      data = response.data();
-    })
-    return data;
+  handleGetUserData = (userId) => {
+    return new Promise((resolve, reject) => {
+      const users = firestore.collection(usersCollection).doc(userId);
+        users.get()
+        .then(response => {
+          resolve(response.data());
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }
+
 
   handleSetUserData = userId => {
     this.setState({
