@@ -153,9 +153,11 @@ class Tavern extends Component {
           </form>
         ) : null}
 
-        <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
+        {this.checkAdmin() & this.props.tavernData.adminParticipation || !this.checkAdmin() ? (
+          <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
+        ) : null }
 
-        {!this.state.membersReady ? (
+        {!this.state.membersReady ?  (
           <Toggle handleToggle={this.handleToggleUserReady} />
         ) : null }
 
