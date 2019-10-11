@@ -17,7 +17,7 @@ class FriendsList extends Component {
 
         {this.props.userData.friends && this.props.userData.friends.length ? (
           <ul className="item-list">
-            {this.props.userData.friends.map(item => {
+            {this.props.userData.friends.sort((a, b) => (a.score > b.score) ? 1 : -1).map(item => {
               return <FriendsListItem key={item} data={item} confirm={false} />
             })}
           </ul>
@@ -28,7 +28,7 @@ class FriendsList extends Component {
           <React.Fragment>
             <p>Pending...</p>
             <ul className="item-list">
-              {this.props.userData.friendsPending.map(item => {
+              {this.props.userData.friendsPending.sort((a, b) => (a.score > b.score) ? 1 : -1).map(item => {
                 return <FriendsListItem key={item} data={item} confirm={true} />
               })}
             </ul>

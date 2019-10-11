@@ -16,6 +16,10 @@ class User extends Component {
 
       <div className="container">
       <PageHeader title={`Welcome, ${this.props.userData.name}!`}/>
+
+        <h3>Score</h3>
+        <p>{this.props.userData.score}</p>
+
         <h3>Notifications</h3>
         <p>No new notifications</p>
 
@@ -24,9 +28,6 @@ class User extends Component {
         <div className="item-block">
           <Link className="item-block__block" to='/add-friend'>Add Friend</Link>
         </div>
-
-        <h3>Score</h3>
-        <p>{this.props.userData.score}</p>
 
       </div>
     ) : (
