@@ -11,15 +11,15 @@ class Settings extends Component {
       <div className="container">
         <PageHeader title={this.props.userId}/>
         <nav>
-          <ul>
-            <li>
+          <ul className="item-list">
+            <li className="item-list__item">
               <Link to={`/logout`}>
                 <i className="material-icons">exit_to_app</i>
                 <span>Logout</span>
               </Link>
             </li>
-            <li onClick={() => this.props.deleteUser(this.props.userId)}>
-              <i className="material-icons">exit_to_app</i>
+            <li className="item-list__item" style={{background: 'red'}} onClick={() => this.props.deleteUser(this.props.userId)}>
+              <i className="material-icons">delete_forever</i>
               <span>Delete User</span>
             </li>
           </ul>

@@ -12,21 +12,18 @@ class Index extends Component {
       <div className="container">
         <PageHeader title={`${this.props.userData.name}'s Taverns`}/>
 
-        {this.props.userData.taverns && this.props.userData.taverns.length ? (
-          <React.Fragment>
-            <TavernList />
-            <Link className="bz-navigation__item" to='/find-tavern'>Find a tavern</Link>
-            <Link className="bz-navigation__item" to='/create-tavern'>Create a tavern</Link>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
+        <React.Fragment>
+          {!this.props.userData.taverns.length ? (
             <p>Welcome! You aren't linked to any rooms yet, why not find a tavern or create one below?</p>
-            <div className="item-block">
-              <Link className="item-block__block" to='/find-tavern'>Find a tavern</Link>
-              <Link className="item-block__block" to='/create-tavern'>Create a tavern</Link>
-            </div>
-          </React.Fragment>
-        )}
+          ) : (
+            null
+          )}
+          <TavernList />
+          <div className="item-block">
+            <Link className="item-block__block" to='/find-tavern'>Find a tavern</Link>
+            <Link className="item-block__block" to='/create-tavern'>Create a tavern</Link>
+          </div>
+        </React.Fragment>
 
       </div>
     ) : (
