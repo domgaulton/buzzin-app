@@ -19,7 +19,6 @@ class Tavern extends Component {
       buzzedIn: '',
       countdownActive: false,
       timePercentLeft: 100,
-      adminParticipant: false,
     };
   }
 
@@ -28,12 +27,6 @@ class Tavern extends Component {
     this.setState({
       tavernId: this.props.match.params.tavernId,
     })
-
-    if (this.props.tavernData) {
-      this.setState({
-        adminParticipant: this.props.tavernData.adminParticipant,
-      })
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,12 +42,6 @@ class Tavern extends Component {
     if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
       this.setState({
         countdownActive: this.props.tavernData.countdownActive,
-      })
-    }
-
-    if (this.props.tavernData.adminParticipant !== prevProps.tavernData.adminParticipant) {
-      this.setState({
-        adminParticipant: this.props.tavernData.adminParticipant,
       })
     }
 
@@ -167,7 +154,6 @@ class Tavern extends Component {
         ) : null}
 
         <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
-
 
         {!this.state.membersReady ? (
           <Toggle handleToggle={this.handleToggleUserReady} />
