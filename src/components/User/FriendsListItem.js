@@ -18,7 +18,6 @@ class FriendsListItem extends Component {
   }
 
   confirmFriend = userId => {
-    console.log(userId)
     this.props.confirmFriendRequest(userId);
   }
 

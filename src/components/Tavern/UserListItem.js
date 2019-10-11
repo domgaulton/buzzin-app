@@ -10,9 +10,11 @@ class UserListItem extends Component {
   }
 
   componentDidMount(){
-    this.props.getUserData(this.props.userData.id).then(result => this.setState({
-      name: result.name,
-    }))
+    this.props.getUserData(this.props.userData.id).then(result =>
+      this.setState({
+        name: result.name,
+      })
+    )
   }
 
   render(){

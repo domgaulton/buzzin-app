@@ -57,14 +57,17 @@ class FirebaseTavernProvider extends Component {
     });
   }
 
-  async handleGetTavernData(tavernId) {
-    let data = {}
-    const tavern = firestore.collection(tavernsCollection).doc(tavernId);
-    await tavern.get()
-    .then(response => {
-      data = response.data();
-    })
-    return data;
+  handleGetTavernData = (tavernId) => {
+    return new Promise((resolve, reject) => {
+      const tavern = firestore.collection(tavernsCollection).doc(tavernId);
+        tavern.get()
+        .then(response => {
+          resolve(response.data());
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }
 
   // // // // // //
