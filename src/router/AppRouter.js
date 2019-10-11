@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Router, Route } from "react-router-dom";
 import FirebaseUserProvider from "../context/ContextFirebaseUserProvider";
 import FirebaseTavernProvider from "../context/ContextFirebaseTavernProvider";
 import MessageProvider from "../context/ContextMessageProvider";
