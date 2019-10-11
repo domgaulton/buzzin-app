@@ -12,21 +12,32 @@ class Tavern extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tavernId: '',
       tavernName: '',
       adminUser: false,
       membersReady: false,
       buzzedIn: '',
       countdownActive: false,
       timePercentLeft: 100,
+      adminParticipant: false,
     };
   }
 
   componentDidMount(){
     this.props.setTavernData(this.props.match.params.tavernId);
+    this.setState({
+      tavernId: this.props.match.params.tavernId,
+    })
+
+    if (this.props.tavernData) {
+      this.setState({
+        adminParticipant: this.props.tavernData.adminParticipant,
+      })
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.tavernData.members !== prevProps.tavernData.members) {
+    if (this.props.tavernData.members && this.props.tavernData.members !== prevProps.tavernData.members) {
       const membersReady = this.props.tavernData.members.every(item => {
         return item.isReady === true;
       })
@@ -38,6 +49,12 @@ class Tavern extends Component {
     if (this.props.tavernData.countdownActive !== prevProps.tavernData.countdownActive) {
       this.setState({
         countdownActive: this.props.tavernData.countdownActive,
+      })
+    }
+
+    if (this.props.tavernData.adminParticipant !== prevProps.tavernData.adminParticipant) {
+      this.setState({
+        adminParticipant: this.props.tavernData.adminParticipant,
       })
     }
 
@@ -105,7 +122,7 @@ class Tavern extends Component {
             ${this.props.tavernData.name}
             ${this.checkAdmin() ? `(Pin:${this.props.tavernData.pin})` : ''}
           `}
-          settings={this.checkAdmin() ? this.props.deleteTavern : ''}
+          settings={this.checkAdmin() ? this.state.tavernId : false}
         />
 
         {this.checkAdmin() ? (
@@ -149,7 +166,10 @@ class Tavern extends Component {
           </form>
         ) : null}
 
-        <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
+        {this.state.adminParticipant ? (
+          <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
+        ) : null}
+
 
         {!this.state.membersReady ? (
           <Toggle handleToggle={this.handleToggleUserReady} />
@@ -166,7 +186,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers, deleteTavern }) => (
+        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
@@ -181,7 +201,6 @@ const TavernUpdate = props => (
             userBuzzedIn={userBuzzedIn}
             userAnswered={userAnswered}
             resetTavernMembers={resetTavernMembers}
-            deleteTavern={deleteTavern}
           />
         )}
       </ContextTavernConsumer>
