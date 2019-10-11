@@ -187,8 +187,6 @@ class FirebaseTavernProvider extends Component {
 
   handleToggleAdminParticipant = (event, tavernId) => {
     const checked = event.currentTarget.checked;
-    console.log(checked);
-    console.log(event.target)
     let newMembers = []
     const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
     tavernDoc.update({
@@ -199,7 +197,6 @@ class FirebaseTavernProvider extends Component {
     tavernDoc.get().then(response => {
       const members = response.data().members;
       const admin = response.data().admin;
-      console.log(members, admin);
       if (members && admin && checked) {
         this.updateTavernMembers('add', tavernId, admin);
       } else if (members && admin && !checked) {

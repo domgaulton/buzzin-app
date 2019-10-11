@@ -5,7 +5,7 @@ import UserListItem from "./UserListItem";
 class UserList extends Component {
 
   userListComponent = (item) => {
-    return <UserListItem admin={item.id === this.props.tavernData.admin} adminParticipant={this.props.tavernData.adminParticipant} key={item.id} userData={item} score={item.score} buzzedIn={this.props.tavernData.buzzedIn} />
+    return <UserListItem key={item.id} userData={item} score={item.score} buzzedIn={this.props.tavernData.buzzedIn} />
   }
 
   render(){
