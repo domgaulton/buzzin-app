@@ -13,7 +13,7 @@ class Index extends Component {
         <PageHeader title={`${this.props.userData.name}'s Taverns`}/>
 
         <React.Fragment>
-          {!this.props.userData.taverns.length ? (
+          {this.props.userData.taverns && !this.props.userData.taverns.length ? (
             <p>Welcome! You aren't linked to any rooms yet, why not find a tavern or create one below?</p>
           ) : (
             null

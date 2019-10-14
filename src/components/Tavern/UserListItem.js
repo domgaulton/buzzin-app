@@ -18,7 +18,7 @@ class UserListItem extends Component {
   }
 
   render(){
-    return(
+    return (
       <li
         className=
           {`item-list__item item-list__item${this.props.userData.isReady ? '--ready' : '--not-ready'}

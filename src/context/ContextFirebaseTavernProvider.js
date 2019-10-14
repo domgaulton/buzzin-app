@@ -34,6 +34,7 @@ class FirebaseTavernProvider extends Component {
       resetTavernMembers:  () => this.handleResetTavernMembers(),
 
       // Settings
+      toggleAdminParticipant: (event, tavernId) => this.handleToggleAdminParticipant(event, tavernId),
       deleteTavern: (tavernId) => this.handleDeleteTavern(tavernId),
     };
   }
@@ -183,6 +184,33 @@ class FirebaseTavernProvider extends Component {
   // // // // // //
   // Settings
   // // // // // //
+
+  handleToggleAdminParticipant = (event, tavernId) => {
+    const checked = event.currentTarget.checked;
+    let newMembers = []
+    const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);
+    tavernDoc.update({
+      adminParticipant: checked,
+    })
+
+    // remove / add admin user to members list
+    tavernDoc.get().then(response => {
+      const members = response.data().members;
+      const admin = response.data().admin;
+      if (members && admin && checked) {
+        this.updateTavernMembers('add', tavernId, admin);
+      } else if (members && admin && !checked) {
+        newMembers = members.filter(item => item.id !== admin);
+        tavernDoc.update({
+          members: newMembers
+        })
+      }
+    })
+    .catch(error => {
+      // this.props.addMessage(error);
+      console.log(error)
+    });
+  }
 
   handleDeleteTavern = tavernId => {
     const tavernDoc = firestore.collection(tavernsCollection).doc(tavernId);

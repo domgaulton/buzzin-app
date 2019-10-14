@@ -12,6 +12,7 @@ import Room from "../components/Tavern/Room";
 import TavernHome from "../components/Tavern/Index";
 import FindTavern from "../components/Tavern/FindTavern";
 import CreateNewTavern from "../components/Tavern/CreateNewTavern";
+import TavernSettings from "../components/Tavern/TavernSettings"
 import Settings from "../components/Settings/Index";
 import Navigation from '../components/Navigation';
 import MessageBanner from '../components/General/MessageBanner';
@@ -34,7 +35,8 @@ function AppRouter() {
             <Route path="/tavern" exact component={TavernHome} />
             <Route path="/find-tavern" exact component={FindTavern} />
             <Route path="/create-tavern" exact component={CreateNewTavern} />
-            <Route path="/tavern/:tavernId" component={Room} />
+            <Route path="/tavern/:tavernId" exact component={Room} />
+            <Route path="/tavern/settings/:tavernId" exact component={TavernSettings} />
             <Navigation />
           </FirebaseTavernProvider>
         </FirebaseUserProvider>
