@@ -269,8 +269,8 @@ class FirebaseUserProvider extends Component {
   // // // // // //
 
   handleResetPassword = email => {
-    auth.sendPasswordResetEmail(email).then(function() {
-      // Email sent.
+    auth.sendPasswordResetEmail(email).then(() => {
+      this.props.addMessage('An email will be sent if the email exists');
     }).catch(error => {
       this.props.addMessage(error);
     });
