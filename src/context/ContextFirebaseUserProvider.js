@@ -36,6 +36,7 @@ class FirebaseUserProvider extends Component {
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
       phoneLogin: (phone) => this.handlePhoneLogin(phone),
+      phoneConfirm: (code) => this.handlePhoneConfirm(code),
     };
   }
 
@@ -74,35 +75,37 @@ class FirebaseUserProvider extends Component {
     });
   }
 
-  handlePhoneLogin = (phone) => {
+  handlePhoneLogin = phone => {
     console.log(phone);
     const appVerifier = window.recaptchaVerifier;
     firebase.auth().signInWithPhoneNumber(phone, appVerifier)
       .then(function (confirmationResult) {
+        this.props.addMessage(confirmationResult)
         console.log(confirmationResult)
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
-      }).catch(function (error) {
+      }).catch(error => {
         console.log(error)
+        this.props.addMessage(error.message)
         // Error; SMS not sent
         // ...
       });
   }
 
-  // onSignInSubmit = phone => {
-  //   console.log(phone);
-  //   const appVerifier = window.recaptchaVerifier;
-  //   firebase.auth.signInWithPhoneNumber(phone, appVerifier)
-  //     .then(function (confirmationResult) {
-  //       // SMS sent. Prompt user to type the code from the message, then sign the
-  //       // user in with confirmationResult.confirm(code).
-  //       window.confirmationResult = confirmationResult;
-  //     }).catch(function (error) {
-  //       // Error; SMS not sent
-  //       // ...
-  //     });
-  // }
+  handlePhoneConfirm = code => {
+    console.log(code)
+    window.confirmationResult.confirm(code).then(result => {
+      // User signed in successfully.
+      var user = result.user;
+      console.log(result, user)
+      // ...
+    }).catch(error => {
+      console.log(error)
+      // User couldn't sign in (bad verification code?)
+      // ...
+    });
+  }
 
   handleCreateAuthUser = (email, password, name) => {
     auth.createUserWithEmailAndPassword(email, password)

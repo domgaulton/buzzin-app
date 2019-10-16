@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { withRouter } from 'react-router-dom';
-import * as firebase from "firebase/app";
+import LoginPhone from './LoginPhone';
+import LoginEmail from './LoginEmail';
+import RegisterEmail from './RegisterEmail';
+import ResetPassword from './ResetPassword';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loginFormShowing: true,
-      resetPassword: true,
+      resetPassword: false,
+      loginRegisterMethod: '',
+      phoneLogin: false,
       email: '',
       password: '',
       createName: '',
@@ -17,140 +22,70 @@ class Login extends Component {
     };
   }
 
-  componentDidMount() {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
-      'size': 'invisible',
-      'callback': function(response) {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        this.props.phoneLogin(this.state.email);
-      }
-    });
-
-  }
-  toggleLoginCreateUser = () => {
+  handleLoginMethod = input => {
     this.setState({
-      loginFormShowing: !this.state.loginFormShowing
+      loginRegisterMethod: input
     })
   }
 
-  handleInputChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  }
+  // handleInputChange(e) {
+  //   this.setState({
+  //     [e.target.name]: e.target.value,
+  //   });
+  // }
 
-  resetPassword = e => {
-    this.setState({
-      resetPassword: !this.state.resetPassword
-    })
-  }
+  // resetPassword = e => {
+  //   this.setState({
+  //     resetPassword: !this.state.resetPassword
+  //   })
+  // }
 
 
-  handleSubmit = e => {
-    e.preventDefault();
-    if (this.state.resetPassword) {
-      this.props.phoneLogin(this.state.email, document.querySelector('#sign-in-button'));
-      this.setState({
-        email: '',
-        password: '',
-        resetPassword: false,
-      })
-    } else {
-      this.props.loginUser(this.state.email, this.state.password);
-      this.setState({
-        email: '',
-        password: '',
-      })
+  // handleSubmit = e => {
+  //   e.preventDefault();
+  //   if (this.state.resetPassword) {
+  //     this.props.phoneLogin(this.state.email, document.querySelector('#sign-in-button'));
+  //     this.setState({
+  //       email: '',
+  //       password: '',
+  //       resetPassword: false,
+  //     })
+  //   } else {
+  //     this.props.loginUser(this.state.email, this.state.password);
+  //     this.setState({
+  //       email: '',
+  //       password: '',
+  //     })
+  //   }
+  // }
+
+  // handleCreateUser = e => {
+  //   e.preventDefault();
+  //   this.props.createAuthUser(this.state.createEmail, this.state.createPassword, this.state.createName)
+  // }
+
+  loginMethod = loginRegisterState => {
+    // console.log(loginRegisterState)
+    switch(loginRegisterState) {
+      case 'loginEmail':
+        return <LoginEmail changeLoginMethod={this.handleLoginMethod} />
+      case 'registerEmail':
+        return <RegisterEmail changeLoginMethod={this.handleLoginMethod} />
+      case 'resetPassword':
+        return <ResetPassword changeLoginMethod={this.handleLoginMethod} />
+      case 'loginPhone':
+        return <LoginPhone changeLoginMethod={this.handleLoginMethod} />
+      default :
+        return <LoginEmail changeLoginMethod={this.handleLoginMethod} />
     }
   }
 
-  handleCreateUser = e => {
-    e.preventDefault();
-    this.props.createAuthUser(this.state.createEmail, this.state.createPassword, this.state.createName)
-  }
-
-
   render(){
-    return this.state.loginFormShowing ? (
+    return (
       <div className="container">
-        <h1>{!this.state.resetPassword ? 'Login' : 'Reset Password'}</h1>
-         <form
-          onSubmit={e => this.handleSubmit(e)}
-          className="buzzin-form"
-        >
-          <input
-            className="buzzin-form__item buzzin-form__item--text-input"
-            type='phone'
-            placeholder='Email'
-            name="email"
-            value={this.state.email}
-            onChange={e => this.handleInputChange(e)}
-          />
-          {!this.state.resetPassword ? (
-            <input
-              className="buzzin-form__item buzzin-form__item--text-input"
-              type='password'
-              placeholder='Password'
-              name="password"
-              value={this.state.password}
-              onChange={e => this.handleInputChange(e)}
-            />
-          ) : null }
-          <input
-            className="buzzin-form__item buzzin-form__item--submit"
-            type='submit'
-            id="sign-in-button"
-            value={!this.state.resetPassword ? 'Login' : 'Reset Password'}
-            disabled={this.state.email === ''}
-          />
-        </form>
-        <p onClick={this.toggleLoginCreateUser}>No login? Register here</p>
-        <p onClick={this.resetPassword}>{this.state.resetPassword ? 'Back to Login' : 'Forgot Password - Reset Here'}</p>
+        {this.loginMethod(this.state.loginRegisterMethod)}
       </div>
-    ) : (
-      <div className="container">
-        <h1>Register</h1>
-          <form
-            onSubmit={e => this.handleCreateUser(e)}
-            className="buzzin-form"
-          >
-            <input
-              className="buzzin-form__item buzzin-form__item--text-input"
-              type='text'
-              placeholder='Name'
-              name="createName"
-              value={this.state.createName}
-              onChange={e => this.handleInputChange(e)}
-            />
-            <input
-              className="buzzin-form__item buzzin-form__item--text-input"
-              type='email'
-              placeholder='Email'
-              name="createEmail"
-              value={this.state.createEmail}
-              onChange={e => this.handleInputChange(e)}
-            />
-            <input
-              className="buzzin-form__item buzzin-form__item--text-input"
-              type='password'
-              placeholder='Password'
-              name="createPassword"
-              value={this.state.createPassword}
-              onChange={e => this.handleInputChange(e)}
-            />
-            <input
-              className="buzzin-form__item buzzin-form__item--submit"
-              type='submit'
-              value="Register"
-              disabled={
-                this.state.createName === '' ||
-                this.state.createEmail  === '' ||
-                this.state.createPassword === ''}
-            />
-          </form>
-          <p onClick={this.toggleLoginCreateUser}>Have an account already? Login here</p>
-        </div>
-      );
+    );
   }
 }
 
