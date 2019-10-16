@@ -40,11 +40,9 @@ class ResetPassword extends Component {
             value={this.state.email}
             onChange={e => this.handleInputChange(e)}
           />
-
           <input
             className="buzzin-form__item buzzin-form__item--submit"
             type='submit'
-            id="sign-in-button"
             value='Reset Password'
             disabled={this.state.email === ''}
           />
@@ -57,17 +55,11 @@ class ResetPassword extends Component {
 
 const ResetPasswordUpdate = (props) => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser, resetPassword, phoneLogin }) => (
+    {({ resetPassword }) => (
       <ResetPassword
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
-        userLoggedIn={userLoggedIn}
-        userId={userId}
-        setUserData={setUserData}
-        loginUser={loginUser}
-        createAuthUser={createAuthUser}
         resetPassword={resetPassword}
-        phoneLogin={phoneLogin}
       />
     )}
   </ContextUserConsumer>

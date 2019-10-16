@@ -66,17 +66,11 @@ class LoginEmail extends Component {
 
 const LoginEmailUpdate = (props) => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser, resetPassword, phoneLogin }) => (
+    {({ loginUser }) => (
       <LoginEmail
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
-        userLoggedIn={userLoggedIn}
-        userId={userId}
-        setUserData={setUserData}
         loginUser={loginUser}
-        createAuthUser={createAuthUser}
-        resetPassword={resetPassword}
-        phoneLogin={phoneLogin}
       />
     )}
   </ContextUserConsumer>

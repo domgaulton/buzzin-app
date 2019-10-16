@@ -10,15 +10,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loginFormShowing: true,
-      resetPassword: false,
       loginRegisterMethod: '',
-      phoneLogin: false,
-      email: '',
-      password: '',
-      createName: '',
-      createEmail: '',
-      createPassword: '',
     };
   }
 
@@ -28,44 +20,7 @@ class Login extends Component {
     })
   }
 
-  // handleInputChange(e) {
-  //   this.setState({
-  //     [e.target.name]: e.target.value,
-  //   });
-  // }
-
-  // resetPassword = e => {
-  //   this.setState({
-  //     resetPassword: !this.state.resetPassword
-  //   })
-  // }
-
-
-  // handleSubmit = e => {
-  //   e.preventDefault();
-  //   if (this.state.resetPassword) {
-  //     this.props.phoneLogin(this.state.email, document.querySelector('#sign-in-button'));
-  //     this.setState({
-  //       email: '',
-  //       password: '',
-  //       resetPassword: false,
-  //     })
-  //   } else {
-  //     this.props.loginUser(this.state.email, this.state.password);
-  //     this.setState({
-  //       email: '',
-  //       password: '',
-  //     })
-  //   }
-  // }
-
-  // handleCreateUser = e => {
-  //   e.preventDefault();
-  //   this.props.createAuthUser(this.state.createEmail, this.state.createPassword, this.state.createName)
-  // }
-
   loginMethod = loginRegisterState => {
-    // console.log(loginRegisterState)
     switch(loginRegisterState) {
       case 'loginEmail':
         return <LoginEmail changeLoginMethod={this.handleLoginMethod} />
