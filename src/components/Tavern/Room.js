@@ -85,6 +85,11 @@ class Tavern extends Component {
     }
   }
 
+  checkIfMember = () => {
+    if(this.props.tavernData.members.some(member => member.id === this.props.userId)){
+      return true;
+    }
+  }
   toggleCountdown = () => {
     this.setState({
       countdownActive: !this.props.tavernData.countdownActive,
@@ -153,11 +158,9 @@ class Tavern extends Component {
           </form>
         ) : null}
 
-        {this.checkAdmin() & this.props.tavernData.adminParticipation || !this.checkAdmin() ? (
-          <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
-        ) : null }
+        <Buzzer handleBuzzer={this.handleUserBuzzer} buzzerDisabled={!this.state.countdownActive || this.state.buzzedIn !== ''}/>
 
-        {!this.state.membersReady ?  (
+        {!this.state.membersReady && this.checkIfMember() ?  (
           <Toggle handleToggle={this.handleToggleUserReady} />
         ) : null }
 
@@ -172,7 +175,7 @@ const TavernUpdate = props => (
   <ContextUserConsumer>
     {({ userLoggedIn, userId, userData, getUserData, updateUserData }) => (
       <ContextTavernConsumer>
-        {({ tavernData,setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers }) => (
+        {({ tavernData, setTavernData, setUserReady, setCountdownActive, userBuzzedIn, userAnswered, resetTavernMembers }) => (
           <Tavern
             {...props}
             userLoggedIn={userLoggedIn}
