@@ -89,6 +89,7 @@ class Login extends Component {
             className="buzzin-form__item buzzin-form__item--submit"
             type='submit'
             value={!this.state.resetPassword ? 'Login' : 'Reset Password'}
+            disabled={this.state.email === ''}
           />
         </form>
         <p onClick={this.toggleLoginCreateUser}>No login? Register here</p>
@@ -129,6 +130,10 @@ class Login extends Component {
               className="buzzin-form__item buzzin-form__item--submit"
               type='submit'
               value="Register"
+              disabled={
+                this.state.createName === '' ||
+                this.state.createEmail  === '' ||
+                this.state.createPassword === ''}
             />
           </form>
           <p onClick={this.toggleLoginCreateUser}>Have an account already? Login here</p>
