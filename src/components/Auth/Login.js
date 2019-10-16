@@ -7,6 +7,7 @@ class Login extends Component {
     super(props);
     this.state = {
       loginFormShowing: true,
+      resetPassword: false,
       email: '',
       password: '',
       createName: '',
@@ -28,17 +29,28 @@ class Login extends Component {
   }
 
   resetPassword = e => {
-    this.props.resetPassword(this.state.email)
+    this.setState({
+      resetPassword: !this.state.resetPassword
+    })
   }
 
 
-  handleLogin = e => {
+  handleSubmit = e => {
     e.preventDefault();
-    this.props.loginUser(this.state.email, this.state.password);
-    this.setState({
-      email: '',
-      password: '',
-    })
+    if (this.state.resetPassword) {
+      this.props.resetPassword(this.state.email);
+      this.setState({
+        email: '',
+        password: '',
+        resetPassword: false,
+      })
+    } else {
+      this.props.loginUser(this.state.email, this.state.password);
+      this.setState({
+        email: '',
+        password: '',
+      })
+    }
   }
 
   handleCreateUser = e => {
@@ -50,9 +62,9 @@ class Login extends Component {
   render(){
     return this.state.loginFormShowing ? (
       <div className="container">
-        <h1>Login</h1>
+        <h1>{!this.state.resetPassword ? 'Login' : 'Reset Password'}</h1>
          <form
-          onSubmit={e => this.handleLogin(e)}
+          onSubmit={e => this.handleSubmit(e)}
           className="buzzin-form"
         >
           <input
@@ -63,22 +75,24 @@ class Login extends Component {
             value={this.state.email}
             onChange={e => this.handleInputChange(e)}
           />
-          <input
-            className="buzzin-form__item buzzin-form__item--text-input"
-            type='password'
-            placeholder='Password'
-            name="password"
-            value={this.state.password}
-            onChange={e => this.handleInputChange(e)}
-          />
+          {!this.state.resetPassword ? (
+            <input
+              className="buzzin-form__item buzzin-form__item--text-input"
+              type='password'
+              placeholder='Password'
+              name="password"
+              value={this.state.password}
+              onChange={e => this.handleInputChange(e)}
+            />
+          ) : null }
           <input
             className="buzzin-form__item buzzin-form__item--submit"
             type='submit'
-            value="Login"
+            value={!this.state.resetPassword ? 'Login' : 'Reset Password'}
           />
         </form>
         <p onClick={this.toggleLoginCreateUser}>No login? Register here</p>
-        <p onClick={this.resetPassword}>Reset Password</p>
+        <p onClick={this.resetPassword}>{this.state.resetPassword ? 'Back to Login' : 'Forgot Password - Reset Here'}</p>
       </div>
     ) : (
       <div className="container">
