@@ -5,4 +5,8 @@
   text-align: center;
   max-height: calc(100vh - 83px); // $navigation-height
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
