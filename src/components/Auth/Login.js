@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { ContextUserConsumer } from "../../context/ContextFirebaseUserProvider";
 import { withRouter } from 'react-router-dom';
+import * as firebase from "firebase/app";
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loginFormShowing: true,
-      resetPassword: false,
+      resetPassword: true,
       email: '',
       password: '',
       createName: '',
@@ -16,6 +17,16 @@ class Login extends Component {
     };
   }
 
+  componentDidMount() {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+      'size': 'invisible',
+      'callback': function(response) {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        this.props.phoneLogin(this.state.email);
+      }
+    });
+
+  }
   toggleLoginCreateUser = () => {
     this.setState({
       loginFormShowing: !this.state.loginFormShowing
@@ -38,7 +49,7 @@ class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.resetPassword) {
-      this.props.resetPassword(this.state.email);
+      this.props.phoneLogin(this.state.email, document.querySelector('#sign-in-button'));
       this.setState({
         email: '',
         password: '',
@@ -69,7 +80,7 @@ class Login extends Component {
         >
           <input
             className="buzzin-form__item buzzin-form__item--text-input"
-            type='email'
+            type='phone'
             placeholder='Email'
             name="email"
             value={this.state.email}
@@ -88,6 +99,7 @@ class Login extends Component {
           <input
             className="buzzin-form__item buzzin-form__item--submit"
             type='submit'
+            id="sign-in-button"
             value={!this.state.resetPassword ? 'Login' : 'Reset Password'}
             disabled={this.state.email === ''}
           />
@@ -144,7 +156,7 @@ class Login extends Component {
 
 const LoginUpdate = (props) => (
   <ContextUserConsumer>
-    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser, resetPassword }) => (
+    {({ userLoggedIn, userId, setUserData, loginUser, createAuthUser, resetPassword, phoneLogin }) => (
       <Login
         // remember to spread the existing props otherwise you lose any new ones e.g. 'something' that don't come from the provider
         {...props}
@@ -154,6 +166,7 @@ const LoginUpdate = (props) => (
         loginUser={loginUser}
         createAuthUser={createAuthUser}
         resetPassword={resetPassword}
+        phoneLogin={phoneLogin}
       />
     )}
   </ContextUserConsumer>

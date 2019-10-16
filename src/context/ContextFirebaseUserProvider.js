@@ -35,6 +35,7 @@ class FirebaseUserProvider extends Component {
 
       // Settings
       resetPassword: (email) => this.handleResetPassword(email),
+      phoneLogin: (phone) => this.handlePhoneLogin(phone),
     };
   }
 
@@ -72,6 +73,36 @@ class FirebaseUserProvider extends Component {
       this.props.addMessage(errorMessage)
     });
   }
+
+  handlePhoneLogin = (phone) => {
+    console.log(phone);
+    const appVerifier = window.recaptchaVerifier;
+    firebase.auth().signInWithPhoneNumber(phone, appVerifier)
+      .then(function (confirmationResult) {
+        console.log(confirmationResult)
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+      }).catch(function (error) {
+        console.log(error)
+        // Error; SMS not sent
+        // ...
+      });
+  }
+
+  // onSignInSubmit = phone => {
+  //   console.log(phone);
+  //   const appVerifier = window.recaptchaVerifier;
+  //   firebase.auth.signInWithPhoneNumber(phone, appVerifier)
+  //     .then(function (confirmationResult) {
+  //       // SMS sent. Prompt user to type the code from the message, then sign the
+  //       // user in with confirmationResult.confirm(code).
+  //       window.confirmationResult = confirmationResult;
+  //     }).catch(function (error) {
+  //       // Error; SMS not sent
+  //       // ...
+  //     });
+  // }
 
   handleCreateAuthUser = (email, password, name) => {
     auth.createUserWithEmailAndPassword(email, password)
@@ -260,8 +291,6 @@ class FirebaseUserProvider extends Component {
     firestore.collection(usersCollection).doc(userId).update({
       friends: firebase.firestore.FieldValue.arrayUnion(this.state.userId)
     });
-
-
   }
 
   // // // // // //
