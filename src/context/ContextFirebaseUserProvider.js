@@ -80,14 +80,14 @@ class FirebaseUserProvider extends Component {
     const appVerifier = window.recaptchaVerifier;
     firebase.auth().signInWithPhoneNumber(phone, appVerifier)
       .then(function (confirmationResult) {
-        this.props.addMessage(confirmationResult)
+        //this.props.addMessage(confirmationResult)
         console.log(confirmationResult)
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
       }).catch(error => {
         console.log(error)
-        this.props.addMessage(error.message)
+        //this.props.addMessage(error.message)
         // Error; SMS not sent
         // ...
       });
