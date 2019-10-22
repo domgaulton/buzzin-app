@@ -86,7 +86,7 @@ class Tavern extends Component {
   }
 
   checkIfMember = () => {
-    if(this.props.tavernData.members.some(member => member.id === this.props.userId)){
+    if(this.props.tavernData && this.props.tavernData.members.some(member => member.id === this.props.userId)){
       return true;
     }
   }
