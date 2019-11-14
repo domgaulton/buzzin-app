@@ -26,3 +26,15 @@ yarn-error.log*
 
 # other
 .firebase
+
+# cordova app
+app/node_modules
+app/www
+app/platforms
+app/plugins
+app/hooks
+app/**/node_modules
+app/**/www
+app/**/platforms
+app/**/plugins
+app/**/hooks
