@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route } from "react-router-dom";
 import FirebaseUserProvider from "../context/ContextFirebaseUserProvider";
 import FirebaseTavernProvider from "../context/ContextFirebaseTavernProvider";
 import MessageProvider from "../context/ContextMessageProvider";
@@ -18,6 +18,12 @@ import Navigation from '../components/Navigation';
 import MessageBanner from '../components/General/MessageBanner';
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
+
+let Router = BrowserRouter;
+
+if (window.cordova) {
+  Router = HashRouter;
+}
 
 function AppRouter() {
   return (
