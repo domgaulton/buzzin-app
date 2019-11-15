@@ -4,6 +4,9 @@
 1. From the root build change the `index.js` to the contents from `src/index.app.js` file and build using `npm run build`
 2. Run `cd app` to go into app directory and run `npm run deploy-ios` - this will copy the `./build` files to the `./app/www` files in the app folder
 
+### Trouble shooting
+* If `js` and `css` resources can't be found you might need to update paths where `/static/` becomes `./static`
+
 ## Overview
 Google Firebase live database and state
 Google Cloud functions - countdown
